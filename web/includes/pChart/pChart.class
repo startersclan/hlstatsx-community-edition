@@ -259,7 +259,7 @@
      $GFactor = ($G2-$G1)/$Shades;
      $BFactor = ($B2-$B1)/$Shades;
 
-     for($i=0;$i<=$Shades-1;$i++)
+     for ($i=0;$i<=$Shades-1;$i++)
       {
        $this->Palette[$i]["R"] = $R1+$RFactor*$i;
        $this->Palette[$i]["G"] = $G1+$GFactor*$i;
@@ -328,7 +328,7 @@
        $LineColor =$this->AllocateColor($this->Picture,$R2,$G2,$B2);
        $SkewWidth = $this->GArea_Y2-$this->GArea_Y1-1;
 
-       for($i=$this->GArea_X1-$SkewWidth;$i<=$this->GArea_X2;$i=$i+4)
+       for ($i=$this->GArea_X1-$SkewWidth;$i<=$this->GArea_X2;$i=$i+4)
         {
          $X1 = $i;            $Y1 = $this->GArea_Y2;
          $X2 = $i+$SkewWidth; $Y2 = $this->GArea_Y1;
@@ -533,7 +533,7 @@
       return(0);
 
      $YPos = $this->GArea_Y2; $XMin = NULL;
-     for($i=1;$i<=$Divisions+1;$i++)
+     for ($i=1;$i<=$Divisions+1;$i++)
       {
        if ( $RightScale )
         $this->drawLine($this->GArea_X2,$YPos,$this->GArea_X2+5,$YPos,$R,$G,$B);
@@ -730,7 +730,7 @@
      $this->DivisionRatio  = ( $this->GArea_Y2 - $this->GArea_Y1 ) / $DataRange;
 
      $YPos = $this->GArea_Y2; $XMin = NULL;
-     for($i=1;$i<=$Divisions+1;$i++)
+     for ($i=1;$i<=$Divisions+1;$i++)
       {
        $this->drawLine($this->GArea_X1,$YPos,$this->GArea_X1-5,$YPos,$R,$G,$B);
        $Value     = $this->VMin + ($i-1) * (( $this->VMax - $this->VMin ) / $Divisions);
@@ -838,7 +838,7 @@
      $this->XDivisionRatio  = ( $this->GArea_X2 - $this->GArea_X1 ) / $XDataRange;
 
      $XPos = $this->GArea_X1; $YMax = NULL;
-     for($i=1;$i<=$XDivisions+1;$i++)
+     for ($i=1;$i<=$XDivisions+1;$i++)
       {
        $this->drawLine($XPos,$this->GArea_Y2,$XPos,$this->GArea_Y2+5,$R,$G,$B);
 
@@ -915,7 +915,7 @@
 
        $YPos  = $LayerHeight; //$this->GArea_Y2-1;
        $LastY = $YPos;
-       for($i=0;$i<=$this->DivisionCount;$i++)
+       for ($i=0;$i<=$this->DivisionCount;$i++)
         {
          $LastY = $YPos;
          $YPos  = $YPos - $this->DivisionHeight;
@@ -933,7 +933,7 @@
 
      /* Horizontal lines */
      $YPos = $this->GArea_Y2 - $this->DivisionHeight;
-     for($i=1;$i<=$this->DivisionCount;$i++)
+     for ($i=1;$i<=$this->DivisionCount;$i++)
       {
        if ( $YPos > $this->GArea_Y1 && $YPos < $this->GArea_Y2 )
         $this->drawDottedLine($this->GArea_X1,$YPos,$this->GArea_X2,$YPos,$LineWidth,$R,$G,$B);
@@ -947,7 +947,7 @@
      else
       { $XPos = $this->GArea_X1 + $this->GAreaXOffset; $ColCount = floor( ($this->GArea_X2 - $this->GArea_X1) / $this->DivisionWidth ); }
 
-     for($i=1;$i<=$ColCount;$i++)
+     for ($i=1;$i<=$ColCount;$i++)
       {
        if ( $XPos > $this->GArea_X1 && $XPos < $this->GArea_X2 )
         $this->drawDottedLine(floor($XPos),$this->GArea_Y1,floor($XPos),$this->GArea_Y2,$LineWidth,$R,$G,$B);
@@ -1406,22 +1406,22 @@
      $XPos     = $this->GAreaXOffset;
      $LastXPos = -1;
      foreach ( $Data as $Key => $Values )
-      {
+	{
        $Value1 = $Data[$Key][$Serie1];
        $Value2 = $Data[$Key][$Serie2];
        $YPos1  = $LayerHeight - (($Value1-$this->VMin) * $this->DivisionRatio);
        $YPos2  = $LayerHeight - (($Value2-$this->VMin) * $this->DivisionRatio);
 
-       if ( $LastXPos != -1 )
-        {
-         $Points   = "";
-         $Points[] = $LastXPos; $Points[] = $LastYPos1;
-         $Points[] = $LastXPos; $Points[] = $LastYPos2;
-         $Points[] = $XPos; $Points[] = $YPos2;
-         $Points[] = $XPos; $Points[] = $YPos1;
+		if ( $LastXPos != -1 )
+		{
+			$Points   = array();
+			$Points[] = $LastXPos; $Points[] = $LastYPos1;
+			$Points[] = $LastXPos; $Points[] = $LastYPos2;
+			$Points[] = $XPos; $Points[] = $YPos2;
+			$Points[] = $XPos; $Points[] = $YPos1;
 
-         imagefilledpolygon($this->Layers[0],$Points,4,$C_Graph);
-        }
+			imagefilledpolygon($this->Layers[0],$Points,4,$C_Graph);
+		}
 
        $LastYPos1 = $YPos1;
        $LastYPos2 = $YPos2;
@@ -1430,7 +1430,7 @@
        $XPos = $XPos + $this->DivisionWidth;
       }
 
-     imagecopymerge($this->Picture,$this->Layers[0],$this->GArea_X1,$this->GArea_Y1,0,0,$LayerWidth,$LayerHeight,$Alpha);
+		imagecopymerge($this->Picture,$this->Layers[0],$this->GArea_X1,$this->GArea_Y1,0,0,$LayerWidth,$LayerHeight,$Alpha);
      imagedestroy($this->Layers[0]);
     }
 
@@ -1561,7 +1561,7 @@
           { if ( $keyI == $ColName ) { $ColorID = $ID; }; $ID++; }
 
          $Index = 1;
-         $XLast = -1; $Missing = "";
+         $XLast = -1; $Missing = array();
          foreach ( $Data as $Key => $Values )
           {
            if ( isset($Data[$Key][$ColName]) )
@@ -1578,7 +1578,7 @@
          $Yt[0] = 0;
          $Yt[1] = 0;
          $U[1]  = 0;
-         for($i=2;$i<=$Index-1;$i++)
+         for ($i=2;$i<=$Index-1;$i++)
           {
            $Sig    = ($XIn[$i] - $XIn[$i-1]) / ($XIn[$i+1] - $XIn[$i-1]);
            $p      = $Sig * $Yt[$i-1] + 2;
@@ -1591,11 +1591,11 @@
          $un = 0;
          $Yt[$Index] = ($un - $qn * $U[$Index-1]) / ($qn * $Yt[$Index-1] + 1);
 
-         for($k=$Index-1;$k>=1;$k--)
+         for ($k=$Index-1;$k>=1;$k--)
           $Yt[$k] = $Yt[$k] * $Yt[$k+1] + $U[$k];
 
          $XPos  = $this->GArea_X1 + $this->GAreaXOffset;
-         for($X=1;$X<=$Index;$X=$X+$Accuracy)
+         for ($X=1;$X<=$Index;$X=$X+$Accuracy)
           {
            $klo = 1;
            $khi = $Index;
@@ -1638,170 +1638,170 @@
       }
     }
 
-   /* This function draw a filled cubic curve */
-   function drawFilledCubicCurve($Data,$DataDescription,$Accuracy=.1,$Alpha=100,$AroundZero=FALSE)
-    {
-     /* Validate the Data and DataDescription array */
-     $this->validateDataDescription("drawFilledCubicCurve",$DataDescription);
-     $this->validateData("drawFilledCubicCurve",$Data);
+	/* This function draw a filled cubic curve */
+	function drawFilledCubicCurve($Data,$DataDescription,$Accuracy=.1,$Alpha=100,$AroundZero=FALSE)
+	{
+		/* Validate the Data and DataDescription array */
+		$this->validateDataDescription("drawFilledCubicCurve",$DataDescription);
+		$this->validateData("drawFilledCubicCurve",$Data);
 
-     $LayerWidth  = $this->GArea_X2-$this->GArea_X1;
-     $LayerHeight = $this->GArea_Y2-$this->GArea_Y1;
-     $YZero = $LayerHeight - ((0-$this->VMin) * $this->DivisionRatio);
-     if ( $YZero > $LayerHeight ) { $YZero = $LayerHeight; }
+		$LayerWidth  = $this->GArea_X2-$this->GArea_X1;
+		$LayerHeight = $this->GArea_Y2-$this->GArea_Y1;
+		$YZero = $LayerHeight - ((0-$this->VMin) * $this->DivisionRatio);
+		if ( $YZero > $LayerHeight ) { $YZero = $LayerHeight; }
 
-     $GraphID = 0;
-     foreach ( $DataDescription["Values"] as $Key2 => $ColName )
-      {
-       $XIn = ""; $Yin = ""; $Yt = ""; $U = "";
-       $XIn[0] = 0; $YIn[0] = 0;
+		$GraphID = 0;
+		foreach ( $DataDescription["Values"] as $Key2 => $ColName )
+		{
+		   $XIn = array(); $Yin = array(); $Yt = array(); $U = array();
+		   $XIn[0] = 0; $YIn[0] = 0;
 
-       $ID = 0;
-       foreach ( $DataDescription["Description"] as $keyI => $ValueI )
-        { if ( $keyI == $ColName ) { $ColorID = $ID; }; $ID++; }
+		   $ID = 0;
+		   foreach ( $DataDescription["Description"] as $keyI => $ValueI )
+			{ if ( $keyI == $ColName ) { $ColorID = $ID; }; $ID++; }
 
-       $Index = 1;
-       $XLast = -1; $Missing = "";
-       foreach ( $Data as $Key => $Values )
-        {
-         $Value = $Data[$Key][$ColName];
-         $XIn[$Index] = $Index;
-         $YIn[$Index] = $Value;
-         if ( !is_numeric($Value) ) { $Missing[$Index] = TRUE; }
-         $Index++;
-        }
-       $Index--;
- 
-       $Yt[0] = 0;
-       $Yt[1] = 0;
-       $U[1]  = 0;
-       for($i=2;$i<=$Index-1;$i++)
-        {
-         $Sig    = ($XIn[$i] - $XIn[$i-1]) / ($XIn[$i+1] - $XIn[$i-1]);
-         $p      = $Sig * $Yt[$i-1] + 2;
-         $Yt[$i] = ($Sig - 1) / $p;
-         $U[$i]  = ($YIn[$i+1] - $YIn[$i]) / ($XIn[$i+1] - $XIn[$i]) - ($YIn[$i] - $YIn[$i-1]) / ($XIn[$i] - $XIn[$i-1]);
-         $U[$i]  = (6 * $U[$i] / ($XIn[$i+1] - $XIn[$i-1]) - $Sig * $U[$i-1]) / $p;
-        }
+			$Index = 1;
+			$XLast = -1; $Missing = array();
+			foreach ( $Data as $Key => $Values )
+			{
+				$Value = $Data[$Key][$ColName];
+				$XIn[$Index] = $Index;
+				$YIn[$Index] = $Value;
+				if ( !is_numeric($Value) ) { $Missing[$Index] = TRUE; }
+				$Index++;
+			}
+			$Index--;
+	 
+			$Yt[0] = 0;
+			$Yt[1] = 0;
+			$U[1]  = 0;
+			for ($i = 2; $i < $Index; $i++)
+			{
+				$Sig    = ($XIn[$i] - $XIn[$i-1]) / ($XIn[$i+1] - $XIn[$i-1]);
+				$p      = $Sig * $Yt[$i-1] + 2;
+				$Yt[$i] = ($Sig - 1) / $p;
+				$U[$i]  = ($YIn[$i+1] - $YIn[$i]) / ($XIn[$i+1] - $XIn[$i]) - ($YIn[$i] - $YIn[$i-1]) / ($XIn[$i] - $XIn[$i-1]);
+				$U[$i]  = (6 * $U[$i] / ($XIn[$i+1] - $XIn[$i-1]) - $Sig * $U[$i-1]) / $p;
+			}
 
-       $qn = 0;
-       $un = 0;
-       $Yt[$Index] = ($un - $qn * $U[$Index-1]) / ($qn * $Yt[$Index-1] + 1);
+			$qn = 0;
+			$un = 0;
+			$Yt[$Index] = ($un - $qn * $U[$Index-1]) / ($qn * $Yt[$Index-1] + 1);
 
-       for($k=$Index-1;$k>=1;$k--) 
-        $Yt[$k] = $Yt[$k] * $Yt[$k+1] + $U[$k];
+			for ($k=$Index-1;$k>=1;$k--) 
+				$Yt[$k] = $Yt[$k] * $Yt[$k+1] + $U[$k];
 
-       $Points   = array();
-       $Points[] = $this->GAreaXOffset;
-       $Points[] = $LayerHeight;
+			$Points   = array();
+			$Points[] = $this->GAreaXOffset;
+			$Points[] = $LayerHeight;
 
-       $this->Layers[0] = imagecreatetruecolor($LayerWidth,$LayerHeight);
-       $C_White         =$this->AllocateColor($this->Layers[0],255,255,255);
-       imagefilledrectangle($this->Layers[0],0,0,$LayerWidth,$LayerHeight,$C_White);
-       imagecolortransparent($this->Layers[0],$C_White);
+			$this->Layers[0] = imagecreatetruecolor($LayerWidth,$LayerHeight);
+			$C_White = $this->AllocateColor($this->Layers[0],255,255,255);
+			imagefilledrectangle($this->Layers[0],0,0,$LayerWidth,$LayerHeight,$C_White);
+			imagecolortransparent($this->Layers[0],$C_White);
 
-       $YLast = NULL;
-       $XPos  = $this->GAreaXOffset; $PointsCount = 2;
-       for($X=1;$X<=$Index;$X=$X+$Accuracy)
-        {
-         $klo = 1;
-         $khi = $Index;
-         $k   = $khi - $klo;
-         while($k > 1)
-          {
-           $k = $khi - $klo;
-           If ( $XIn[$k] >= $X )
-            $khi = $k;
-           else
-            $klo = $k;
-          }
-         $klo = $khi - 1;
+			$YLast = NULL;
+			$XPos  = $this->GAreaXOffset; $PointsCount = 2;
+			for ($X=1;$X<=$Index;$X=$X+$Accuracy)
+			{
+			 $klo = 1;
+			 $khi = $Index;
+			 $k   = $khi - $klo;
+			 while($k > 1)
+			  {
+			   $k = $khi - $klo;
+			   If ( $XIn[$k] >= $X )
+				$khi = $k;
+			   else
+				$klo = $k;
+			  }
+			 $klo = $khi - 1;
 
-         $h     = $XIn[$khi] - $XIn[$klo];
-         $a     = ($XIn[$khi] - $X) / $h;
-         $b     = ($X - $XIn[$klo]) / $h;
-         $Value = $a * $YIn[$klo] + $b * $YIn[$khi] + (($a*$a*$a - $a) * $Yt[$klo] + ($b*$b*$b - $b) * $Yt[$khi]) * ($h*$h) / 6;
+			 $h     = $XIn[$khi] - $XIn[$klo];
+			 $a     = ($XIn[$khi] - $X) / $h;
+			 $b     = ($X - $XIn[$klo]) / $h;
+			 $Value = $a * $YIn[$klo] + $b * $YIn[$khi] + (($a*$a*$a - $a) * $Yt[$klo] + ($b*$b*$b - $b) * $Yt[$khi]) * ($h*$h) / 6;
 
-         $YPos = $LayerHeight - (($Value-$this->VMin) * $this->DivisionRatio);
+			 $YPos = $LayerHeight - (($Value-$this->VMin) * $this->DivisionRatio);
 
-         if ( $YLast != NULL && $AroundZero && !isset($Missing[floor($X)]) && !isset($Missing[floor($X+1)]))
-          {
-           $aPoints   = "";
-           $aPoints[] = $XLast;
-           $aPoints[] = $YLast;
-           $aPoints[] = $XPos;
-           $aPoints[] = $YPos;
-           $aPoints[] = $XPos;
-           $aPoints[] = $YZero;
-           $aPoints[] = $XLast;
-           $aPoints[] = $YZero;
+				if ( $YLast != NULL && $AroundZero && !isset($Missing[floor($X)]) && !isset($Missing[floor($X+1)]))
+				{
+					$aPoints   = array();
+					$aPoints[] = $XLast;
+					$aPoints[] = $YLast;
+					$aPoints[] = $XPos;
+					$aPoints[] = $YPos;
+					$aPoints[] = $XPos;
+					$aPoints[] = $YZero;
+					$aPoints[] = $XLast;
+					$aPoints[] = $YZero;
 
-           $C_Graph =$this->AllocateColor($this->Layers[0],$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
-           imagefilledpolygon($this->Layers[0],$aPoints,4,$C_Graph);
-          }
+					$C_Graph =$this->AllocateColor($this->Layers[0],$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
+					imagefilledpolygon($this->Layers[0],$aPoints,4,$C_Graph);
+				}
 
-         if ( !isset($Missing[floor($X)]) || $YLast == NULL )
-          {
-           $PointsCount++;
-           $Points[] = $XPos;
-           $Points[] = $YPos;
-          }
-         else
-          {
-           $PointsCount++; $Points[] = $XLast; $Points[] = $LayerHeight;
-          }
+			 if ( !isset($Missing[floor($X)]) || $YLast == NULL )
+			  {
+			   $PointsCount++;
+			   $Points[] = $XPos;
+			   $Points[] = $YPos;
+			  }
+			 else
+			  {
+			   $PointsCount++; $Points[] = $XLast; $Points[] = $LayerHeight;
+			  }
 
-         $YLast = $YPos; $XLast = $XPos; 
-         $XPos  = $XPos + $this->DivisionWidth * $Accuracy;
-        }
+			 $YLast = $YPos; $XLast = $XPos; 
+			 $XPos  = $XPos + $this->DivisionWidth * $Accuracy;
+			}
 
-       // Add potentialy missing values
-       $XPos  = $XPos - $this->DivisionWidth * $Accuracy;
-       if ( $XPos < ($LayerWidth-$this->GAreaXOffset) )
-        {
-         $YPos = $LayerHeight - (($YIn[$Index]-$this->VMin) * $this->DivisionRatio);
+		   // Add potentialy missing values
+		   $XPos  = $XPos - $this->DivisionWidth * $Accuracy;
+		   if ( $XPos < ($LayerWidth-$this->GAreaXOffset) )
+			{
+			 $YPos = $LayerHeight - (($YIn[$Index]-$this->VMin) * $this->DivisionRatio);
 
-         if ( $YLast != NULL && $AroundZero )
-          {
-           $aPoints   = "";
-           $aPoints[] = $XLast;
-           $aPoints[] = $YLast;
-           $aPoints[] = $LayerWidth-$this->GAreaXOffset;
-           $aPoints[] = $YPos;
-           $aPoints[] = $LayerWidth-$this->GAreaXOffset;
-           $aPoints[] = $YZero;
-           $aPoints[] = $XLast;
-           $aPoints[] = $YZero;
+			 if ( $YLast != NULL && $AroundZero )
+			  {
+			   $aPoints   = array();
+			   $aPoints[] = $XLast;
+			   $aPoints[] = $YLast;
+			   $aPoints[] = $LayerWidth-$this->GAreaXOffset;
+			   $aPoints[] = $YPos;
+			   $aPoints[] = $LayerWidth-$this->GAreaXOffset;
+			   $aPoints[] = $YZero;
+			   $aPoints[] = $XLast;
+			   $aPoints[] = $YZero;
 
-           $C_Graph =$this->AllocateColor($this->Layers[0],$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
-           imagefilledpolygon($this->Layers[0],$aPoints,4,$C_Graph);
-          }
+			   $C_Graph =$this->AllocateColor($this->Layers[0],$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
+			   imagefilledpolygon($this->Layers[0],$aPoints,4,$C_Graph);
+			  }
 
-         if ( $YIn[$klo] != "" && $YIn[$khi] != "" || $YLast == NULL )
-          {
-           $PointsCount++;
-           $Points[] = $LayerWidth-$this->GAreaXOffset;
-           $Points[] = $YPos;
-          }
-        }
+			 if ( $YIn[$klo] != "" && $YIn[$khi] != "" || $YLast == NULL )
+			  {
+			   $PointsCount++;
+			   $Points[] = $LayerWidth-$this->GAreaXOffset;
+			   $Points[] = $YPos;
+			  }
+			}
 
-       $Points[] = $LayerWidth-$this->GAreaXOffset;
-       $Points[] = $LayerHeight;
+		   $Points[] = $LayerWidth-$this->GAreaXOffset;
+		   $Points[] = $LayerHeight;
 
-       if ( !$AroundZero )
-        {
-         $C_Graph =$this->AllocateColor($this->Layers[0],$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
-         imagefilledpolygon($this->Layers[0],$Points,$PointsCount,$C_Graph);
-        }
+		   if ( !$AroundZero )
+			{
+			 $C_Graph =$this->AllocateColor($this->Layers[0],$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
+			 imagefilledpolygon($this->Layers[0],$Points,$PointsCount,$C_Graph);
+			}
 
-       imagecopymerge($this->Picture,$this->Layers[0],$this->GArea_X1,$this->GArea_Y1,0,0,$LayerWidth,$LayerHeight,$Alpha);
-       imagedestroy($this->Layers[0]);
+		   imagecopymerge($this->Picture,$this->Layers[0],$this->GArea_X1,$this->GArea_Y1,0,0,$LayerWidth,$LayerHeight,$Alpha);
+		   imagedestroy($this->Layers[0]);
 
-       $this->drawCubicCurve($Data,$DataDescription,$Accuracy,$ColName);
+		   $this->drawCubicCurve($Data,$DataDescription,$Accuracy,$ColName);
 
-       $GraphID++;
-      }
-    }
+		   $GraphID++;
+		}
+	}
 
    /* This function draw a filled line graph */
    function drawFilledLineGraph($Data,$DataDescription,$Alpha=100,$AroundZero=FALSE)
@@ -1822,7 +1822,7 @@
        foreach ( $DataDescription["Description"] as $keyI => $ValueI )
         { if ( $keyI == $ColName ) { $ColorID = $ID; }; $ID++; }
 
-       $aPoints   = "";
+       $aPoints   = array();
        $aPoints[] = $this->GAreaXOffset;
        $aPoints[] = $LayerHeight;
 
@@ -1864,7 +1864,7 @@
 
            if ($YLast <> $Empty && $AroundZero)
             {
-             $Points   = "";
+             $Points   = array();
              $Points[] = $XLast; $Points[] = $YLast;
              $Points[] = $XPos;
              $Points[] = $YPos;
@@ -1954,7 +1954,7 @@
        $GraphID++;
       }
 
-     for($i=0;$i<=($GraphID-1);$i++)
+     for ($i=0;$i<=($GraphID-1);$i++)
       {
        imagecopymerge($this->Picture,$this->Layers[$i],$this->GArea_X1,$this->GArea_Y1,0,0,$LayerWidth,$LayerHeight,$Alpha);
        imagedestroy($this->Layers[$i]);
@@ -2029,7 +2029,7 @@
      $YZero  = $this->GArea_Y2 - ((0-$this->VMin) * $this->DivisionRatio);
      if ( $YZero > $this->GArea_Y2 ) { $YZero = $this->GArea_Y2; }
 
-     $SerieID = 0; $LastValue = "";
+     $SerieID = 0; $LastValue = array();
      foreach ( $DataDescription["Values"] as $Key2 => $ColName )
       {
        $ID = 0;
@@ -2167,7 +2167,7 @@
 
            if ( $t % 2 == 1 && $LastX1 != -1)
             {
-             $Plots   = "";
+             $Plots   = array();
              $Plots[] = $X1; $Plots[] = $Y1;
              $Plots[] = $X2; $Plots[] = $Y2;
              $Plots[] = $LastX2; $Plots[] = $LastY2;
@@ -2354,7 +2354,7 @@
 
        $Angle = -90;
        $XLast = -1;
-       $Plots = "";
+       $Plots = array();
        foreach ( $Data as $Key => $Values )
         {
          if ( isset($Data[$Key][$ColName]))
@@ -2391,7 +2391,7 @@
          imagecopymerge($this->Picture,$this->Layers[0],$this->GArea_X1,$this->GArea_Y1,0,0,$LayerWidth,$LayerHeight,$Alpha);
          imagedestroy($this->Layers[0]);
 
-         for($i=0;$i<=count($Plots)-4;$i=$i+2)
+         for ($i=0;$i<=count($Plots)-4;$i=$i+2)
           $this->drawLine($Plots[$i]+$this->GArea_X1,$Plots[$i+1]+$this->GArea_Y1,$Plots[$i+2]+$this->GArea_X1,$Plots[$i+3]+$this->GArea_Y1,$this->Palette[$ColorID]["R"],$this->Palette[$ColorID]["G"],$this->Palette[$ColorID]["B"]);
         }
 
@@ -2429,7 +2429,7 @@
      $SplicePercent       = 100 / $PieSum;
 
      /* Calculate all polygons */
-     $Angle    = 0; $TopPlots = "";
+     $Angle    = 0; $TopPlots = array();
      foreach($iValues as $Key => $Value)
       {
        $TopPlots[$Key][] = $XPos;
@@ -2468,7 +2468,7 @@
         }
 
        /* Process pie slices */
-       for($iAngle=$Angle;$iAngle<=$Angle+$Value*$SpliceRatio;$iAngle=$iAngle+.5)
+       for ($iAngle=$Angle;$iAngle<=$Angle+$Value*$SpliceRatio;$iAngle=$iAngle+.5)
         {
          $TopX = cos($iAngle * 3.1418 / 180 ) * $Radius + $XPos;
          $TopY = sin($iAngle * 3.1418 / 180 ) * $Radius + $YPos;
@@ -2501,7 +2501,7 @@
      /* Draw Top polygons */
      foreach ($TopPlots as $Key => $Value)
       { 
-       for($j=0;$j<=count($TopPlots[$Key])-4;$j=$j+2)
+       for ($j=0;$j<=count($TopPlots[$Key])-4;$j=$j+2)
         $this->drawLine($TopPlots[$Key][$j],$TopPlots[$Key][$j+1],$TopPlots[$Key][$j+2],$TopPlots[$Key][$j+3],$R,$G,$B);
       }
     }
@@ -2547,7 +2547,7 @@
      $SplicePercent = 100 / $PieSum;
 
      /* Calculate all polygons */
-     $Angle = 0; $TopPlots = "";
+     $Angle = 0; $TopPlots = array();
      foreach($iValues as $Key => $Value)
       {
        $XOffset = cos(($Angle+($Value/2*$SpliceRatio)) * 3.1418 / 180 ) * $SpliceDistance;
@@ -2602,7 +2602,7 @@
         $LineColor = $this->AllocateColor($this->Picture,$Rc,$Gc,$Bc);
 
        $XLineLast = ""; $YLineLast = "";
-       for($iAngle=$Angle;$iAngle<=$Angle+$Value*$SpliceRatio;$iAngle=$iAngle+.5)
+       for ($iAngle=$Angle;$iAngle<=$Angle+$Value*$SpliceRatio;$iAngle=$iAngle+.5)
         {
          $PosX = cos($iAngle * 3.1418 / 180 ) * $Radius + $XPos + $XOffset;
          $PosY = sin($iAngle * 3.1418 / 180 ) * $Radius + $YPos + $YOffset;
@@ -2675,8 +2675,8 @@
 
      /* Calculate all polygons */
      $Angle    = 0; $CDev = 5;
-     $TopPlots = ""; $BotPlots = "";
-     $aTopPlots = ""; $aBotPlots = "";
+     $TopPlots = array(); $BotPlots = array();
+     $aTopPlots= array(); $aBotPlots = array();
      foreach($iValues as $Key => $Value)
       {
        $XCenterPos = cos(($Angle-$CDev+($Value*$SpliceRatio+$SpliceDistanceRatio)/2) * 3.1418 / 180 ) * $SpliceDistance + $XPos;
@@ -2720,7 +2720,7 @@
         }
 
        /* Process pie slices */
-       for($iAngle=$Angle;$iAngle<=$Angle+$Value*$SpliceRatio;$iAngle=$iAngle+.5)
+       for ($iAngle=$Angle;$iAngle<=$Angle+$Value*$SpliceRatio;$iAngle=$iAngle+.5)
         {
          $TopX = cos($iAngle * 3.1418 / 180 ) * $Radius + $XPos;
          $TopY = sin($iAngle * 3.1418 / 180 ) * $SkewHeight + $YPos;
@@ -2747,18 +2747,18 @@
 
        if ( $EnhanceColors ) { $En = -10; } else { $En = 0; }
  
-       for($j=0;$j<=count($aBotPlots[$Key])-4;$j=$j+2)
+       for ($j=0;$j<=count($aBotPlots[$Key])-4;$j=$j+2)
         $this->drawLine($aBotPlots[$Key][$j],$aBotPlots[$Key][$j+1],$aBotPlots[$Key][$j+2],$aBotPlots[$Key][$j+3],$this->Palette[$Key]["R"]+$En,$this->Palette[$Key]["G"]+$En,$this->Palette[$Key]["B"]+$En);
       }
 
      /* Draw pie layers */
      if ( $EnhanceColors ) { $ColorRatio = 30 / $SpliceHeight; } else { $ColorRatio = 25 / $SpliceHeight; }
-     for($i=$SpliceHeight-1;$i>=1;$i--)
+     for ($i=$SpliceHeight-1;$i>=1;$i--)
       {
        foreach($iValues as $Key => $Value)
         {
          $C_GraphLo = $this->AllocateColor($this->Picture,$this->Palette[$Key]["R"],$this->Palette[$Key]["G"],$this->Palette[$Key]["B"],-10);
-         $Plots = ""; $Plot = 0;
+         $Plots = array(); $Plot = 0;
          foreach($TopPlots[$Key] as $Key2 => $Value2)
           {
            $Plot++;
@@ -2779,13 +2779,13 @@
       }
 
      /* Draw Top polygons */
-     for($Key=count($iValues)-1;$Key>=0;$Key--)
+     for ($Key=count($iValues)-1;$Key>=0;$Key--)
       { 
        $C_GraphLo = $this->AllocateColor($this->Picture,$this->Palette[$Key]["R"],$this->Palette[$Key]["G"],$this->Palette[$Key]["B"]);
        imagefilledpolygon($this->Picture,$TopPlots[$Key],(count($TopPlots[$Key])+1)/2,$C_GraphLo);
 
        if ( $EnhanceColors ) { $En = 10; } else { $En = 0; }
-       for($j=0;$j<=count($aTopPlots[$Key])-4;$j=$j+2)
+       for ($j=0;$j<=count($aTopPlots[$Key])-4;$j=$j+2)
         $this->drawLine($aTopPlots[$Key][$j],$aTopPlots[$Key][$j+1],$aTopPlots[$Key][$j+2],$aTopPlots[$Key][$j+3],$this->Palette[$Key]["R"]+$En,$this->Palette[$Key]["G"]+$En,$this->Palette[$Key]["B"]+$En);
       }
     }
@@ -2815,7 +2815,7 @@
      if ( $Decay > 0 )
       {
        $YStep = ($Y2 - $Y1 - 2) / $Decay;
-       for($i=0;$i<=$Decay;$i++)
+       for ($i=0;$i<=$Decay;$i++)
         {
          $R-=1;$G-=1;$B-=1;
          $Yi1 = $Y1 + ( $i * $YStep );
@@ -2832,7 +2832,7 @@
       {
        $YStep = ($Y2 - $Y1 - 2) / -$Decay;
        $Yi1   = $Y1; $Yi2   = $Y1+$YStep;
-       for($i=-$Decay;$i>=0;$i--)
+       for ($i=-$Decay;$i>=0;$i--)
         {
          $R+=1;$G+=1;$B+=1;
          $C_Background = $this->AllocateColor($this->Picture,$R,$G,$B);
@@ -2882,9 +2882,9 @@
           {
            $AlphaDecay = ($this->ShadowAlpha / $this->ShadowBlur);
 
-           for($i=1; $i<=$this->ShadowBlur; $i++)
+           for ($i=1; $i<=$this->ShadowBlur; $i++)
             $this->drawFilledRectangle($X1+$this->ShadowXDistance-$i/2,$Y1+$this->ShadowYDistance-$i/2,$X2+$this->ShadowXDistance-$i/2,$Y2+$this->ShadowYDistance-$i/2,$this->ShadowRColor,$this->ShadowGColor,$this->ShadowBColor,FALSE,$this->ShadowAlpha-$AlphaDecay*$i,TRUE);
-           for($i=1; $i<=$this->ShadowBlur; $i++)
+           for ($i=1; $i<=$this->ShadowBlur; $i++)
             $this->drawFilledRectangle($X1+$this->ShadowXDistance+$i/2,$Y1+$this->ShadowYDistance+$i/2,$X2+$this->ShadowXDistance+$i/2,$Y2+$this->ShadowYDistance+$i/2,$this->ShadowRColor,$this->ShadowGColor,$this->ShadowBColor,FALSE,$this->ShadowAlpha-$AlphaDecay*$i,TRUE);
           }
         }
@@ -2928,7 +2928,7 @@
 
      $Step = 90 / ((3.1418 * $Radius)/2);
 
-     for($i=0;$i<=90;$i=$i+$Step)
+     for ($i=0;$i<=90;$i=$i+$Step)
       {
        $X = cos(($i+180)*3.1418/180) * $Radius + $X1 + $Radius;
        $Y = sin(($i+180)*3.1418/180) * $Radius + $Y1 + $Radius;
@@ -2966,7 +2966,7 @@
 
      $Step = 90 / ((3.1418 * $Radius)/2);
 
-     for($i=0;$i<=90;$i=$i+$Step)
+     for ($i=0;$i<=90;$i=$i+$Step)
       {
        $Xi1 = cos(($i+180)*3.1418/180) * $Radius + $X1 + $Radius;
        $Yi1 = sin(($i+180)*3.1418/180) * $Radius + $Y1 + $Radius;
@@ -3013,7 +3013,7 @@
      $C_Circle = $this->AllocateColor($this->Picture,$R,$G,$B);
      $Step     = 360 / (2 * 3.1418 * max($Width,$Height));
 
-     for($i=0;$i<=360;$i=$i+$Step)
+     for ($i=0;$i<=360;$i=$i+$Step)
       {
        $X = cos($i*3.1418/180) * $Height + $Xc;
        $Y = sin($i*3.1418/180) * $Width + $Yc;
@@ -3032,7 +3032,7 @@
      $C_Circle = $this->AllocateColor($this->Picture,$R,$G,$B);
      $Step     = 360 / (2 * 3.1418 * max($Width,$Height));
 
-     for($i=90;$i<=270;$i=$i+$Step)
+     for ($i=90;$i<=270;$i=$i+$Step)
       {
        $X1 = cos($i*3.1418/180) * $Height + $Xc;
        $Y1 = sin($i*3.1418/180) * $Width + $Yc;
@@ -3069,7 +3069,7 @@
      $XStep = ($X2-$X1) / $Distance;
      $YStep = ($Y2-$Y1) / $Distance;
 
-     for($i=0;$i<=$Distance;$i++)
+     for ($i=0;$i<=$Distance;$i++)
       {
        $X = $i * $XStep + $X1;
        $Y = $i * $YStep + $Y1;
@@ -3081,7 +3081,7 @@
          else
           {
            $StartOffset = -($this->LineWidth/2); $EndOffset = ($this->LineWidth/2);
-           for($j=$StartOffset;$j<=$EndOffset;$j++)
+           for ($j=$StartOffset;$j<=$EndOffset;$j++)
             $this->drawAntialiasPixel($X+$j,$Y+$j,$R,$G,$B);
           }
         }
@@ -3101,7 +3101,7 @@
      $YStep = ($Y2-$Y1) / $Distance;
 
      $DotIndex = 0;
-     for($i=0;$i<=$Distance;$i++)
+     for ($i=0;$i<=$Distance;$i++)
       {
        $X = $i * $XStep + $X1;
        $Y = $i * $YStep + $Y1;
@@ -3115,7 +3115,7 @@
            else
             {
              $StartOffset = -($this->LineWidth/2); $EndOffset = ($this->LineWidth/2);
-             for($j=$StartOffset;$j<=$EndOffset;$j++)
+             for ($j=$StartOffset;$j<=$EndOffset;$j++)
               $this->drawAntialiasPixel($X+$j,$Y+$j,$R,$G,$B);
             }
           }
@@ -3256,9 +3256,9 @@
         {
          $AlphaDecay = ($this->ShadowAlpha / $this->ShadowBlur);
 
-         for($i=1; $i<=$this->ShadowBlur; $i++)
+         for ($i=1; $i<=$this->ShadowBlur; $i++)
           $this->drawAntialiasPixel($X+$this->ShadowXDistance-$i/2,$Y+$this->ShadowYDistance-$i/2,$this->ShadowRColor,$this->ShadowGColor,$this->ShadowBColor,$this->ShadowAlpha-$AlphaDecay*$i,TRUE);
-         for($i=1; $i<=$this->ShadowBlur; $i++)
+         for ($i=1; $i<=$this->ShadowBlur; $i++)
           $this->drawAntialiasPixel($X+$this->ShadowXDistance+$i/2,$Y+$this->ShadowYDistance+$i/2,$this->ShadowRColor,$this->ShadowGColor,$this->ShadowBColor,$this->ShadowAlpha-$AlphaDecay*$i,TRUE);
         }
       }
@@ -3267,7 +3267,7 @@
      if ( $G < 0 ) { $G = 0; } if ( $G > 255 ) { $G = 255; }
      if ( $B < 0 ) { $B = 0; } if ( $B > 255 ) { $B = 255; }
 
-     $Plot = "";
+     //$Plot = "";
      $Xi   = floor($X);
      $Yi   = floor($Y);
 
