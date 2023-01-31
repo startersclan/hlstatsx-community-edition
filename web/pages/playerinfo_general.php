@@ -900,22 +900,28 @@ For support and installation notes visit http://www.hlxcommunity.com
 		ORDER BY
 			hlstats_Awards.name;
 	");
+
 	while ($r1=$db->fetch_array())
 	{
-		unset($tmp);
-		$tmp->aType = $r1['awardType'];
-		$tmp->code = $r1['code'];
-		$tmp->ribbonName = $r1['name'];
+		unset($tmp_arr);
+		$tmp_arr = new StdClass;
+
+		$tmp_arr->aType = $r1['awardType'];
+		$tmp_arr->code = $r1['code'];
+		$tmp_arr->ribbonName = $r1['name'];
+
 		if ($id == 0)
 		{
-			$tmp->playerName = $r1['lastname'];
-			$tmp->flag = $r1['flag'];
-			$tmp->playerId = $r1['g_winner_id'];
-			$tmp->kills = $r1['g_winner_count'];
-			$tmp->verb = $r1['verb'];
+			$tmp_arr->playerName = $r1['lastname'];
+			$tmp_arr->flag = $r1['flag'];
+			$tmp_arr->playerId = $r1['g_winner_id'];
+			$tmp_arr->kills = $r1['g_winner_count'];
+			$tmp_arr->verb = $r1['verb'];
 		}
-		array_push($awards,$tmp); 
+
+		array_push($awards, $tmp_arr);
 	}
+
 	$GlobalAwardsList = '';
 	foreach ($awards as $a)
 	{
