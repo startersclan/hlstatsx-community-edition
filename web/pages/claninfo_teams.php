@@ -195,17 +195,18 @@ For support and installation notes visit http://www.hlxcommunity.com
 	);
 	$db->query("DROP TABLE IF EXISTS hlstats_Frags_as");
 
-	$db->query("
-	CREATE TEMPORARY TABLE hlstats_Frags_as
-	(
-		playerId INT(10),
-		kills INT(10),
-		deaths INT(10),
-		role varchar(128) NOT NULL default ''
-	)
-	");
-	
-	
+	$sql_create_temp_table = "
+		CREATE TEMPORARY TABLE hlstats_Frags_as
+		(
+			playerId INT(10),
+			kills INT(10),
+			deaths INT(10),
+			role varchar(128) NOT NULL default ''
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	$db->query("
 		INSERT INTO
 		hlstats_Frags_as
@@ -252,30 +253,33 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE   
 			hlstats_Servers.game='$game' AND clan = $clan 
 		");
-		
+
 	$db->query("DROP TABLE IF EXISTS hlstats_Frags_as_res");
+
+	$sql_create_temp_table = "
+		CREATE TEMPORARY TABLE hlstats_Frags_as_res
+		(
+			killsTotal INT(10),
+			deathsTotal INT(10),
+			role varchar(128) NOT NULL default ''
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	$db->query("
-	CREATE TEMPORARY TABLE hlstats_Frags_as_res
-	(
-		killsTotal INT(10),
-		deathsTotal INT(10),
-		role varchar(128) NOT NULL default ''
-	)
-	");
-	
-	$db->query("
-	INSERT INTO
-	hlstats_Frags_as_res
-	(
-		killsTotal,
-		deathsTotal,
-		role
-	)
-	SELECT
-	COUNT(hlstats_Frags_as.kills) AS kills, 
-	COUNT(hlstats_Frags_as.deaths) AS deaths,
-	role 
-	from hlstats_Frags_as GROUP by role
+		INSERT INTO
+		hlstats_Frags_as_res
+		(
+			killsTotal,
+			deathsTotal,
+			role
+		)
+		SELECT
+		COUNT(hlstats_Frags_as.kills) AS kills, 
+		COUNT(hlstats_Frags_as.deaths) AS deaths,
+		role 
+		from hlstats_Frags_as GROUP by role
 	");
 	
 	$db->query("

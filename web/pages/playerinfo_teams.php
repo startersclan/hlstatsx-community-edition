@@ -209,22 +209,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'desc',
 		true
 	);
-	$db->query
-	("
-		DROP TABLE IF EXISTS
-			hlstats_Frags_as
-	");
-	$db->query
-	("
-		CREATE TEMPORARY TABLE
-			hlstats_Frags_as
-			(
-				playerId INT(10),
-				kills INT(10),
-				deaths INT(10),
-				role varchar(128) NOT NULL default ''
-			)
-	");
+
+	$db->query("DROP TABLE IF EXISTS hlstats_Frags_as");
+
+	$sql_create_temp_table = "
+		CREATE TEMPORARY TABLE hlstats_Frags_as
+		(
+			playerId INT(10),
+			kills INT(10),
+			deaths INT(10),
+			role varchar(128) NOT NULL default ''
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	$db->query
 	("
 		INSERT INTO
@@ -261,21 +260,20 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE 
 			hlstats_Events_Frags.victimId = $player 
 	");
-	$db->query
-	("
-		DROP TABLE IF EXISTS
-			hlstats_Frags_as_res
-	");
-	$db->query
-	("
-		CREATE TEMPORARY TABLE
-			hlstats_Frags_as_res
-			(
-				killsTotal INT(10),
-				deathsTotal INT(10),
-				role varchar(128) NOT NULL default ''
-			)
-	");
+
+	$db->query("DROP TABLE IF EXISTS hlstats_Frags_as_res");
+
+	$sql_create_temp_table = "
+		CREATE TEMPORARY TABLE hlstats_Frags_as_res
+		(
+			killsTotal INT(10),
+			deathsTotal INT(10),
+			role varchar(128) NOT NULL default ''
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	$db->query
 	("
 		INSERT INTO

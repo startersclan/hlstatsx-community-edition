@@ -89,7 +89,9 @@ class DB_mysql
 
 		if ( $this->link )
 		{
-			mysqli_set_charset($this->link, "utf8mb4");
+			mysqli_set_charset($this->link, DB_CHARSET);
+			$query_str = "SET collation_connection = " . DB_COLLATE;
+			mysqli_query($this->link, $query_str);
 
 			if ( $db_name != '' )
 			{

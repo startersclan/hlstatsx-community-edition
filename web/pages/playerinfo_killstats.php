@@ -134,24 +134,22 @@ For support and installation notes visit http://www.hlxcommunity.com
 	);
 // This would be better done with a UNION query, I think, but MySQL doesn't
 // support them yet. (NOTE you need MySQL 3.23 for temporary table support.)
-	$db->query
-	("
-		DROP TABLE IF EXISTS
-			hlstats_Frags_Kills
-	");
-	$db->query
-	("
-		CREATE TEMPORARY TABLE
-			hlstats_Frags_Kills
-			(
-				playerId INT(10),
-				kills INT(10),
-				deaths INT(10),
-				headshot INT(10),
-				country varchar(128),
-				flag char(2)
-			)
-	");
+	$db->query("DROP TABLE IF EXISTS hlstats_Frags_Kills");
+
+	$sql_create_temp_table = "
+		CREATE TEMPORARY TABLE hlstats_Frags_Kills
+		(
+			playerId INT(10),
+			kills INT(10),
+			deaths INT(10),
+			headshot INT(10),
+			country varchar(128),
+			flag char(2)
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	$db->query
 	("
 		INSERT INTO

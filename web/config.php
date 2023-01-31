@@ -56,6 +56,12 @@ define("DB_NAME", '');
 // DB_TYPE - The database server type. Only "mysql" is supported currently
 define("DB_TYPE", 'mysql');
 
+// default 'utf8mb4'
+define("DB_CHARSET", 'utf8mb4');
+
+// default 'utf8mb4_unicode_ci'
+define("DB_COLLATE", 'utf8mb4_unicode_ci');
+
 // DB_PCONNECT - Set to 1 to use persistent database connections. Persistent
 //               connections can give better performance, but may overload
 //               the database server. Set to 0 to use non-persistent

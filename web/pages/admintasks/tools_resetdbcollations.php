@@ -47,21 +47,26 @@ if ($auth->userdata['acclevel'] < 80)
 
 <?php
 
-    if (isset($_POST['confirm']))
-    {
-		$convert_to   = 'utf8mb4_unicode_ci';
-		$character_set= 'utf8mb4';
+	if (isset($_POST['confirm']))
+	{
+		$convert_to = DB_COLLATE;
+		$character_set = DB_CHARSET;
 
 		if ($_POST['printonly'] > 0) {
 			echo '<strong>Run these statements against your MySql database</strong><br><br>';
 			echo "ALTER DATABASE `".DB_NAME."` DEFAULT CHARACTER SET $character_set COLLATE $convert_to;<br>";
+
 			$rs_tables = $db->query('SHOW TABLES') or die("DB:> Cannot SHOW TABLES");
+
 			while ($row_tables = $db->fetch_row($rs_tables))
 			{
 				$table = $db->escape($row_tables[0]);
+
 				echo "ALTER TABLE `$table` CONVERT TO CHARACTER SET $character_set COLLATE $convert_to;<br>";
-				$rs = $db->query("SHOW FULL FIELDS FROM `$table` WHERE collation is not null AND collation <> 'utf8mb4_unicode_ci'") or die("DB:> Cannot SHOW FULL FIELDS");
-				while ($row=mysqli_fetch_assoc($rs))
+
+				$rs = $db->query("SHOW FULL FIELDS FROM `$table` WHERE collation is not null AND collation <> '{$convert_to}'") or die ("DB:> Cannot SHOW FULL FIELDS");
+
+				while ($row = mysqli_fetch_assoc($rs))
 				{
 					if ($row['Collation'] == '')
 						continue;
@@ -83,8 +88,8 @@ if ($auth->userdata['acclevel'] < 80)
 				}
 			}
 		} else {
-			echo "Converting database, table, and row collations to utf8mb4:<ul>\n";
-			set_time_limit(0);	
+			echo "Converting database, table, and row collations to {$character_set}:<ul>\n";
+			set_time_limit(0);
 			echo '<li>Changing '.DB_NAME.' default character set and collation... ';
 			$db->query("ALTER DATABASE `".DB_NAME."` DEFAULT CHARACTER SET $character_set COLLATE $convert_to;") or die("DB:> Cannot ALTER DATABASE");
 			echo 'OK';
@@ -92,10 +97,15 @@ if ($auth->userdata['acclevel'] < 80)
 			while ($row_tables = $db->fetch_row($rs_tables))
 			{
 				$table = $db->escape($row_tables[0]);
+
 				echo "<li>Converting Table: $table ... ";
+
 				$db->query("ALTER TABLE `$table` CONVERT TO CHARACTER SET $character_set COLLATE $convert_to;");
+
 				echo 'OK';
-				$rs = $db->query("SHOW FULL FIELDS FROM `$table` WHERE collation is not null AND collation <> 'utf8mb4_unicode_ci'") or die("DB:> Cannot SHOW FULL FIELDS");
+
+				$rs = $db->query("SHOW FULL FIELDS FROM `$table` WHERE collation is not null AND collation <> '{$convert_to}'") or die("DB:> Cannot SHOW FULL FIELDS");
+
 				while ($row=mysqli_fetch_assoc($rs))
 				{
 					if ($row['Collation'] == '')

@@ -82,7 +82,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	);
 	
 	$db->query("DROP TABLE IF EXISTS hlstats_AdminEventHistory");
-	$db->query("
+
+	$sql_create_temp_table = "
 		CREATE TEMPORARY TABLE hlstats_AdminEventHistory
 		(
 			eventType VARCHAR(64) NOT NULL,
@@ -90,9 +91,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 			eventDesc VARCHAR(255) NOT NULL,
 			serverName VARCHAR(255) NOT NULL,
 			map VARCHAR(64) NOT NULL
-		) DEFAULT CHARSET=utf8
-	");
-	
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	function insertEvents ($table, $select)
 	{
 		global $db;

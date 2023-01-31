@@ -147,23 +147,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$surl = $g_options['scripturl'];
 // This would be better done with a UNION query, I think, but MySQL doesn't
 // support them yet. (NOTE you need MySQL 3.23 for temporary table support.)
-	$db->query
-	("
-		DROP TABLE IF EXISTS
-			hlstats_EventHistory
-	");
-	$db->query
-	("
-		CREATE TEMPORARY TABLE
-			hlstats_EventHistory
-			(
-				eventType VARCHAR(32) NOT NULL,
-				eventTime DATETIME NOT NULL,
-				eventDesc VARCHAR(255) NOT NULL,
-				serverName VARCHAR(255) NOT NULL,
-				map VARCHAR(64) NOT NULL
-			) DEFAULT CHARSET=utf8mb4
-	");
+	$db->query("DROP TABLE IF EXISTS hlstats_EventHistory");
+
+	$sql_create_temp_table = "
+		CREATE TEMPORARY TABLE hlstats_EventHistory
+		(
+			eventType VARCHAR(32) NOT NULL,
+			eventTime DATETIME NOT NULL,
+			eventDesc VARCHAR(255) NOT NULL,
+			serverName VARCHAR(255) NOT NULL,
+			map VARCHAR(64) NOT NULL
+		) DEFAULT CHARSET=" . DB_CHARSET . " DEFAULT COLLATE=" . DB_COLLATE . ";
+	";
+
+	$db->query($sql_create_temp_table);
+
 	function insertEvents ($table, $select)
 	{
 		global $db;
