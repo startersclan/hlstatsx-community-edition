@@ -139,7 +139,7 @@ function printMap($type = 'main')
 					//Skip this part, if we already have the location info (should be the same)
 					if (!isset($servers[$row['lat'] . ',' . $row['lng']]))
 					{
-						$servers[$row['lat'] . ',' . $row['lng']] = array('lat' => $row['lat'], 'lng' => $row['lng'], 'publicaddress' => $row['public_address'], 'city' => $row['city'], 'country' => $row['country']);
+						$servers[$row['lat'] . ',' . $row['lng']] = array('lat' => $row['lat'], 'lng' => $row['lng'], 'addr' => $row['addr'], 'city' => $row['city'], 'country' => $row['country']);
 					}
 
 					$servers[$row['lat'] . ',' . $row['lng']]['servers'][] = array('serverId' => $row['serverId'], 'addr' => $row['addr'], 'name' => $row['name'], 'kills' => $row['kills']);
