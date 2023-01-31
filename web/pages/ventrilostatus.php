@@ -358,7 +358,7 @@ class CVentriloStatus
 		$ventserv = new Vent;
 		$ventserv->setTimeout( 100000 );		// 100 ms timeout
 		if ( $ventserv->makeRequest( $this->m_cmdcode, $this->m_cmdhost, $this->m_cmdport )) {
-			$res = split("[\n\r\t]+", $ventserv->getResponse());
+			$res = explode("[\n\r\t]+", $ventserv->getResponse());
 		}
 		
 		foreach($res as $line)

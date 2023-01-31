@@ -575,8 +575,6 @@ class Heatmap {
 // End of Heat Class
 }
 
-
-
 class DB {
 	static $connect;
 	public static function connect () {
