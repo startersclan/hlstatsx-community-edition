@@ -509,7 +509,9 @@ class TableColumn
 	var $sort = 'yes';
 	var $type = 'text';
 	var $embedlink = 'no';
-	var $flag;    
+	var $flag;
+	var $skill_change;
+	var $heatmap;
 
 	function __construct($name, $title, $attrs="", $fname=null)
 	{
@@ -531,15 +533,16 @@ class TableColumn
 			'heatmap'
 		);
 
-		parse_str($attrs);
+		parse_str($attrs ?? 0, $attr_vars);
 
 		foreach ($allowed_attrs as $a)
 		{
-			if (isset($$a))
+			if (isset($attr_vars[$a]))
 			{
-				$this->$a = mystripslashes($$a);
+				$this->$a = mystripslashes($attr_vars[$a]);
 			}
 		}
+
 		$this->fname = $fname;
 	}
 }
