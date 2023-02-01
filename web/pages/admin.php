@@ -259,7 +259,6 @@ class AdminTask
 	}
 }
 
-
 class EditList
 {
 	var $columns;

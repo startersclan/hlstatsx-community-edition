@@ -8,7 +8,6 @@
 	Version 2.2.1: Supports channel comments.
 */
 
-
 function StrKey( $src, $key, &$res )
 {
 	$key .= " ";
@@ -18,9 +17,6 @@ function StrKey( $src, $key, &$res )
 	$res = substr( $src, strlen( $key ) );
 	return true;
 }
-
-
-
 
 function StrSplit( $src, $sep, &$d1, &$d2 )
 {
@@ -34,10 +30,6 @@ function StrSplit( $src, $sep, &$d1, &$d2 )
 	$d1 = substr( $src, 0, $pos );
 	$d2 = substr( $src, $pos + 1 );
 }
-
-
-
-
 
 function StrDecode( &$src )
 {
@@ -58,9 +50,6 @@ function StrDecode( &$src )
 	
 	return( $res );
 }
-
-
-
 
 class CVentriloClient
 {
@@ -181,7 +170,6 @@ class CVentriloChannel
 		}
 	}
 }
-
 
 class CVentriloStatus
 {
@@ -409,8 +397,8 @@ define( "VENT_HEADSIZE", 20 );
 define( "VENT_MAXPACKETSIZE", 512 );
 define( "VENT_MAXPACKETNO", 32 );
 
-
-function &getHeadEncodeRef() {
+function &getHeadEncodeRef()
+{
 	static $ventrilo_udp_encdata_head = array(
 		0x80, 0xe5, 0x0e, 0x38, 0xba, 0x63, 0x4c, 0x99, 0x88, 0x63, 0x4c, 0xd6, 0x54, 0xb8, 0x65, 0x7e,
 		0xbf, 0x8a, 0xf0, 0x17, 0x8a, 0xaa, 0x4d, 0x0f, 0xb7, 0x23, 0x27, 0xf6, 0xeb, 0x12, 0xf8, 0xea,
@@ -433,7 +421,8 @@ function &getHeadEncodeRef() {
 	return $ventrilo_udp_encdata_head;
 }
 
-function &getDataEncodeRef() {
+function &getDataEncodeRef()
+{
 	static $ventrilo_udp_encdata_data = array(
 		0x82, 0x8b, 0x7f, 0x68, 0x90, 0xe0, 0x44, 0x09, 0x19, 0x3b, 0x8e, 0x5f, 0xc2, 0x82, 0x38, 0x23,
 		0x6d, 0xdb, 0x62, 0x49, 0x52, 0x6e, 0x21, 0xdf, 0x51, 0x6c, 0x76, 0x37, 0x86, 0x50, 0x7d, 0x48,
@@ -456,7 +445,8 @@ function &getDataEncodeRef() {
 	return $ventrilo_udp_encdata_data;
 }
 
-function &getCRCref() {
+function &getCRCref()
+{
 	static $ventrilo_crc_table = array(
 		0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
 		0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
@@ -495,8 +485,6 @@ function &getCRCref() {
 	return $ventrilo_crc_table;
 }
 
-
-
 /* decbin2: PHP's decbin() doesn't pad the binary string to a full 32 bits, unless
  *	it's a negative number. Since we need to mimic casting to smaller int types,
  *	I'll use this version over the built-in decbin().
@@ -510,7 +498,8 @@ function decbin2( $val ) { return str_pad( decbin( $val ), 32, "0", STR_PAD_LEFT
  *	bindec( decbin( -1000 )) != -1000		// not correct!
  *	bindec2( decbin2( -1000 )) == -1000		// correct!
  */
-function bindec2( $binstr ) {
+function bindec2( $binstr )
+{
 	$val = bindec( $binstr );
 
 	// it's not two's. Return the built-in bindec() value.
@@ -525,7 +514,8 @@ function bindec2( $binstr ) {
  *	Internally, PHP integers seem to always be 32 bit. (my test systems are both 64-bit
  *	- Athlon x64 and PowerPC G5 - and PHP still uses 32 bit ints.)
  */
-function smallCast( $val, $bits ) {
+function smallCast( $val, $bits )
+{
 	$binstr = decbin2( $val );
 	return bindec2( substr ( $binstr, 32 - $bits ));
 }
@@ -535,7 +525,8 @@ function smallCast( $val, $bits ) {
  *	I'm using PHP4. If I were using PHP5, I'd use the 'private' keyword over
  *	var and use the accessor functions.
  */
-class Vent {
+class Vent
+{
 	var $clock;			// u_short of the epoch time for the last request.
 	var $timeout;			// timeout for socket read in *microseconds* ( 1,000,000 microsec = 1 sec )
 	var $packets = array();	// hold all the decoded response packets, in correct order
@@ -552,7 +543,8 @@ class Vent {
 	*	Note: The password field is no longer required for 2.3 or higher servers. Even if a server
 	*	  is password protected, it will return status info.
 	*/
-	function makeRequest( $cmd, $ip, $port, $pass = "" ) {
+	function makeRequest( $cmd, $ip, $port, $pass = "" )
+	{
 		$this->clock = smallCast( time(), 16 );		// reset the clock for each request
 		$this->packets = array();					// start fresh
 		$this->response = '';
@@ -631,7 +623,8 @@ class Vent {
 
 	/* getCRC: find the CRC for a data argument.
 	*/
-	function getCRC( &$data ) {
+	function getCRC( &$data )
+	{
 		$crc = 0;
 		$dtoks = unpack( "c*", $data );		// Note: unpack starts output array index at 1, NOT 0.
 		$table = getCRCref();			// my CRC table reference
@@ -646,7 +639,8 @@ class Vent {
 
   /* constructor: (need to change method name for PHP5)
    */
-	function Vent() {
+	function __construct()
+	{
 		$this->timeout = 500000;		// default to 0.5 second timeout
 	}
 
@@ -657,7 +651,8 @@ class Vent {
 /* VentPacket: class to mimic the ventrilo_udp_head struct in the source,
  *	but with more logic moved inside.
  */
-class VentPacket {
+class VentPacket
+{
 	var $rawdata;		// hold raw, unencoded data portion of packet
 	var $data;		// hold encoded data
 
@@ -680,12 +675,12 @@ class VentPacket {
 	var $datakey;		// key used to encode the data part
 	var $crc;			// checksum
 
-
 	/* mapHeader: Easy way to keep the correct order. We can use the array for loops when byte
 	 *	order is important, and still access each element by name. Using a straight hash would
 	 *	have lost the ordering.
 	 */
-	function mapHeader() {
+	function mapHeader()
+	{
 		$this->head_items = array( & $this->headkey, 	& $this->zero,	& $this->cmd,	& $this->id,
 			& $this->totlen, 	& $this->len,	& $this->totpck,	& $this->pck,
 			& $this->datakey,	& $this->crc );
@@ -694,16 +689,15 @@ class VentPacket {
 }
 /* end of VentPacket class */
 
-
-
 /* VentRequestPacket: For outgoing requests.
  */
-class VentRequestPacket extends VentPacket {
-
+class VentRequestPacket extends VentPacket
+{
 	/* createKeys: keys are used to encode header and data parts. a1 and a2 are the two cyphers
 	 *	derived from the full key.
 	 */
-	function createKeys( &$key, &$a1, &$a2, $is_head = false ) {
+	function createKeys( &$key, &$a1, &$a2, $is_head = false )
+	{
 		$rndupk = unpack( "vx", pack( "S", mt_rand( 1, 65536 )));	// need this in little endian
 		$rnd = $rndupk['x'];
 
@@ -724,7 +718,8 @@ class VentRequestPacket extends VentPacket {
 	 *		make sure all the header info is here, and we've got encoded data of
 	 *		the correct length...
 	 */
-	function encodeHeader() {
+	function encodeHeader()
+	{
 		$this->createKeys( $key, $a1, $a2, true );
 		$table = getHeadEncodeRef();
 
@@ -757,7 +752,8 @@ class VentRequestPacket extends VentPacket {
 	/* encodeData: The data has to be encoded first because the datakey is part of the
 	 *		header, and it needs to encoded along with the rest of the header.
 	 */
-	function encodeData() {
+	function encodeData()
+	{
 		$this->createKeys( $key, $a1, $a2 );
 
 		$chars = unpack( "c*", $this->rawdata );		// 1 indexed array
@@ -777,7 +773,8 @@ class VentRequestPacket extends VentPacket {
 
 	/* Constructor (Need to change to __Constructor() for PHP5?)
 	 */
-	function VentRequestPacket( $cmd, $id, $pass ) {
+	function __construct( $cmd, $id, $pass )
+	{
 		$this->mapHeader();							// set up the references
 		$this->rawdata = pack( "a16", $pass );			// the only thing in the data part.
 
@@ -799,12 +796,13 @@ class VentRequestPacket extends VentPacket {
 
 /* VentResponsePacket: For incoming data.
  */
-class VentResponsePacket extends VentPacket {
-
+class VentResponsePacket extends VentPacket
+{
 	/* decodeHeader: run through the header portion of the packet, get the key, decode,
 	 *	and perform some sanity checks.
 	 */
-	function decodeHeader() {
+	function decodeHeader()
+	{
 		$table = getHeadEncodeRef();
 
 		$key_array = unpack( "n1", $this->header );			// unpack the key as a short
@@ -852,11 +850,11 @@ class VentResponsePacket extends VentPacket {
 		return true;
 	}
 
-
 	/* decodeData: use the datakey to find the cyphers and decode the data portion of the
 		packet. Straightforward.
 	*/
-	function decodeData() {
+	function decodeData()
+	{
 		$table = getDataEncodeRef();
 
 		$a1 = smallCast( $this->datakey, 8 );
@@ -878,10 +876,10 @@ class VentResponsePacket extends VentPacket {
 		return true;
 	}
 
-
 	/* constructor: change for PHP5.
 	*/
-	function VentResponsePacket( $packet ) {
+	function __construct( $packet )
+	{
 		$plen = strlen( $packet );
 
 		if (( $plen > VENT_MAXPACKETSIZE ) || ( $plen < VENT_HEADSIZE )) {
