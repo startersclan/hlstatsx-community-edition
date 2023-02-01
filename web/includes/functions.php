@@ -114,14 +114,15 @@ function valid_request($str, $numeric = false)
  * @param integer $timestamp
  * @return string Formatted Timestamp
  */
-function timestamp_to_str($timestamp)
+function timestamp_to_str($seconds)
 {
-	if ($timestamp != '')
-	{
-		return sprintf('%dd&nbsp;%02d:%02d:%02dh', $timestamp / 86400, $timestamp / 3600 % 24, $timestamp /
-			60 % 60, $timestamp % 60);
+	if ($seconds == '') {
+		return '-';
 	}
-	return '-';
+
+	$dtF = new \DateTime('@0');
+	$dtT = new \DateTime("@$seconds");
+	return $dtF->diff($dtT)->format('%ad&nbsp;%H:%I:%Sh');
 }
 
 /**
