@@ -69,7 +69,7 @@ class Auth
 
 	var $userdata = array();
 
-	function Auth()
+	function __construct()
 	{
 		//@session_start();
 
@@ -80,8 +80,9 @@ class Auth
 			$this->savepass = valid_request($_POST['authsavepass'], 0);
 			$this->sessionStart = 0;
 
-	
+
 			# clear POST vars so as not to confuse the receiving page
+			unset($_POST);
 			$_POST = array();
 
 			$this->session = false;
@@ -241,7 +242,6 @@ class Auth
 	}
 }
 
-
 class AdminTask
 {
 	var $title = '';
@@ -249,7 +249,7 @@ class AdminTask
 	var $type = '';
 	var $description = '';
 
-	function AdminTask($title, $acclevel, $type = 'general', $description = '', $group = '')
+	function __construct($title, $acclevel, $type = 'general', $description = '', $group = '')
 	{
 		$this->title = $title;
 		$this->acclevel = $acclevel;
@@ -278,7 +278,7 @@ class EditList
 	var $helpKey;
 	var $helpDIV;
 
-	function EditList($keycol, $table, $icon, $showid = true, $drawDetailsLink = false, $DetailsLink = '', $deleteCallback = null)
+	function __construct($keycol, $table, $icon, $showid = true, $drawDetailsLink = false, $DetailsLink = '', $deleteCallback = null)
 	{
 		$this->keycol = $keycol;
 		$this->table = $table;
@@ -320,7 +320,6 @@ class EditList
 			$returnstr .= "document.getElementById('" . $this->helpDIV . "').style.visibility='hidden';\n";
 			$returnstr .= "}\n";
 			$returnstr .= "</script>\n";
-
 
 			$returnstr .= '<div class="helpwindow" ID="' . $this->helpDIV . '">No help text available</div>';
 
@@ -624,7 +623,6 @@ class EditList
 <?php
 	}
 
-
 	function drawfields($rowdata = array(), $new = false, $stripslashes = false)
 	{
 		global $g_options, $db;
@@ -823,7 +821,7 @@ class EditListColumn
 	var $datasource;
 	var $maxlength;
 
-	function EditListColumn($name, $title, $width = 20, $required = false, $type = 'text', $datasource = '', $maxlength = 0)
+	function __construct($name, $title, $width = 20, $required = false, $type = 'text', $datasource = '', $maxlength = 0)
 	{
 		$this->name = $name;
 		$this->title = $title;
@@ -835,7 +833,6 @@ class EditListColumn
 	}
 }
 
-
 class PropertyPage
 {
 	var $table;
@@ -843,7 +840,7 @@ class PropertyPage
 	var $keyval;
 	var $propertygroups = array();
 
-	function PropertyPage($table, $keycol, $keyval, $groups)
+	function __construct($table, $keycol, $keyval, $groups)
 	{
 		$this->table = $table;
 		$this->keycol = $keycol;
@@ -899,7 +896,7 @@ class PropertyPage_Group
 	var $title = '';
 	var $properties = array();
 
-	function PropertyPage_Group($title, $properties)
+	function __construct($title, $properties)
 	{
 		$this->title = $title;
 		$this->properties = $properties;
@@ -934,7 +931,7 @@ class PropertyPage_Property
 	var $title;
 	var $type;
 
-	function PropertyPage_Property($name, $title, $type, $datasource = '')
+	function __construct($name, $title, $type, $datasource = '')
 	{
 		$this->name = $name;
 		$this->title = $title;
