@@ -44,20 +44,26 @@ For support and installation notes visit http://www.hlxcommunity.com
 		var $game;
 		var $uniqueid_string = 'Unique ID';
 		var $uniqueid_string_plural = 'Unique IDs';
-		function Search ($query, $type, $game)
+
+		function __construct($query, $type, $game)
 		{
+			global $g_options;
+
 			$this->query = trim($query);
 			$this->type = $type;
 			$this->game = $game;
+
 			if ($g_options['Mode'] == 'LAN')
 			{
 				$this->uniqueid_string = 'IP Address';
 				$this->uniqueid_string_plural = 'IP Addresses';
 			}
 		}
-		function drawForm ($getvars=array(), $searchtypes=-1)
+
+		function drawForm ($getvars = array(), $searchtypes = -1)
 		{
 			global $g_options, $db;
+
 			if (!is_array($searchtypes))
 			{
 				$searchtypes = array(
