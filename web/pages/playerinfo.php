@@ -35,15 +35,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-
 	if ( !defined('IN_HLSTATS') )
 	{
 		die('Do not access this file directly.');
 	}
-// Player Details
-	$player = valid_request(intval($_GET['player']), 1);
-	$uniqueid = valid_request(strval($_GET['uniqueid']), 0);
-	$game = valid_request(strval($_GET['game']), 0);
+
+	// Player Details
+	$player = valid_request(intval($_GET['player'] ?? ''), true);
+	$uniqueid = valid_request(strval($_GET['uniqueid'] ?? ''), false);
+	$game = valid_request(strval($_GET['game'] ?? ''), false);
+
 	if (!$player && $uniqueid)
 	{
 		if (!$game)
@@ -51,6 +52,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			header("Location: " . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid");
 			exit;
 		}
+
 		$uniqueid = preg_replace('/^STEAM_\d+?\:/i','',$uniqueid);
 		$db->query
 		("
@@ -80,6 +82,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	{
 		error("No player ID specified.");
 	}
+
 	$db->query
 	("
 		SELECT
@@ -207,23 +210,29 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Events_Teamkills.killerId = '$player'
 	");
+
 	list($realteamkills) = $db->fetch_row();
-	if(!isset($_GET['killLimit']))
+
+	if (!isset($_GET['killLimit']))
 		$killLimit = 5;
 	else 
-		$killLimit = valid_request($_GET['killLimit'], 1);
-	if ( $_GET['type'] == 'ajax' )
+		$killLimit = valid_request($_GET['killLimit'], true);
+
+	if (isset($_GET['type']) && $_GET['type'] == 'ajax')
 	{
 		$tabs = explode('_', preg_replace('[^a-z]', '', $_GET['tab']));
-		foreach ( $tabs as $tab )
+
+		foreach ($tabs as $tab)
 		{
-			if ( file_exists(PAGE_PATH . "/playerinfo_$tab.php") )
+			if (file_exists(PAGE_PATH . "/playerinfo_$tab.php"))
 			{
 				@include(PAGE_PATH . "/playerinfo_$tab.php");
 			}
 		}
+
 		exit;
 	}
+
 	pageHeader
 	(
 		array ($gamename, 'Player Details', $pl_name),
