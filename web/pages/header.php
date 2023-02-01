@@ -50,7 +50,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->query("UPDATE hlstats_Options SET value=value+1 WHERE keyname='counter_hits';"); 
   
 	// visit counter
-	if ($_COOKIE['ELstatsNEO_Visit'] == 0) {
+	if (isset($_COOKIE['ELstatsNEO_Visit']) && $_COOKIE['ELstatsNEO_Visit'] == 0) {
 		// kein cookie gefunden, also visitcounter erhöhen und cookie setzen
 		$db->query("UPDATE hlstats_Options SET value=value+1 WHERE keyname='counter_visits';");
 		@setcookie('ELstatsNEO_Visit', '1', time() + ($g_options['counter_visit_timeout'] * 60), '/');   
