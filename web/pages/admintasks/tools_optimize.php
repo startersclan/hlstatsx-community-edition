@@ -49,15 +49,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 <?php
 		flush();
-		
+
+		$dbtables = null;
 		$result = $db->query("SHOW TABLES");
-		
+
 		while (list($table) = $db->fetch_row($result))
 		{
-			if ($dbtables) $dbtables .= ", ";
+			if ($dbtables) {
+				$dbtables .= ", ";
+			}
+
 			$dbtables .= $table;
 		}
-		
+
 		$tableOptimize = new Table(
 			array(
 				new TableColumn(
