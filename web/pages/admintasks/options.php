@@ -49,12 +49,12 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	{
 		var $title = '';
 		var $options = array();
-		
-		function OptionGroup ($title)
+
+		function __construct($title)
 		{
 			$this->title = $title;
 		}
-		
+
 		function draw ()
 		{
 			global $g_options;
@@ -124,23 +124,22 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 				}
 			}
 		}
-
 	}
-	
+
 	class Option
 	{
 		var $name;
 		var $title;
 		var $type;
-		
-		function Option ($name, $title, $type)
+
+		function __construct($name, $title, $type)
 		{
 			$this->name = $name;
 			$this->title = $title;
 			$this->type = $type;
 		}
-		
-		function draw ()
+
+		function draw()
 		{
 			global $g_options, $optiondata, $db;
 			
@@ -197,7 +196,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 <?php
 		}
 	}
-	
+
 	$optiongroups = array();
 
 	$optiongroups[0] = new OptionGroup('Site Settings');
