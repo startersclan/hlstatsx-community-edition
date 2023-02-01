@@ -135,8 +135,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 	//JS Check
 
-	if ( $_POST['js'] )
-	{
+	if (isset($_POST['js']) && $_POST['js']) {
 		$_SESSION['nojs'] = 0;
 	} else {
 		if ((!isset($_SESSION['nojs'])) or ($_SESSION['nojs'] == 1)) {
