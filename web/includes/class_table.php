@@ -506,6 +506,7 @@ class TableColumn
 	var $mmrank;
 	var $link;
 	var $sort = 'yes';
+	var $append;
 	var $type = 'text';
 	var $embedlink = 'no';
 	var $flag;
