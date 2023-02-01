@@ -86,10 +86,9 @@ class Table
 		$this->sort_default_order = $sort_default_order;
 		$this->ajax = ( $g_options['playerinfo_tabs'] ) ? $ajax : false;
 
-		$this->page = valid_request(intval($_GET[$var_page]), 1);
-		$this->sort = valid_request($_GET[$var_sort], 0);
-		$this->sortorder = valid_request($_GET[$var_sortorder], 0);
-
+		$this->page = valid_request(intval($_GET[$var_page] ?? ''), true);
+		$this->sort = valid_request($_GET[$var_sort] ?? '', false);
+		$this->sortorder = valid_request($_GET[$var_sortorder] ?? '', false);
 
 		if ($this->page < 1)
 		{
