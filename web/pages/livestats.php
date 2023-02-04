@@ -202,8 +202,9 @@ function printserverstats($server_id)
 									shots, 
 									hits, 
 									connected, 
-									skill_change, 
-									cli_flag
+									skill_change,
+									cli_country, 
+									cli_flag 
 								FROM 
 									hlstats_Livestats 
 								WHERE 
