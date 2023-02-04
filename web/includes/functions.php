@@ -92,20 +92,22 @@ function valid_request($str, $numeric = false)
 	$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`�':;߲�#+~_\-|<>\/\\\\@{}������ ]/");
 	$replace_pattern = array('');
 	$str = preg_replace($search_pattern, $replace_pattern, $str);
-	if ( $numeric == false )
-	{
-		if ( get_magic_quotes_gpc() )
+
+	if (!$numeric) {
+		// Deprecated, throws an warning in php 7.4 and above
+		/*if ( get_magic_quotes_gpc() )
 			return $str = htmlspecialchars(stripslashes($str), ENT_QUOTES);
 		else
-			return $str = htmlspecialchars($str, ENT_QUOTES);
+			return $str = htmlspecialchars($str, ENT_QUOTES);*/
+
+		return htmlspecialchars($str, ENT_QUOTES);
 	}
-	else
-	{
-		if ( is_numeric($str) )
-			return intval($str);
-		else
-			return -1;
+
+	if (is_numeric($str)) {
+		return intval($str);
 	}
+
+	return -1;
 }
 
 /**
@@ -466,7 +468,9 @@ function getImage($filename)
 
 function mystripslashes($text)
 {
-	return get_magic_quotes_gpc() ? stripslashes($text) : $text;
+	// Deprecated, throws an warning in php 7.4 and above
+	// return get_magic_quotes_gpc() ? stripslashes($text) : $text;
+	return $text;
 }
 
 function getRealGame($game)
