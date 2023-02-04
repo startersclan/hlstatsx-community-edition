@@ -97,7 +97,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			'Player Details'=>$g_options['scripturl'] . "?mode=playerinfo&player=$player",
 			'Chat History'=>''
 		),
-		$playername
+		$playername = ""
 	);
 	flush();
 	$table = new Table
