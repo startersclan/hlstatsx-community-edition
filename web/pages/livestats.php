@@ -444,9 +444,9 @@ function printserverstats($server_id)
 				if (count($teamdata[$curteam]) > 0)
 				{
 					$hpk = sprintf('%.2f', 0);
-					if ($teama_kills > 0)
+					if ($teamdata[$curteam]['teamkills'] > 0)
 					{
-						$hpk = sprintf('%.2f', $teamdata[$curteam]['headshots']/$teamdata[$curteam]['kills']);
+						$hpk = sprintf('%.2f', $teamdata[$curteam]['teamheadshots']/$teamdata[$curteam]['teamkills']);
 					}
 					echo $hpk;
 				}
@@ -455,11 +455,13 @@ function printserverstats($server_id)
 					echo '&nbsp;';
 				}
 ?>		</td>
-		<td style="<?php echo $bordercolor ?>" class="fSmall"><?php
+		<td style="<?php echo $bordercolor ?>" class="fSmall">
+            <?php
 				if (count($teamdata[$curteam]) > 0)
 				{
 					$acc = sprintf('%.0f', 0);
-					if ($teama_shots > 0)
+
+					if ($teamdata[$curteam]['teamshots'] > 0)
 					{
 						$acc = sprintf('%.0f', ($teamdata[$curteam]['teamhits']/$teamdata[$curteam]['teamshots'])*100);
 					}
@@ -469,7 +471,8 @@ function printserverstats($server_id)
 				{
 					echo '&nbsp;';
 				}
-                        ?></td>
+            ?>
+        </td>
 		<td style="<?php echo $bordercolor ?>" class="fSmall"><?php
 				if (count($teamdata[$curteam]) > 0)
 				{
