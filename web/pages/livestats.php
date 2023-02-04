@@ -218,14 +218,17 @@ function printserverstats($server_id)
 			}
 			$teamno++;
 		}
+
 		$curteam = 0;
 		while (isset($teamdata[$curteam]))
 		{
-			$j=0;
-			$thisteam = $teamdata[$curteam];
+			$j = 0;
+
+            $thisteam = $teamdata[$curteam];
 			$teamcolor = 'background:'.$thisteam['playerlist_bgcolor'].';color:'.$thisteam['playerlist_color'];
 			$bordercolor = 'background:'.$$thisteam['playerlist_bgcolor'].';color:'.$thisteam['playerlist_color'].';border-top:1px '.$thisteam['playerlist_color'].' solid';
-			$team_display_name  = htmlspecialchars($thisteam['name']);
+            $team_display_name = empty($thisteam['name']) ? "Unknown team" : htmlspecialchars($thisteam['name']);
+
 			while (isset($playerdata[$curteam][$j]))
 			{
 				$thisplayer = $playerdata[$curteam][$j];
