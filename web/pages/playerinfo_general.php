@@ -748,11 +748,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 		ORDER BY
 			hlstats_Ranks.minKills
 	");
-	for ($i=1;$i<($db->num_rows());$i++)
-	{
+
+    $rankHistory = "";
+    $db_num_rows = $db->num_rows();
+
+	for ($i = 1; $i < $db_num_rows; $i++) {
 		$result = $db->fetch_array();
-		$histimage = getImage('/ranks/'.$result['image'].'_small');
-		$rankHistory .= '<img src="'.$histimage['url'].'" title="'.$result['rankName'].'" alt="'.$result['rankName'].'" /> ';
+        
+		$histimage = getImage('/ranks/' . $result['image'] . '_small');
+		$rankHistory .= '<img src="' . $histimage['url'] . '" title="' . $result['rankName'] . '" alt="' . $result['rankName'] . '" /> ';
 	} 
 ?>
 
