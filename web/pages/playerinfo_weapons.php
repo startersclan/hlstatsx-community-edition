@@ -35,15 +35,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-
-	if ( !defined('IN_HLSTATS') )
-	{
+	if ( !defined('IN_HLSTATS') ) {
 		die('Do not access this file directly.');
 	}
+
 	flush();
+
 	$realgame = getRealGame($game);
-	$result = $db->query
-	("
+	$result = $db->query("
 		SELECT
 			hlstats_Weapons.code,
 			hlstats_Weapons.name
@@ -52,11 +51,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Weapons.game = '$game'
 	");
-	while ($rowdata = $db->fetch_row($result))
-	{
+
+	while ($rowdata = $db->fetch_row($result)) {
 		$code = $rowdata[0];
 		$fname[$code] = htmlspecialchars($rowdata[1]);
 	}
+
 	$tblWeapons = new Table
 	(
 		array
@@ -129,8 +129,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'desc',
 		true
 	);
-	$result = $db->query
-	("
+
+	$result = $db->query("
 		SELECT
 			hlstats_Events_Frags.weapon,
 			IFNULL(hlstats_Weapons.modifier, 1.00) AS modifier,
@@ -158,9 +158,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$tblWeapons->sort $tblWeapons->sortorder,
 			$tblWeapons->sort2 $tblWeapons->sortorder
 	");
+
 	$numitems = $db->num_rows($result);
-	if ($numitems > 0)
-	{
+	if ($numitems > 0) {
 		printSectionTitle('Weapon Usage *');
 		$tblWeapons->draw($result, $numitems, 95); ?>
 		<br /><br />
@@ -171,6 +171,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 <!-- Begin of StatsMe Addon 1.0 by JustinHoMi@aol.com -->
 <?php
 	flush();
+
 	$tblWeaponstats = new Table
 	(
 		array
@@ -248,6 +249,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'desc',
 		true
 	);
+
 	$result = $db->query("
 		SELECT
 			hlstats_Events_Statsme.weapon AS smweapon,
@@ -273,11 +275,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 			$tblWeaponstats->sort $tblWeaponstats->sortorder,
 			$tblWeaponstats->sort2 $tblWeaponstats->sortorder
 	");
+
 	$numitems = $db->num_rows($result);
-	if ($numitems > 0)
-	{
+	if ($numitems > 0) {
 		printSectionTitle('Weapon Statistics *');
-		$tblWeaponstats->draw($result, $dnumitems, 95); ?>
+		$tblWeaponstats->draw($result, $numitems, 95); ?>
 		<br /><br />
 <!-- End of StatsMe Addon 1.0 by JustinHoMi@aol.com -->
 
