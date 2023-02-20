@@ -336,6 +336,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 							");
 
 						    $fav_weapon = '';
+						    $weap_name = '';
 
 							while ($rowdata = $db->fetch_row($result)) {
 								$fav_weapon = $rowdata[0];
