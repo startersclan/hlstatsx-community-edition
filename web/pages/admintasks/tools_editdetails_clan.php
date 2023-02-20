@@ -40,7 +40,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 	$id=-1;
 	if ((isset($_GET['id'])) && (is_numeric($_GET['id'])))
-		$id = valid_request($_GET['id'], 1);
+		$id = valid_request($_GET['id'], true);
 	
 	$result = $db->query("SELECT `value` FROM hlstats_Options_Choices WHERE `keyname` = 'google_map_region' ORDER BY `value`");
     while ($rowdata = $db->fetch_row($result))

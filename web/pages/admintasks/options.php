@@ -83,7 +83,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 					$replace_pattern = array('', '', '');
 					$optval = preg_replace($search_pattern, $replace_pattern, $optval);
 				} else {
-					$optval = valid_request($_POST[$opt->name], 0);
+					$optval = valid_request($_POST[$opt->name], false);
  	 			}
 				
 				$result = $db->query("

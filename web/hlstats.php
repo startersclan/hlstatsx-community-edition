@@ -144,7 +144,7 @@ if (!isset($g_options['scripturl'])) {
 //// Main
 ////
 
-$game = valid_request(isset($_GET['game'])?$_GET['game']:'', 0);
+$game = valid_request(isset($_GET['game'])?$_GET['game']:'', false);
 $realgame = $_SESSION['realgame'] ?? null;
 
 if (!$game)

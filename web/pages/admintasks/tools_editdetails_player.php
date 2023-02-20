@@ -48,7 +48,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$id=-1;
 	if ((isset($_GET['id'])) && (is_numeric($_GET['id'])))
 	{
-		$id = valid_request($_GET['id'], 1);
+		$id = valid_request($_GET['id'], true);
 	}
 ?>
 

@@ -111,74 +111,74 @@ $g_options['scriptbase'] = str_replace('/status.php', '', $g_options['scripturl'
 
 $game = 'css';  
 if ((isset($_GET['game'])) && (is_string($_GET['game'])))
-	$game = valid_request($_GET['game'], 0);
+	$game = valid_request($_GET['game'], false);
 $game_escaped = $db->escape($game);
 $server_id = '1';
 if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-	$server_id = valid_request($_GET['server_id'], 1);
+	$server_id = valid_request($_GET['server_id'], true);
 $width = '218';
 if ((isset($_GET['width'])) && (is_numeric($_GET['width'])))
-	$width = valid_request($_GET['width'], 1);
+	$width = valid_request($_GET['width'], true);
 $body_color = 'ECF8FF';
 if ((isset($_GET['body_color'])) && (is_string($_GET['body_color'])))
-	$body_color = valid_request($_GET['body_color'], 0);
+	$body_color = valid_request($_GET['body_color'], false);
 $background_color = 'ABCCD6';
 if (isset($_GET['bg_color']))
-	$background_color = valid_request($_GET['bg_color'], 0);
+	$background_color = valid_request($_GET['bg_color'], false);
 $color = '000000';
 if ((isset($_GET['color'])) && (is_string($_GET['color'])))
-	$color = valid_request($_GET['color'], 0);
+	$color = valid_request($_GET['color'], false);
 $border_width = '1';
 if (isset($_GET['border_width']))
-	$border_width = valid_request($_GET['border_width'], 1);
+	$border_width = valid_request($_GET['border_width'], true);
 $border_color = 'ABCCD6';
 if (isset($_GET['border_color']))
-	$border_color = valid_request($_GET['border_color'], 0);
+	$border_color = valid_request($_GET['border_color'], false);
 $show_logo = '1';
 if ((isset($_GET['show_logo'])) && (is_string($_GET['show_logo'])))
-	$show_logo = valid_request($_GET['show_logo'], 1);
+	$show_logo = valid_request($_GET['show_logo'], true);
 $small_fonts = '1';
 if ((isset($_GET['small_fonts'])) && (is_numeric($_GET['small_fonts'])))
-	$small_fonts = valid_request($_GET['small_fonts'], 1);
+	$small_fonts = valid_request($_GET['small_fonts'], true);
 $server_name = '1';
 if ((isset($_GET['server_name'])) && (is_string($_GET['server_name'])))
-	$server_name = valid_request($_GET['server_name'], 1);
+	$server_name = valid_request($_GET['server_name'], true);
 $server_url = '1';
 if ((isset($_GET['server_url'])) && (is_string($_GET['server_url'])))
-	$server_url = valid_request($_GET['server_url'], 1);
+	$server_url = valid_request($_GET['server_url'], true);
 $map_image = '1';
 if ((isset($_GET['map_image'])) && (is_numeric($_GET['map_image'])))
-	$map_image = valid_request($_GET['map_image'], 1);
+	$map_image = valid_request($_GET['map_image'], true);
 $show_summary = '1';
 if ((isset($_GET['show_summary'])) && (is_numeric($_GET['show_summary'])))
-	$show_summary = valid_request($_GET['show_summary'], 1);
+	$show_summary = valid_request($_GET['show_summary'], true);
 $map_name = '1';
 if ((isset($_GET['map_name'])) && (is_numeric($_GET['map_name'])))
-	$map_name = valid_request($_GET['map_name'], 1);
+	$map_name = valid_request($_GET['map_name'], true);
 $show_flags = '1';  
 if ((isset($_GET['show_flags'])) && (is_numeric($_GET['show_flags'])))
-	$show_flags = valid_request($_GET['show_flags'], 1);
+	$show_flags = valid_request($_GET['show_flags'], true);
 $show_players = '1';
 if ((isset($_GET['show_players'])) && (is_numeric($_GET['show_players'])))
-	$show_players = valid_request($_GET['show_players'], 1);
+	$show_players = valid_request($_GET['show_players'], true);
 $show_teams = '1';
 if ((isset($_GET['show_teams'])) && (is_numeric($_GET['show_teams'])))
-	$show_teams = valid_request($_GET['show_teams'], 1);
+	$show_teams = valid_request($_GET['show_teams'], true);
 $show_team_wins = '1';
 if ((isset($_GET['show_team_wins'])) && (is_numeric($_GET['show_team_wins'])))
-	$show_team_wins = valid_request($_GET['show_team_wins'], 1);
+	$show_team_wins = valid_request($_GET['show_team_wins'], true);
 $show_map_wins = '1';
 if ((isset($_GET['show_map_wins'])) && (is_numeric($_GET['show_map_wins'])))
-	$show_map_wins = valid_request($_GET['show_map_wins'], 1);
+	$show_map_wins = valid_request($_GET['show_map_wins'], true);
 $top_players = '10';
 if ((isset($_GET['top_players'])) && (is_numeric($_GET['top_players'])))
-	$top_players = valid_request($_GET['top_players'], 1);
+	$top_players = valid_request($_GET['top_players'], true);
 $players_images = '1';
 if ((isset($_GET['players_images'])) && (is_numeric($_GET['players_images'])))
-	$players_images = valid_request($_GET['players_images'], 1);
+	$players_images = valid_request($_GET['players_images'], true);
 $show_password = '';
 if ((isset($_GET['show_password'])) && (is_string($_GET['show_password'])))
-	$show_password = valid_request($_GET['show_password'], 1);
+	$show_password = valid_request($_GET['show_password'], true);
 
 //// Entries
 $result = $db->query("

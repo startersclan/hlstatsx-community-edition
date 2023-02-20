@@ -189,7 +189,7 @@ function makeQueryString($key, $value, $notkeys = array())
 	$querystring = '';
 	foreach ($_GET as $k => $v)
 	{
-		$v = valid_request($v, 0);
+		$v = valid_request($v, false);
 		if ($k && $k != $key && !in_array($k, $notkeys))
 		{
 			$querystring .= urlencode($k) . '=' . rawurlencode($v) . '&amp;';

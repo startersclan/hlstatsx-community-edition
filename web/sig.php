@@ -130,11 +130,11 @@ function f_num($number) {
 
 	$player_id = 0;  
 	if (isset($_GET['player_id'])) {
-		$player_id = valid_request($_GET['player_id'], 1);
+		$player_id = valid_request($_GET['player_id'], true);
 	} elseif (isset($_GET['steam_id']) && isset($_GET['game'])) {
-		$steam_id = valid_request($_GET['steam_id'], 0);
+		$steam_id = valid_request($_GET['steam_id'], false);
 		$steam_id = preg_replace('/^STEAM_\d+?\:/i','',$steam_id);
-		$game = valid_request($_GET['game'], 0);
+		$game = valid_request($_GET['game'], false);
 
 		$steam_id_escaped=$db->escape($steam_id);
 		$game_escaped=$db->escape($game);
@@ -168,9 +168,7 @@ function f_num($number) {
 	
 	$show_flags = $g_options['countrydata'];
 	if ((isset($_GET['show_flags'])) && (is_numeric($_GET['show_flags'])))
-		$show_flags = valid_request($_GET['show_flags'], 1);
-
-
+		$show_flags = valid_request($_GET['show_flags'], true);
 
 	if (file_exists(IMAGE_PATH.'/progress/sig_'.$player_id.'.png')) {
 		$file_timestamp = @filemtime(IMAGE_PATH.'/progress/sig_'.$player_id.'.png');
@@ -194,11 +192,11 @@ function f_num($number) {
 	////
 
 if ((isset($_GET['color'])) && (is_string($_GET['color'])))
-	$color = hex2rgb(valid_request($_GET['color'], 0));
+	$color = hex2rgb(valid_request($_GET['color'], false));
 if ((isset($_GET['caption_color'])) && (is_string($_GET['caption_color'])))
-	$caption_color = hex2rgb(valid_request($_GET['caption_color'], 0));
+	$caption_color = hex2rgb(valid_request($_GET['caption_color'], false));
 if ((isset($_GET['link_color'])) && (is_string($_GET['link_color'])))
-	$link_color = hex2rgb(valid_request($_GET['link_color'], 0));
+	$link_color = hex2rgb(valid_request($_GET['link_color'], false));
   
 if ($player_id > 0) {
 	$db->query("
@@ -282,7 +280,7 @@ if ($player_id > 0) {
 	
 	$background='random';
 	if ((isset($_GET['background'])) && ( (($_GET['background'] > 0) && ($_GET['background'] < 12)) || ($_GET['background']=='random')) )
-		$background = valid_request($_GET['background'], 0);
+		$background = valid_request($_GET['background'], false);
 
 	if ($background == 'random')
 		$background = rand(1,11);

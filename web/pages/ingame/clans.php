@@ -47,7 +47,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	
 	if (isset($_GET['minmembers']))
 	{
-		$minmembers = valid_request(intval($_GET['minmembers']), 1);
+		$minmembers = valid_request(intval($_GET['minmembers']), true);
 	}
 	else
 	{

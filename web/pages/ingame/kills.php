@@ -41,9 +41,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	// Player Details
 	
-	$player = valid_request(intval($_GET['player']), 1);
-	$uniqueid  = valid_request(strval($_GET['uniqueid']), 0);
-	$game = valid_request(strval($_GET['game']), 0);
+	$player = valid_request(intval($_GET['player']), true);
+	$uniqueid = valid_request(strval($_GET['uniqueid']), false);
+	$game = valid_request(strval($_GET['game']), false);
 	
 	if (!$player && $uniqueid)
 	{

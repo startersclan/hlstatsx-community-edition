@@ -6,7 +6,7 @@
   include (PAGE_PATH.'/voicecomm_serverlist.php');
   include (PAGE_PATH.'/teamspeak_query.php');
 
-  $tsId = valid_request($_GET['tsId'],1);
+  $tsId = valid_request($_GET['tsId'],true);
 
 
 function show($tpl, $array)

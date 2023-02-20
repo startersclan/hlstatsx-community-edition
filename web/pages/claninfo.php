@@ -43,7 +43,7 @@
 	
 	// Clan Details
 	
-	$clan = valid_request(intval($_GET["clan"]), 1)
+	$clan = valid_request(intval($_GET["clan"]), true)
 		or error("No clan ID specified.");
 
 	$db->query("

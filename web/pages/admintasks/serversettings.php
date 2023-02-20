@@ -54,10 +54,10 @@ function setdefaults($key)
 }
 	
 	if (isset($_GET['key'])) {
-		$key = valid_request(intval($_GET['key']),1);
+		$key = valid_request(intval($_GET['key']),true);
 	} else {
 		if (isset($_POST['key'])) {
-			$key = valid_request(intval($_POST['key']),1);
+			$key = valid_request(intval($_POST['key']),true);
 		} else {
 			$key = 0;
 		}
@@ -67,7 +67,7 @@ function setdefaults($key)
 		die('Server ID not set!');
 	
 	if (isset($_POST['sourceId'])) {
-		$sourceId = valid_request(intval($_POST['sourceId']),1);
+		$sourceId = valid_request(intval($_POST['sourceId']),true);
 	} else {
 		$sourceId = 0;
 	}

@@ -43,7 +43,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	// Action Details
 
 	
-	$rank = valid_request($_GET['rank'], 1)
+	$rank = valid_request($_GET['rank'], true)
 		or error('No rank ID specified.');
 	
 	$db->query("

@@ -107,7 +107,7 @@ if (!isset($g_options['scripturl']))
 
 if ( isset($_GET["game"]) )
 {
-	$game = valid_request($_GET["game"], 0);
+	$game = valid_request($_GET["game"], false);
 }
 
 $mode = isset($_GET["mode"])?$_GET["mode"]:"";

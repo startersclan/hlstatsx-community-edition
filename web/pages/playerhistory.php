@@ -41,7 +41,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		die('Do not access this file directly.');
 	}
 // Player History
-	$player = valid_request(intval($_GET['player']), 1)
+	$player = valid_request(intval($_GET['player']), true)
 		or error('No player ID specified.');
 	$db->query
 	("

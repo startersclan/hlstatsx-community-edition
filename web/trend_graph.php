@@ -59,11 +59,11 @@
 	
 	$bg_color = array('red' => 90, 'green' => 90, 'blue' => 90);
 	if ((isset($_GET['bgcolor'])) && (is_string($_GET['bgcolor'])))
-		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], 0));
+		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], false));
 
 	$color = array('red' => 213, 'green' => 217, 'blue' => 221);
 	if ((isset($_GET['color'])) && (is_string($_GET['color'])))
-		$color = hex2rgb(valid_request($_GET['color'], 0));
+		$color = hex2rgb(valid_request($_GET['color'], false));
 	
 	if (isset($_GET['player'])) $player = (int)$_GET['player'];
 	if (!$player) exit();

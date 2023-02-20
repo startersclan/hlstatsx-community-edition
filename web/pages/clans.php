@@ -55,7 +55,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->free_result();
 	if (isset($_GET['minmembers']))
 	{
-		$minmembers = valid_request(intval($_GET["minmembers"]),1);
+		$minmembers = valid_request(intval($_GET["minmembers"]),true);
 	}
 	else
 	{

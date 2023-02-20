@@ -64,15 +64,15 @@ For support and installation notes visit http://www.hlxcommunity.com
   
 	$players = 10;  
 	if ((isset($_GET['players'])) && (is_numeric($_GET['players'])))
-		$players = valid_request($_GET['players'], 1);
+		$players = valid_request($_GET['players'], true);
   
 	$clans = 3;  
 	if ((isset($_GET['clans'])) && (is_numeric($_GET['clans'])))
-		$clans = valid_request($_GET['clans'], 1);
+		$clans = valid_request($_GET['clans'], true;
   
 	$servers = 9001;  
 	if ((isset($_GET['servers'])) && (is_numeric($_GET['servers'])))
-		$servers = valid_request($_GET['servers'], 1);
+		$servers = valid_request($_GET['servers'], true);
 
 	//
 	// Top 10 Players

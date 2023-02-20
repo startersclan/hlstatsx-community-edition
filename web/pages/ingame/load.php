@@ -40,7 +40,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	$server_id = 1;
 	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-		$server_id = valid_request($_GET['server_id'], 1);
+		$server_id = valid_request($_GET['server_id'], true);
 
     $query= "
 			SELECT

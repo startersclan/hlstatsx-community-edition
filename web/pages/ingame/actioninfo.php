@@ -41,7 +41,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 
 	// Addon created by Rufus (rufus@nonstuff.de)
 	
-	$action = valid_request($_GET['action'], 0)
+	$action = valid_request($_GET['action'], true)
 		or error('No action ID specified.');
 	
 	$db->query("

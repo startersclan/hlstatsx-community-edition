@@ -39,7 +39,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	// Map Details
 	
-	$map = valid_request($_GET['map'], 0)
+	$map = valid_request($_GET['map'], false)
 		or error('No map specified.');
 	
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");

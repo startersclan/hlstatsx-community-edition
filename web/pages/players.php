@@ -55,7 +55,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->free_result();
 	if (isset($_GET['minkills']))
 	{
-		$minkills = valid_request($_GET['minkills'], 1);
+		$minkills = valid_request($_GET['minkills'], true);
 	}
 	else
 	{
@@ -68,7 +68,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	);
 	$rank_type = 0;
 	if (isset($_GET['rank_type']))
-		$rank_type = valid_request(strval($_GET['rank_type']), 0);
+		$rank_type = valid_request(strval($_GET['rank_type']), false);
 		
 // Autocomplete function below implemented by KingJ. Heavy modified to use HTML request instead of JSON.
 ?>
@@ -403,7 +403,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 				<?php					
 					foreach ($_GET as $k=>$v)
 					{
-						$v = valid_request($v, 0);
+						$v = valid_request($v, false);
 						if ($k != 'minkills')
 						{
 							echo "<input type=\"hidden\" name=\"" . htmlspecialchars($k) . "\" value=\"" . htmlspecialchars($v) . "\" />\n";

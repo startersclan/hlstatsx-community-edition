@@ -55,7 +55,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$db->free_result();
 	if (isset($_GET['minkills']))
 	{
-		$minkills = valid_request(intval($_GET['minkills']),1);
+		$minkills = valid_request(intval($_GET['minkills']),true);
 	}
 	else
 	{
@@ -201,7 +201,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					<?php
 						foreach ($_GET as $k=>$v)
 						{
-							$v = valid_request($v, 0); 
+							$v = valid_request($v, false);
 							if ($k != "minkills")
 							{
 								echo "<input type=\"hidden\" name=\"" . htmlspecialchars($k) . "\" value=\"" . htmlspecialchars($v) . "\" />\n";

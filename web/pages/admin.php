@@ -73,13 +73,12 @@ class Auth
 	{
 		//@session_start();
 
-		if (valid_request($_POST['authusername'], 0))
+		if (valid_request($_POST['authusername'], false))
 		{
-			$this->username = valid_request($_POST['authusername'], 0);
-			$this->password = valid_request($_POST['authpassword'], 0);
-			$this->savepass = valid_request($_POST['authsavepass'], 0);
+			$this->username = valid_request($_POST['authusername'], false);
+			$this->password = valid_request($_POST['authpassword'], false);
+			$this->savepass = valid_request($_POST['authsavepass'], false);
 			$this->sessionStart = 0;
-
 
 			# clear POST vars so as not to confuse the receiving page
 			unset($_POST);

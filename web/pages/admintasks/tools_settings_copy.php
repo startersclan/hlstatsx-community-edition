@@ -168,8 +168,8 @@ function scanCopyFiles($source,$dest) {
 		
 		echo '<ul><br />';
 		check_writable();
-		$game2 = valid_request($game2, 0);
-		$game2name = valid_request($game2name, 0);
+		$game2 = valid_request($game2, false);
+		$game2name = valid_request($game2name, false);
 		echo '<li>hlstats_Games ...';
 		$db->query("SELECT code FROM hlstats_Games WHERE code='$game2' LIMIT 1;");
 		if ($db->num_rows()!=0) {

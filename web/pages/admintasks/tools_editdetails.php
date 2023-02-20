@@ -107,8 +107,8 @@ For support and installation notes visit http://www.hlxcommunity.com
     $replace_pattern = array("", "", "");
     $sr_query = preg_replace($search_pattern, $replace_pattern, $sr_query);
 
-	$sr_type  = valid_request($_GET["st"], 0) or "player";
-	$sr_game  = valid_request($_GET["game"], 0);
+	$sr_type  = valid_request($_GET["st"], false) or "player";
+	$sr_game  = valid_request($_GET["game"], false);
 	
 	$search = new Search($sr_query, $sr_type, $sr_game);
 	

@@ -85,19 +85,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	$width = 500;
 	if ((isset($_GET['width'])) && (is_numeric($_GET['width'])))
-		$width = valid_request($_GET['width'], 1);
+		$width = valid_request($_GET['width'], true);
 	$server_id = 1;
 	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-		$server_id = valid_request($_GET['server_id'], 1);
+		$server_id = valid_request($_GET['server_id'], true);
 	$height = 125;
 	if ((isset($_GET['height'])) && (is_numeric($_GET['height'])))
-		$height = valid_request($_GET['height'], 1);
+		$height = valid_request($_GET['height'], true);
 	$player = 1;
 	if ((isset($_GET['player'])) && (is_numeric($_GET['player'])))
-		$player = valid_request($_GET['player'], 1);
+		$player = valid_request($_GET['player'], true);
 	$game = "unset";
 	if (isset($_GET['game']))
-		$game = valid_request($_GET['game'], 0);
+		$game = valid_request($_GET['game'], false);
 
 	$game_escaped=$db->escape($game);
 
@@ -107,7 +107,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	// 3 == masterserver load
 
 	if ((isset($_GET['type'])) && (is_numeric($_GET['type'])))
-		$bar_type = valid_request($_GET['type'], 1);
+		$bar_type = valid_request($_GET['type'], true);
 
 		
 	$selectedStyle = (isset($_COOKIE['style']) && $_COOKIE['style']) ? $_COOKIE['style'] : $g_options['style'];
@@ -123,17 +123,17 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	$bg_color = array('red' => 171, 'green' => 204, 'blue' => 214);
 	if ((isset($_GET['bgcolor'])) && (is_string($_GET['bgcolor'])))
-		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], 0));
+		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], false));
 
 	$color = array('red' => 255, 'green' => 255, 'blue' => 255);
 	if ((isset($_GET['color'])) && (is_string($_GET['color'])))
-		$color = hex2rgb(valid_request($_GET['color'], 0));
+		$color = hex2rgb(valid_request($_GET['color'], false));
 
 	$bg_id = $bg_color['red'] + $bg_color['green'] + $bg_color['blue'];
 
 	$server_load_type = 1;
 	if ((isset($_GET['range'])) && (is_numeric($_GET['range'])))
-		$server_load_type = valid_request($_GET['range'], 1);
+		$server_load_type = valid_request($_GET['range'], true);
 
 	switch ($server_load_type)
 	{

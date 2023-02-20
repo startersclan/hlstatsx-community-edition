@@ -44,7 +44,7 @@ if ( !defined('IN_HLSTATS') )
 
 	// Addon created by Rufus (rufus@nonstuff.de)
 	
-	$action =  valid_request($_GET['action'], 0)
+	$action =  valid_request($_GET['action'], false)
 		or error('No action ID specified.');
 
 	$action_escaped=$db->escape($action);

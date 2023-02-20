@@ -42,7 +42,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 	// Country Details
 	
-	$flag = valid_request($_GET['flag'],0)
+	$flag = valid_request($_GET['flag'], false)
 		or error('No country ID specified.');
 
 	$SQL = "

@@ -43,7 +43,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	// Roles Details
 	
-	$role = valid_request($_GET['role'], 0)
+	$role = valid_request($_GET['role'], false)
 		or error('No role ID specified.');
 	
 	$db->query("
