@@ -118,12 +118,23 @@ function valid_request($str, $numeric = false)
  */
 function timestamp_to_str($seconds)
 {
-	if ($seconds == '') {
-		return '-';
+    // We allow passing an empty parameter, for output in html
+	if (empty($seconds)) {
+		return '---';
 	}
+
+    // If something other than int or float is passed here, then return 'Undefined'
+	if (!is_numeric($seconds)) {
+		return "Undefined";
+	}
+
+    // DateTime class doesn't work with float type,
+    // doesn't matter we don't need microsecond precision :D
+	$seconds = round($seconds);
 
 	$dtF = new \DateTime('@0');
 	$dtT = new \DateTime("@$seconds");
+
 	return $dtF->diff($dtT)->format('%ad&nbsp;%H:%I:%Sh');
 }
 
