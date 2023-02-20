@@ -334,13 +334,18 @@ For support and installation notes visit http://www.hlxcommunity.com
 								LIMIT
 									1
 							");
-							while ($rowdata = $db->fetch_row($result))
-							{ 
+
+						    $fav_weapon = '';
+
+							while ($rowdata = $db->fetch_row($result)) {
 								$fav_weapon = $rowdata[0];
 								$weap_name = htmlspecialchars($rowdata[1]);
 							}
-							if ($fav_weapon == '')
+
+							if ($fav_weapon == '') {
 								$fav_weapon = 'Unknown';
+                            }
+
 							$image = getImage("/games/$game/weapons/$fav_weapon");
 						// Check if image exists
 							$weaponlink = "<a href=\"hlstats.php?mode=weaponinfo&amp;weapon=$fav_weapon&amp;game=$game\">";
@@ -754,7 +759,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	for ($i = 1; $i < $db_num_rows; $i++) {
 		$result = $db->fetch_array();
-        
+
 		$histimage = getImage('/ranks/' . $result['image'] . '_small');
 		$rankHistory .= '<img src="' . $histimage['url'] . '" title="' . $result['rankName'] . '" alt="' . $result['rankName'] . '" /> ';
 	} 
