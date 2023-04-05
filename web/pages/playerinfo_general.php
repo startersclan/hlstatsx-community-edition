@@ -910,8 +910,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Awards.name;
 	");
 
-	while ($r1=$db->fetch_array())
-	{
+	while ($r1 = $db->fetch_array()) {
 		unset($tmp_arr);
 		$tmp_arr = new StdClass;
 
@@ -919,14 +918,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$tmp_arr->code = $r1['code'];
 		$tmp_arr->ribbonName = $r1['name'];
 
-		if ($id == 0)
+		// Unused code, undefined variable $id
+		/*if ($id == 0)
 		{
 			$tmp_arr->playerName = $r1['lastname'];
 			$tmp_arr->flag = $r1['flag'];
 			$tmp_arr->playerId = $r1['g_winner_id'];
 			$tmp_arr->kills = $r1['g_winner_count'];
 			$tmp_arr->verb = $r1['verb'];
-		}
+		}*/
 
 		array_push($awards, $tmp_arr);
 	}
