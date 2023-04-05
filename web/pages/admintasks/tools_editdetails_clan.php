@@ -36,17 +36,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
-	$id=-1;
-	if ((isset($_GET['id'])) && (is_numeric($_GET['id'])))
+	if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
+
+    $id = -1;
+	if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 		$id = valid_request($_GET['id'], true);
-	
+	}
+
 	$result = $db->query("SELECT `value` FROM hlstats_Options_Choices WHERE `keyname` = 'google_map_region' ORDER BY `value`");
-    while ($rowdata = $db->fetch_row($result))
-    {
+    while ($rowdata = $db->fetch_row($result)) {
         $mapselect.=";".$rowdata[0]."/".ucwords(strtolower($rowdata[0]));
     }
+
 	$mapselect.=";";   
 ?>
 
@@ -65,15 +72,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 			new PropertyPage_Property("hidden", "1 = Hide from clan list", "text")
 		))
 	));
-	
-	
-	if (isset($_POST['name']))
-	{
+
+	if (isset($_POST['name'])) {
 		$proppage->update();
 		message("success", "Profile updated successfully.");
 	}
-	
-	
+
 	$result = $db->query("
 		SELECT
 			*
@@ -82,7 +86,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			clanId='$id'
 	");
-	if ($db->num_rows() < 1) die("No clan exists with ID #$id");
+
+	if ($db->num_rows() < 1) {
+        die("No clan exists with ID #$id");
+	}
 	
 	$data = $db->fetch_array($result);
 	

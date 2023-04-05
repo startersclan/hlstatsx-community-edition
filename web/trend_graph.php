@@ -46,27 +46,31 @@
 	require (INCLUDE_PATH . '/pChart/pChart.class');
 
 	$db_classname = 'DB_' . DB_TYPE;
-	if (class_exists($db_classname))
-	{
+	if (class_exists($db_classname)) {
 		$db = new $db_classname(DB_ADDR, DB_USER, DB_PASS, DB_NAME, DB_PCONNECT);
-	}
-	else
-	{
+	} else {
 		error('Database class does not exist.  Please check your config.php file for DB_TYPE');
 	}
 
 	$g_options = getOptions();
 	
 	$bg_color = array('red' => 90, 'green' => 90, 'blue' => 90);
-	if ((isset($_GET['bgcolor'])) && (is_string($_GET['bgcolor'])))
+	if (isset($_GET['bgcolor']) && is_string($_GET['bgcolor'])) {
 		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], false));
+	}
 
 	$color = array('red' => 213, 'green' => 217, 'blue' => 221);
-	if ((isset($_GET['color'])) && (is_string($_GET['color'])))
+	if (isset($_GET['color']) && is_string($_GET['color'])) {
 		$color = hex2rgb(valid_request($_GET['color'], false));
-	
-	if (isset($_GET['player'])) $player = (int)$_GET['player'];
-	if (!$player) exit();
+	}
+
+	if (isset($_GET['player'])) {
+		$player = (int)$_GET['player'];
+	}
+
+	if (!$player) {
+		exit();
+	}
 	
 	$res = $db->query("SELECT UNIX_TIMESTAMP(eventTime) AS ts, skill, skill_change FROM hlstats_Players_History WHERE playerId = '$player' ORDER BY eventTime DESC LIMIT 30");
 	$skill = array();

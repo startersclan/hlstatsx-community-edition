@@ -36,15 +36,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
-// Player Awards History 
-	$player = valid_request($_GET['player'], true)
-		or error("No player ID specified.");
-	$db->query
-	("
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+    // Player Awards History
+	$player = valid_request($_GET['player'], true) or error("No player ID specified.");
+
+	$db->query("
 		SELECT
 			hlstats_Players.lastName,
 			hlstats_Players.game
@@ -53,25 +52,25 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Players.playerId = $player
 	");
-	if ($db->num_rows() != 1)
-	{
+
+	if ($db->num_rows() != 1) {
 		error("No such player '$player'.");
 	}
+
 	$playerdata = $db->fetch_array();
 	$pl_name = $playerdata['lastName'];
-	if (strlen($pl_name) > 10)
-	{
+
+	if (strlen($pl_name) > 10) {
 		$pl_shortname = substr($pl_name, 0, 8) . "...";
-	}
-	else
-	{
+	} else {
 		$pl_shortname = $pl_name;
 	}
+
 	$pl_name = htmlspecialchars($pl_name, ENT_COMPAT);
 	$pl_shortname = htmlspecialchars($pl_shortname, ENT_COMPAT);
 	$game = $playerdata['game'];
-	$db->query
-	("
+
+    $db->query("
 		SELECT
 			hlstats_Games.name
 		FROM
@@ -79,14 +78,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() != 1)
-	{
+
+	if ($db->num_rows() != 1) {
 		$gamename = ucfirst($game);
-	}
-	else
-	{
+	} else {
 		list($gamename) = $db->fetch_row();
-	}	
+	}
+
 	pageHeader
 	(
 		array ($gamename, 'Awards History', $pl_name),
@@ -99,11 +97,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 		),
 		$playername = ""
 	);
+
 	flush();
 	$cnttext = 'Earned';
 	$lnktext = '&link='.urlencode("mode=playerawards&player=".$player."&amp;awardId=%k");
-	if (isset($_GET['awardId']))
-	{
+	if (isset($_GET['awardId'])) {
 		$awardId = valid_request($_GET['awardId'], true) or error("No clan ID specified."); 
 	}
 

@@ -36,15 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 	
 	// Roles Details
 	
-	$role = valid_request($_GET['role'], false)
-		or error('No role ID specified.');
+	$role = valid_request($_GET['role'], false) or error('No role ID specified.');
 	
 	$db->query("
 		SELECT
@@ -57,13 +55,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 			AND hlstats_Roles.game='$game'
 	");
 	
-	if ($db->num_rows() != 1)
-	{
+	if ($db->num_rows() != 1) {
 		$role_name = ucfirst($role);
 		$role_code = ucfirst($role);
-	}
-	else
-	{
+	} else {
 		$roledata = $db->fetch_array();
 		$db->free_result();
 		$role_name = $roledata['name'];
@@ -71,11 +66,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
+	if ($db->num_rows() != 1) {
 		error('Invalid or no game specified.');
-	else
+	} else {
 		list($gamename) = $db->fetch_row();
-		
+	}
+
 	pageHeader(
 		array($gamename, 'Roles Details', htmlspecialchars($role_name)),
 		array(
@@ -152,8 +148,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
     $wep_content = "<strong>".htmlspecialchars($role_name)."</strong>: ";
     $image = getImage("/games/$game/roles/$role");
-    if ($image)
-    {
+    if ($image) {
 		$wep_content .= '<img src="' . str_replace('#','%23',$image['url']) ."\" alt=\"".htmlspecialchars($role_name)."\" />";   
     }
 ?>

@@ -36,9 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	 
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 
 	$edlist = new EditList("ribbonTriggerId", "hlstats_Ribbons_Trigger", "game");
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
@@ -46,8 +50,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	$edlist->columns[] = new EditListColumn("awardCode", "Trigger Award", 0, false, "select", "hlstats_Awards.name/code/game='$gamecode'");
 	$edlist->columns[] = new EditListColumn("awardCount", "No. awards needed", 15, true, "text", "0", 64);
 	$edlist->columns[] = new EditListColumn("special", "Special logic", 15, false, "text", "0", 64);
-	
-	
+
 	if ($_POST)
 	{
 		if ($edlist->update())

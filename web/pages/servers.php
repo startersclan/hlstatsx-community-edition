@@ -51,17 +51,14 @@ For support and installation notes visit http://www.hlxcommunity.com
 <br />
 <?php
     $server_id = 1;
-    if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-    {
-      $server_id = valid_request($_GET['server_id'], true);
-    }
-    else
-    {
+
+    if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id']))) {
+        $server_id = valid_request($_GET['server_id'], true);
+    } else {
         error("Invalid server ID provided.", 0);
         pageFooter();
         die();
     }
-
 
     $query= "
             SELECT
@@ -73,42 +70,44 @@ For support and installation notes visit http://www.hlxcommunity.com
 			WHERE 
 				serverId='$server_id'
 	";
+
 	$result = $db->query($query);
 	list($total_kills, $total_headshots) = $db->fetch_row($result);
         
 	$query= "
-			SELECT
-				serverId,
-				name,
-				IF(publicaddress != '',
-					publicaddress,
-					concat(address, ':', port)
-				) AS addr,
-				statusurl,
-				kills,
-				players,
-				rounds, suicides, 
-				headshots, 
-				bombs_planted, 
-				bombs_defused, 
-				ct_wins, 
-				ts_wins, 
-				ct_shots, 
-				ct_hits, 
-				ts_shots, 
-				ts_hits,      
-				act_players,                                
-				max_players,
-				act_map,
-				map_started,
-				map_ct_wins,
-				map_ts_wins,
-				game                 
-			FROM
-				hlstats_Servers
-			WHERE
-				serverId='$server_id'
+        SELECT
+            serverId,
+            name,
+            IF(publicaddress != '',
+                publicaddress,
+                concat(address, ':', port)
+            ) AS addr,
+            statusurl,
+            kills,
+            players,
+            rounds, suicides, 
+            headshots, 
+            bombs_planted, 
+            bombs_defused, 
+            ct_wins, 
+            ts_wins, 
+            ct_shots, 
+            ct_hits, 
+            ts_shots, 
+            ts_hits,      
+            act_players,                                
+            max_players,
+            act_map,
+            map_started,
+            map_ct_wins,
+            map_ts_wins,
+            game                 
+        FROM
+            hlstats_Servers
+        WHERE
+            serverId='$server_id'
 	";
+
 	$db->query($query);
 	$servers   = array();
 	$servers[] = $db->fetch_array();

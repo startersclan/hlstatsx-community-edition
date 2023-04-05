@@ -36,14 +36,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	 
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 
 	$edlist = new EditList("id", "hlstats_ClanTags", "clan", false);
 	$edlist->columns[] = new EditListColumn("pattern", "Pattern", 40, true, "text", "", 64);
 	$edlist->columns[] = new EditListColumn("position", "Match Position", 0, true, "select", "EITHER/EITHER;START/START only;END/END only");
-	
 	
 	if ($_POST)
 	{

@@ -36,8 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 
 	$edlist = new EditList("teamId", "hlstats_Teams", "team", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
@@ -46,10 +51,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$edlist->columns[] = new EditListColumn("playerlist_color", "Color Code", 20, false, "text", "", 64);
 	$edlist->columns[] = new EditListColumn("playerlist_bgcolor", "Bg Color Code", 20, false, "text", "", 64);
 	$edlist->columns[] = new EditListColumn("hidden", "<center>Hide Team</center>", 0, false, "checkbox");
-	
-	
-	if ($_POST)
-	{
+
+	if ($_POST) {
 		if ($edlist->update())
 			message("success", "Operation successful.");
 		else

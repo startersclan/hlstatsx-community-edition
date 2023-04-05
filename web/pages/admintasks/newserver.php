@@ -36,12 +36,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	 
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 	
-	if ( count($_POST) > 0 )
-	{
+	if ( count($_POST) > 0 ) {
 		$db->query("SELECT * FROM `hlstats_Servers` WHERE `address` = '" . $db->escape(clean_data($_POST['server_address'])) . "' AND `port` = '" . $db->escape(clean_data($_POST['server_port'])) . "'");
 		
 		if ( $row = $db->fetch_array() )

@@ -36,16 +36,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
-	
-	
-	// Daily Award Statistics
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
-	$award = valid_request($_GET['award'], true)
-		or error('No award ID specified.');
+	// Daily Award Statistics
+	$award = valid_request($_GET['award'], true) or error('No award ID specified.');
 
 	$db->query("
 		SELECT
@@ -67,8 +63,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$awardcode = $awarddata['code'];
 	
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() < 1)
-	{
+	if ($db->num_rows() < 1) {
 		error("No such game '$game'.");
 	}
 	

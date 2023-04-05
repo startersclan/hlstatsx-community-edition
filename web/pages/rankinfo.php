@@ -36,15 +36,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 	// Action Details
 
-	
-	$rank = valid_request($_GET['rank'], true)
-		or error('No rank ID specified.');
+	$rank = valid_request($_GET['rank'], true) or error('No rank ID specified.');
 	
 	$db->query("
 		SELECT
@@ -55,25 +52,18 @@ For support and installation notes visit http://www.hlxcommunity.com
 			rankId=$rank
 	");
 	
-	if ($db->num_rows() != 1)
-	{
+	if ($db->num_rows() != 1) {
 		$act_name = ucfirst($action);
-	}
-	else
-	{
+	} else {
 		$actiondata = $db->fetch_array();
 		$db->free_result();
 		$act_name = $actiondata['description'];
 	}
-	
-	
+
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
-	{
+	if ($db->num_rows() != 1) {
 		error('Invalid or no game specified.');
-	}
-	else
-	{
+	} else {
 		list($gamename) = $db->fetch_row();
 	}
 		

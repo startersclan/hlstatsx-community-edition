@@ -36,17 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
-
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
 	// Ribbon Statistics
 
-	$ribbon =  valid_request($_GET['ribbon'], true)
-		or error('No ribbon ID specified.');
-
+	$ribbon =  valid_request($_GET['ribbon'], true) or error('No ribbon ID specified.');
 
 	$db->query("
 		SELECT
@@ -67,10 +63,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$awardcode = $actiondata['awardCode'];
 	$image = $actiondata['image'];
 
-	
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() < 1)
-	{
+	if ($db->num_rows() < 1) {
 		error("No such game '$game'.");
 	}
 	
@@ -86,7 +80,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 		),
 		$act_name
 	);
-
 
 	$table = new Table(
 		array(
@@ -115,7 +108,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 		true,
 		50
 	);
-
 
 	$result = $db->query("
 		SELECT
@@ -154,7 +146,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 		LIMIT $table->startitem,$table->numperpage
 	");
 
-
 	$resultCount = $db->query("
 		SELECT
 			flag,
@@ -187,8 +178,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		HAVING
 			COUNT(hlstats_Awards.name) >= $awardmin  	
 	");
-	$numitems = mysqli_num_rows($resultCount);
 
+	$numitems = mysqli_num_rows($resultCount);
 ?>
 
 <div class="block">

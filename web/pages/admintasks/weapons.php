@@ -36,19 +36,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	 
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 
 	$edlist = new EditList("weaponId", "hlstats_Weapons", "gun", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("code", "Weapon Code", 15, true, "text", "", 32);
 	$edlist->columns[] = new EditListColumn("name", "Weapon Name", 25, true, "text", "", 64);
 	$edlist->columns[] = new EditListColumn("modifier", "Points Modifier", 10, true, "text", "1.00");
-	
-	
-	if ($_POST)
-	{
+
+	if ($_POST) {
 		if ($edlist->update())
 			message("success", "Operation successful.");
 		else

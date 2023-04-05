@@ -105,12 +105,11 @@ if (!isset($g_options['scripturl']))
 //// Main
 ////
 
-if ( isset($_GET["game"]) )
-{
+if (isset($_GET["game"])) {
 	$game = valid_request($_GET["game"], false);
 }
 
-$mode = isset($_GET["mode"])?$_GET["mode"]:"";
+$mode = isset($_GET["mode"]) ? $_GET["mode"] : "";
 
 $valid_modes = array(
     "pro",

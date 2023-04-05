@@ -36,16 +36,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 	
-if ( !defined('IN_HLSTATS') )
-{
-	die('Do not access this file directly.');
-}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
 	// Action Details
 
 	// Addon created by Rufus (rufus@nonstuff.de)
 	
-	$action =  valid_request($_GET['action'], false)
-		or error('No action ID specified.');
+	$action = valid_request($_GET['action'], false) or error('No action ID specified.');
 
 	$action_escaped=$db->escape($action);
 	$game_escaped=$db->escape($game);

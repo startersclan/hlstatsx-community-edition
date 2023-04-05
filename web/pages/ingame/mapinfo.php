@@ -36,18 +36,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+	if (!defined('IN_HLSTATS')) {
+		die('Do not access this file directly.');
+	}
+
 	// Map Details
-	
-	$map = valid_request($_GET['map'], false)
-		or error('No map specified.');
+
+	$map = valid_request($_GET['map'], false) or error('No map specified.');
 	
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
+	if ($db->num_rows() != 1) {
 		error('Invalid or no game specified.');
-	else
+	} else {
 		list($gamename) = $db->fetch_row();
-		
+	}
+
 	$table = new Table(
 		array(
 			new TableColumn(

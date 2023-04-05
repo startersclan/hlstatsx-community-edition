@@ -36,13 +36,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+	if (!defined('IN_HLSTATS')) {
+		die('Do not access this file directly.');
+	}
+
 	// Action Details
 
 	// Addon created by Rufus (rufus@nonstuff.de)
 	
-	$action = valid_request($_GET['action'], true)
-		or error('No action ID specified.');
+	$action = valid_request($_GET['action'], true) or error('No action ID specified.');
 	
 	$db->query("
 		SELECT
@@ -54,23 +56,20 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 			AND game='$game'
 	");
 	
-	if ($db->num_rows() != 1)
-	{
+	if ($db->num_rows() != 1) {
 		$act_name = ucfirst($action);
-	}
-	else
-	{
+	} else {
 		$actiondata = $db->fetch_array();
 		$db->free_result();
 		$act_name = $actiondata['description'];
 	}
 	
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
+	if ($db->num_rows() != 1) {
 		error('Invalid or no game specified.');
-	else
+	} else {
 		list($gamename) = $db->fetch_row();
-		
+	}
 
 	$table = new Table(
 		array(

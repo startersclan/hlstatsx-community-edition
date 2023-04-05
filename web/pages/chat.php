@@ -36,26 +36,23 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
 // Global Server Chat History
-	$showserver=0;
-	if (isset($_GET['server_id']))
-	{
+	$showserver = 0;
+	if (isset($_GET['server_id'])) {
 		$showserver = valid_request(strval($_GET['server_id']), true);
 	}
-	if ($showserver == 0)
-	{
+
+	if ($showserver == 0) {
 		$whereclause = "hlstats_Servers.game='$game'";
-	}
-	else
-	{
+	} else {
 		$whereclause = "hlstats_Servers.game='$game' AND hlstats_Events_Chat.serverId=$showserver";
 	}
-	$db->query
-	("
+
+	$db->query("
 		SELECT
 			hlstats_Games.name
 		FROM
@@ -63,15 +60,23 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
+
+	if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
+	}
+
 	list($gamename) = $db->fetch_row();
+
 	$db->free_result();
+
 	pageHeader
 	(
 		array ($gamename, 'Server Chat Statistics'),
 		array ($gamename=>"%s?game=$game", 'Server Chat Statistics'=>'')
 	);
+
 	flush();
+
 	$servername = "(All Servers)";
 	
 	if ($showserver != 0)

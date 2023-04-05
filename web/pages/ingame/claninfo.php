@@ -36,12 +36,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 	// Clan Details
 	
-	$clan = valid_request(intval($_GET['clan']), true)
-		or error('No clan ID specified.');
+	$clan = valid_request(intval($_GET['clan']), true) or error('No clan ID specified.');
 	
 	$db->query("
 		SELECT
@@ -65,9 +65,11 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 		GROUP BY
 			hlstats_Clans.clanId
 	");
-	if ($db->num_rows() != 1)
+
+	if ($db->num_rows() != 1) {
 		error("No such clan '$clan'.");
-	
+	}
+
 	$clandata = $db->fetch_array();
 	$db->free_result();
 	

@@ -64,10 +64,10 @@ if($historical_cache==1)
 
 session_start();
 
-if((!empty($_GET['logout'])) && $_GET['logout'] == '1') {
-        unset($_SESSION['loggedin']);
-        header("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']);
-        die;
+if (!empty($_GET['logout']) && $_GET['logout'] == '1') {
+	unset($_SESSION['loggedin']);
+	header("Location: http://".$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME']);
+	die;
 }
 
 // Several stuff added by Malte Bayer
@@ -144,7 +144,8 @@ if (!isset($g_options['scripturl'])) {
 //// Main
 ////
 
-$game = valid_request(isset($_GET['game'])?$_GET['game']:'', false);
+$game = valid_request(isset($_GET['game']) ? $_GET['game'] : '', false);
+
 $realgame = $_SESSION['realgame'] ?? null;
 
 if (!$game)
@@ -162,7 +163,7 @@ if (!$realgame && $game)
 	$_SESSION['realgame'] = $realgame;
 }
 
-$mode = isset($_GET['mode'])?$_GET['mode']:'';
+$mode = isset($_GET['mode']) ? $_GET['mode'] : '';
 
 $valid_modes = array(
 	'players',

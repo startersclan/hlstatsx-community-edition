@@ -36,10 +36,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
 // Player Rankings
 	$db->query
 	("
@@ -50,22 +50,27 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
-	list($gamename) = $db->fetch_row();
-	$db->free_result();
-	if (isset($_GET['minkills']))
-	{
-		$minkills = valid_request(intval($_GET['minkills']),true);
+
+    if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
 	}
-	else
-	{
+
+    list($gamename) = $db->fetch_row();
+
+    $db->free_result();
+
+	if (isset($_GET['minkills'])) {
+		$minkills = valid_request(intval($_GET['minkills']),true);
+	} else {
 		$minkills = 0;
 	}
+
 	pageHeader
 	(
 		array ($gamename, 'Cheaters &amp; Banned Players'),
 		array ($gamename=>"%s?game=$game", 'Cheaters &amp; Banned Players'=>'')
 	);
+
 	$table = new Table
 	(
 		array(
@@ -135,7 +140,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'skill',
 		true
 	);
+
 	$day_interval = 28;
+
 	$resultCount = $db->query
 	("
 		SELECT
@@ -147,7 +154,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			AND hlstats_Players.hideranking = 2
 			AND hlstats_Players.kills >= $minkills
 	");
+
 	list($numitems) = $db->fetch_row($resultCount);
+
 	$result = $db->query
 	("
 		SELECT

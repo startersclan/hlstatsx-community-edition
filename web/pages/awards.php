@@ -35,10 +35,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
 	// Awards Info Page
 

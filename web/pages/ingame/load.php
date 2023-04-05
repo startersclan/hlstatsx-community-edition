@@ -36,11 +36,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
 	$server_id = 1;
-	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
+	if (isset($_GET['server_id']) && is_numeric($_GET['server_id'])) {
 		$server_id = valid_request($_GET['server_id'], true);
+	}
 
     $query= "
 			SELECT
@@ -50,6 +53,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			WHERE 
 				game='$game'
 	";
+
 	$result = $db->query($query);
 	list($total_players) = $db->fetch_row($result);
 
@@ -63,6 +67,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			WHERE 
 				game='$game'
 	";
+
 	$result = $db->query($query);
 	list($total_kills, $total_headshots, $total_servers) = $db->fetch_row($result);
 ?>

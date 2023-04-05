@@ -36,21 +36,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	
+	if (!defined('IN_HLSTATS')) {
+		die('Do not access this file directly.');
+	}
+
 	// Clan Rankings
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
+	if ($db->num_rows() < 1) {
+		error("No such game '$game'.");
+	}
 	
 	list($gamename) = $db->fetch_row();
 	$db->free_result();
 	
-	if (isset($_GET['minmembers']))
-	{
+	if (isset($_GET['minmembers'])) {
 		$minmembers = valid_request(intval($_GET['minmembers']), true);
-	}
-	else
-	{
+	} else {
 		$minmembers = 3;
 	}
 	

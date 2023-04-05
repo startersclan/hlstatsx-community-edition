@@ -36,8 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 	
 	$edlist = new EditList("awardId", "hlstats_Awards", "award", false);
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
@@ -46,7 +51,6 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	$edlist->columns[] = new EditListColumn("name", "Award Name", 20, true, "text", "", 128);
 	$edlist->columns[] = new EditListColumn("verb", "Verb Plural", 20, true, "text", "", 64);
 	
-	
 	if ($_POST)
 	{
 		if ($edlist->update())
@@ -54,8 +58,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 		else
 			message("warning", $edlist->error());
 	}
-	
-	
+
 	$result = $db->query("
 		SELECT
 			awardId,

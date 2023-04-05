@@ -36,10 +36,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
 // Country Clan Rankings
 	$db->query
 	("
@@ -50,22 +50,27 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
-	list($gamename) = $db->fetch_row();
-	$db->free_result();
-	if (isset($_GET['minmembers']))
-	{
-		$minmembers = valid_request(intval($_GET["minmembers"]), true);
+
+	if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
 	}
-	else
-	{
+
+    list($gamename) = $db->fetch_row();
+
+    $db->free_result();
+
+    if (isset($_GET['minmembers'])) {
+		$minmembers = valid_request(intval($_GET["minmembers"]), true);
+	} else {
 		$minmembers = 3;
 	}
+
 	pageHeader
 	(
 		array ($gamename, 'Country Rankings'),
 		array ($gamename=>"%s?game=$game", 'Country Rankings' => '')
 	);
+
 	$table = new Table
 	(
 		array

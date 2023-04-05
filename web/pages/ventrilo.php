@@ -8,7 +8,7 @@
 	require_once(PAGE_PATH . '/ventrilostatus.php');
 	include (PAGE_PATH . '/voicecomm_serverlist.php');
 
-	$veId = valid_request($_GET['veId'],true);
+	$veId = valid_request($_GET['veId'], true);
 
 function time_convert($time)
 { 

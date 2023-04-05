@@ -53,7 +53,9 @@ UNIQUE KEY `source` (`source`(64))
 ) ENGINE=MyISAM;
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+if (!defined('IN_HLSTATS')) {
+	die('Do not access this file directly.');
+}
 
 class DB_mysql
 {
@@ -130,6 +132,7 @@ class DB_mysql
 		{
 			$query_id = $this->last_result;
 		}
+
 		if ( $query_id )
 		{
 			return @mysqli_fetch_array($query_id);
@@ -143,6 +146,7 @@ class DB_mysql
 		{
 			$query_id = $this->last_result;
 		}
+
 		if ( $query_id )
 		{
 			return @mysqli_fetch_row($query_id);
@@ -156,6 +160,7 @@ class DB_mysql
 		{
 			$query_id = $this->last_result;
 		}
+
 		if ( $query_id )
 		{
 			$rowset = array();
@@ -173,6 +178,7 @@ class DB_mysql
 		{
 			$query_id = $this->last_result;
 		}
+
 		if ( $query_id )
 		{
 			return @mysqli_free_result($query_id);
@@ -191,6 +197,7 @@ class DB_mysql
 		{
 			$query_id = $this->last_result;
 		}
+
 		if ( $query_id )
 		{
 			return @mysqli_num_rows($query_id);
@@ -264,6 +271,7 @@ class DB_mysql
 		{
 			$query_id = $this->last_result;
 		}
+
 		if ( $query_id )
 		{
 			return @mysqli_result($query_id, $row, $field);

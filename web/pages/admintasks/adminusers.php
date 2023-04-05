@@ -36,15 +36,19 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 100) {
+        die ("Access denied!");
+	}
 
 	$edlist = new EditList("username", "hlstats_Users", "user", false);
 	$edlist->columns[] = new EditListColumn("username", "Username", 15, true, "text", "", 16);
 	$edlist->columns[] = new EditListColumn("password", "Password", 15, true, "password", "", 16);
 	$edlist->columns[] = new EditListColumn("acclevel", "Access Level", 25, true, "select", "0/No Access;80/Restricted;100/Administrator");
-	
-	
+
 	if ($_POST)
 	{
 		if ($edlist->update())

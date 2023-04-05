@@ -36,8 +36,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	
+	if (!defined('IN_HLSTATS')) {
+		die('Do not access this file directly.');
+	}
 	
 	// Player Details
 	
@@ -45,10 +46,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$uniqueid = valid_request(strval($_GET['uniqueid']), false);
 	$game = valid_request(strval($_GET['game']), false);
 	
-	if (!$player && $uniqueid)
-	{
-		if (!$game)
-		{
+	if (!$player && $uniqueid) {
+		if (!$game) {
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid");
 			exit;
 		}
@@ -63,23 +62,16 @@ For support and installation notes visit http://www.hlxcommunity.com
 				AND game='$game'
 		");
 		
-		if ($db->num_rows() > 1)
-		{
+		if ($db->num_rows() > 1) {
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid&game=$game");
 			exit;
-		}
-		elseif ($db->num_rows() < 1)
-		{
+		} elseif ($db->num_rows() < 1) {
 			error("No players found matching uniqueId '$uniqueid'");
-		}
-		else
-		{
+		} else {
 			list($player) = $db->fetch_row();
 			$player = intval($player);
 		}
-	}
-	elseif (!$player && !$uniqueid)
-	{
+	} elseif (!$player && !$uniqueid) {
 		error('No player ID specified.');
 	}
 	
@@ -114,26 +106,25 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			playerId='$player'
 	");
-	if ($db->num_rows() != 1)
+
+	if ($db->num_rows() != 1) {
 		error("No such player '$player'.");
-	
+	}
+
 	$playerdata = $db->fetch_array();
 	$db->free_result();
 	
 	$pl_name = $playerdata['lastName'];
-	if (strlen($pl_name) > 10)
-	{
+	if (strlen($pl_name) > 10) {
 		$pl_shortname = substr($pl_name, 0, 8) . '...';
-	}
-	else
-	{
+	} else {
 		$pl_shortname = $pl_name;
 	}
+
 	$pl_name = htmlspecialchars($pl_name, ENT_COMPAT);
 	$pl_shortname = htmlspecialchars($pl_shortname, ENT_COMPAT);
 	$pl_urlname = urlencode($playerdata['lastName']);
-	
-	
+
 	$game = $playerdata['game'];
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
 	if ($db->num_rows() != 1)
@@ -196,10 +187,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'playerkills'
 	);
 
-  if(!isset($_GET['killLimit']))  
-     $killLimit = 5;
-  else   
-    $killLimit = valid_request($_GET['killLimit'], 1);
+	 if(!isset($_GET['killLimit'])) {
+		 $killLimit = 5;
+	 } else {
+		 $killLimit = valid_request($_GET['killLimit'], 1);
+	 }
 
 	//there might be a better way to do this, but I could not figure one out.
 
@@ -267,6 +259,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			HAVING
 				COUNT(hlstats_Frags_Kills.kills) >= $killLimit
 	");
+
 	$realheadshots = 0;
 	while ($rowdata = $db->fetch_array($result))  {
 		$realheadshots += $rowdata['headshots'];

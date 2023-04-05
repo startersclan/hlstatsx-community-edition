@@ -36,22 +36,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-		die('Do not access this file directly.');
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
-	if ($auth->userdata['acclevel'] < 80)
+	if ($auth->userdata['acclevel'] < 80) {
 		die ('Access denied!');
+    }
 
-function setdefaults($key)
-{
-	global $db;
-	// get default values
-	$db->query("DELETE FROM hlstats_Servers_Config WHERE serverId=$key;");
-	$db->query("INSERT INTO hlstats_Servers_Config (serverId, parameter, value) SELECT $key,parameter,value FROM hlstats_Servers_Config_Default");
-	// get server ip and port
-	$db->query("SELECT CONCAT(address, ':', port) AS addr FROM hlstats_Servers WHERE serverId=$key;");
-	$r = $db->fetch_array();
-}
+    function setdefaults($key)
+    {
+        global $db;
+        // get default values
+        $db->query("DELETE FROM hlstats_Servers_Config WHERE serverId=$key;");
+        $db->query("INSERT INTO hlstats_Servers_Config (serverId, parameter, value) SELECT $key,parameter,value FROM hlstats_Servers_Config_Default");
+        // get server ip and port
+        $db->query("SELECT CONCAT(address, ':', port) AS addr FROM hlstats_Servers WHERE serverId=$key;");
+        $r = $db->fetch_array();
+    }
 	
 	if (isset($_GET['key'])) {
 		$key = valid_request(intval($_GET['key']),true);

@@ -36,11 +36,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
 	$server_id = 1;
-	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-	$server_id = valid_request($_GET['server_id'], true);
+	if (isset($_GET['server_id']) && is_numeric($_GET['server_id'])) {
+		$server_id = valid_request($_GET['server_id'], true);
+	}
 ?>
 	<table class="data-table">
 		<tr class="data-table-head">

@@ -36,8 +36,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if (!defined('IN_HLSTATS'))
-{
+if (!defined('IN_HLSTATS')) {
 	die('Do not access this file directly.');
 }
 
@@ -183,15 +182,14 @@ function error($message, $exit = true)
  */
 function makeQueryString($key, $value, $notkeys = array())
 {
-	if (!is_array($notkeys))
+	if (!is_array($notkeys)) {
 		$notkeys = array();
-	
+	}
+
 	$querystring = '';
-	foreach ($_GET as $k => $v)
-	{
+	foreach ($_GET as $k => $v) {
 		$v = valid_request($v, false);
-		if ($k && $k != $key && !in_array($k, $notkeys))
-		{
+		if ($k && $k != $key && !in_array($k, $notkeys)) {
 			$querystring .= urlencode($k) . '=' . rawurlencode($v) . '&amp;';
 		}
 	}

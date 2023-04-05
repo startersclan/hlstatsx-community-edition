@@ -36,15 +36,13 @@
  For support and installation notes visit http://ovrsized.neo-soft.org!
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
+	if (!defined('IN_HLSTATS')) {
 		die('Do not access this file directly.');
 	}
 	
 	// Clan Details
 	
-	$clan = valid_request(intval($_GET["clan"]), true)
-		or error("No clan ID specified.");
+	$clan = valid_request(intval($_GET["clan"]), true) or error("No clan ID specified.");
 
 	$db->query("
 		SELECT
@@ -72,8 +70,8 @@
 		GROUP BY
 			hlstats_Clans.clanId
 	");
-	if ($db->num_rows() != 1)
-	{
+
+	if ($db->num_rows() != 1) {
 		error("No such clan '$clan'.");
 	}
 	
@@ -81,7 +79,6 @@
 
 	$realkills = ($clandata['kills'] == 0) ? 1 : $clandata['kills'];
 	$realheadshots = ($clandata['headshots'] == 0) ? 1 : $clandata['headshots'];
-
 
 	$db->query("
 		SELECT
@@ -92,7 +89,8 @@
 			clan=$clan
 		GROUP BY
 			clan
-    ");	
+    ");
+
 	list($totalclanplayers) = $db->fetch_array();
 
 	$db->free_result();
@@ -103,12 +101,10 @@
 	
 	$game = $clandata['game'];
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
-	{
+
+    if ($db->num_rows() != 1) {
 		$gamename = ucfirst($game);
-	}
-	else
-	{
+	} else {
 		list($gamename) = $db->fetch_row();
 	}	
 	
@@ -126,6 +122,7 @@
 		}
 		exit;
 	}
+
 	pageHeader(
 		array($gamename, 'Clan Details', $cl_full),
 		array(

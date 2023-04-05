@@ -36,8 +36,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-
-	
 	foreach ($_SERVER as $key => $entry) {
 		if ($key !== 'HTTP_COOKIE') {
 			$search_pattern  = array('/<script>/', '/<\/script>/', '/[^A-Za-z0-9.\-\/=:;_?#&~]/');
@@ -72,43 +70,49 @@ For support and installation notes visit http://www.hlxcommunity.com
 	require (INCLUDE_PATH . '/functions_graph.php');
 
 	$db_classname = 'DB_' . DB_TYPE;
-	if (class_exists($db_classname))
-	{
+	if (class_exists($db_classname)) {
 		$db = new $db_classname(DB_ADDR, DB_USER, DB_PASS, DB_NAME, DB_PCONNECT);
-	}
-	else
-	{
+	} else {
 		error('Database class does not exist.  Please check your config.php file for DB_TYPE');
 	}
 
 	$g_options = getOptions();
 
 	$width = 500;
-	if ((isset($_GET['width'])) && (is_numeric($_GET['width'])))
+	if (isset($_GET['width']) && is_numeric($_GET['width'])) {
 		$width = valid_request($_GET['width'], true);
-	$server_id = 1;
-	if ((isset($_GET['server_id'])) && (is_numeric($_GET['server_id'])))
-		$server_id = valid_request($_GET['server_id'], true);
-	$height = 125;
-	if ((isset($_GET['height'])) && (is_numeric($_GET['height'])))
-		$height = valid_request($_GET['height'], true);
-	$player = 1;
-	if ((isset($_GET['player'])) && (is_numeric($_GET['player'])))
-		$player = valid_request($_GET['player'], true);
-	$game = "unset";
-	if (isset($_GET['game']))
-		$game = valid_request($_GET['game'], false);
+	}
 
-	$game_escaped=$db->escape($game);
+	$server_id = 1;
+	if (isset($_GET['server_id']) && is_numeric($_GET['server_id'])) {
+		$server_id = valid_request($_GET['server_id'], true);
+	}
+
+	$height = 125;
+	if (isset($_GET['height']) && is_numeric($_GET['height'])) {
+		$height = valid_request($_GET['height'], true);
+	}
+
+	$player = 1;
+	if (isset($_GET['player']) && is_numeric($_GET['player'])) {
+		$player = valid_request($_GET['player'], true);
+	}
+
+	$game = "unset";
+	if (isset($_GET['game'])) {
+		$game = valid_request($_GET['game'], false);
+	}
+
+	$game_escaped = $db->escape($game);
 
 	$bar_type = 0; // 0 == serverinfo last 100 entries
 	// 1 == ?!
 	// 2 == player trend history
 	// 3 == masterserver load
 
-	if ((isset($_GET['type'])) && (is_numeric($_GET['type'])))
+	if (isset($_GET['type']) && is_numeric($_GET['type'])) {
 		$bar_type = valid_request($_GET['type'], true);
-
+	}
 		
 	$selectedStyle = (isset($_COOKIE['style']) && $_COOKIE['style']) ? $_COOKIE['style'] : $g_options['style'];
 
@@ -122,21 +126,23 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}		
 
 	$bg_color = array('red' => 171, 'green' => 204, 'blue' => 214);
-	if ((isset($_GET['bgcolor'])) && (is_string($_GET['bgcolor'])))
+	if (isset($_GET['bgcolor']) && is_string($_GET['bgcolor'])) {
 		$bg_color = hex2rgb(valid_request($_GET['bgcolor'], false));
+	}
 
 	$color = array('red' => 255, 'green' => 255, 'blue' => 255);
-	if ((isset($_GET['color'])) && (is_string($_GET['color'])))
+	if (isset($_GET['color']) && is_string($_GET['color'])) {
 		$color = hex2rgb(valid_request($_GET['color'], false));
+	}
 
 	$bg_id = $bg_color['red'] + $bg_color['green'] + $bg_color['blue'];
 
 	$server_load_type = 1;
-	if ((isset($_GET['range'])) && (is_numeric($_GET['range'])))
+	if (isset($_GET['range']) && is_numeric($_GET['range'])) {
 		$server_load_type = valid_request($_GET['range'], true);
+	}
 
-	switch ($server_load_type)
-	{
+	switch ($server_load_type) {
 		case 1:
 			$avg_step = 1;
 			$update_interval = IMAGE_UPDATE_INTERVAL;

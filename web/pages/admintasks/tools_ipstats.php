@@ -36,24 +36,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 ?>
 
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width=9 height=6 class="imageformat"><b>&nbsp;<?php
-	if (isset($_GET['hostgroup']))
-	{
-    $hostgroup = $_GET['hostgroup'];
+	if (isset($_GET['hostgroup'])) {
+        $hostgroup = $_GET['hostgroup'];
         
 ?><a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=<?php echo $selTask; ?>"><?php
 	}
 	echo $task->title;
-  if (isset($_GET['hostgroup']))
-	{
+    if (isset($_GET['hostgroup'])) {
 		echo "</a>";
 	}
+
 ?></b> (Last <?php echo $g_options["DeleteDays"]; ?> Days)<?php
-  if (isset($_GET['hostgroup']))
+    if (isset($_GET['hostgroup']))
 	{
 ?><br>
 <img src="<?php echo IMAGE_PATH; ?>/spacer.gif" width=1 height=8 border=0><br>
@@ -67,9 +71,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 ?>
 
 <?php
-  if (isset($_GET['hostgroup']))
-	{
-         
+    if (isset($_GET['hostgroup'])) {
 		$table = new Table(
 			array(
 				new TableColumn(

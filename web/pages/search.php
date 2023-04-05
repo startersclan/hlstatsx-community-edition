@@ -45,11 +45,14 @@ For support and installation notes visit http://www.hlxcommunity.com
 		array ('Search'),
 		array ('Search' => '')
 	);
+
 	$sr_query = $_GET['q'];
 	$sr_type = valid_request(strval($_GET['st']), false) or 'player';
 	$sr_game = valid_request(strval((isset($_GET['game'])) ? $_GET['game'] : $game), flase);
 	$search = new Search($sr_query, $sr_type, $sr_game);
 	$search->drawForm(array('mode' => 'search'));
-	if ($sr_query || $sr_query == '0')
+
+	if ($sr_query || $sr_query == '0') {
 		$search->drawResults();
+	}
 ?>

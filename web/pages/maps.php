@@ -36,13 +36,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
 // Map Statistics
-	$db->query
-	("
+	$db->query("
 		SELECT
 			hlstats_Games.name
 		FROM
@@ -50,14 +49,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
+
+	if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
+	}
+
 	list($gamename) = $db->fetch_row();
 	$db->free_result();
-	pageHeader
-	(
+
+	pageHeader(
 		array ($gamename, 'Map Statistics'),
 		array ($gamename=>"%s?game=$game", 'Map Statistics'=>'')
 	);
+
 	$tblMaps = new Table
 	(
 		array
@@ -126,8 +130,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'maps_sort',
 		'maps_sortorder'
 	);
-	$db->query
-	("
+
+	$db->query("
 	 	SELECT
 			SUM(hlstats_Maps_Counts.kills),
 			SUM(hlstats_Maps_Counts.headshots)
@@ -136,10 +140,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Maps_Counts.game = '$game'
 	");
+
 	list($realkills, $realheadshots) = $db->fetch_row();
 	
-	$result = $db->query
-	("
+	$result = $db->query("
 		SELECT
 			IF(hlstats_Maps_Counts.map = '', '(Unaccounted)', hlstats_Maps_Counts.map) AS map,
 			hlstats_Maps_Counts.kills,

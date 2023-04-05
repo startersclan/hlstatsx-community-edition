@@ -35,11 +35,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-	
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 	
 	/*
 	 * HLstatsX Page Header This file will be inserted at the top of every page
@@ -51,7 +50,7 @@ For support and installation notes visit http://www.hlxcommunity.com
   
 	// visit counter
 	if (isset($_COOKIE['ELstatsNEO_Visit']) && $_COOKIE['ELstatsNEO_Visit'] == 0) {
-		// kein cookie gefunden, also visitcounter erhöhen und cookie setzen
+		// kein cookie gefunden, also visitcounter erhï¿½hen und cookie setzen
 		$db->query("UPDATE hlstats_Options SET value=value+1 WHERE keyname='counter_visits';");
 		@setcookie('ELstatsNEO_Visit', '1', time() + ($g_options['counter_visit_timeout'] * 60), '/');   
 	}

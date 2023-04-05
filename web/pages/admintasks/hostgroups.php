@@ -36,9 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	 
-	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 100) {
+        die ("Access denied!");
+	}
 	
 	$edlist = new EditList("id", "hlstats_HostGroups", "server", false);
 	$edlist->columns[] = new EditListColumn("pattern", "Host Pattern", 30, true, "text", "", 128);

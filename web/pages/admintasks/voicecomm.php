@@ -36,8 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata['acclevel'] < 80) die ('Access denied!');
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata['acclevel'] < 80) {
+        die ('Access denied!');
+	}
 
 	$edlist = new EditList('serverId', 'hlstats_Servers_VoiceComm', '', false);
 	$edlist->columns[] = new EditListColumn('name', 'Server Name', 45, true, 'text', '', 64);
@@ -48,8 +53,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$edlist->columns[] = new EditListColumn('descr', 'Notes', 40, false, 'text', '', 64);
 	$edlist->columns[] = new EditListColumn('serverType', 'Server Type', 20, true, 'select', '0/Teamspeak;1/Ventrilo');
 	
-	if ($_POST)
-	{
+	if ($_POST) {
 		if ($edlist->update())
 			message('success', 'Operation successful.');
 		else

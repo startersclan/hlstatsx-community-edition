@@ -3,29 +3,28 @@
 		array('Teamspeak viewer'),
 		array('Teamspeak viewer' => '')
 	);
-  include (PAGE_PATH.'/voicecomm_serverlist.php');
-  include (PAGE_PATH.'/teamspeak_query.php');
+	include (PAGE_PATH.'/voicecomm_serverlist.php');
+	 include (PAGE_PATH.'/teamspeak_query.php');
 
-  $tsId = valid_request($_GET['tsId'],true);
+ 	$tsId = valid_request($_GET['tsId'],true);
 
+	function show($tpl, $array)
+	{
+		$template = PAGE_PATH."/templates/teamspeak/$tpl";
 
-function show($tpl, $array)
-{
-    $template = PAGE_PATH."/templates/teamspeak/$tpl";
-  
-    if($fp = @fopen($template.".".html, "r"))
-      $tpl = @fread($fp, filesize($template.".".html));
-    
-    foreach($array as $value => $code)
-    {
-      $tpl = str_replace("[".$value."]", $code, $tpl);
-    }
-  return $tpl;
-}
+		if($fp = @fopen($template.".".html, "r"))
+		  $tpl = @fread($fp, filesize($template.".".html));
 
+		foreach($array as $value => $code)
+		{
+		  $tpl = str_replace("[".$value."]", $code, $tpl);
+		}
+	  return $tpl;
+	}
 
 
-  if(function_exists(fopen))
+
+  if (function_exists(fopen))
   {
     $db->query("SELECT addr, queryPort, UDPPort FROM hlstats_Servers_VoiceComm WHERE serverId=$tsId");
     $s = $db->fetch_array();
@@ -36,9 +35,9 @@ function show($tpl, $array)
 
   	$fp = fsockopen($uip, $tPort, $errno, $errstr, 2);
 
-	  if(!$fp)
+	if(!$fp)
     {
-      $index = error("No teamspeak", 1);
+		$index = error("No teamspeak", 1);
     } else {
 	    $out = "";
 	    $fp = fsockopen($uip, $tPort, $errno, $errstr, 2);
@@ -209,17 +208,19 @@ function show($tpl, $array)
 
     }
 
-    if(isset($_GET['cID']))
-    {
-	    $cID 	= $_GET['cID'];
-	    $type	= $_GET['type'];
+    if (isset($_GET['cID'])) {
+	    $cID = $_GET['cID'];
+	    $type= $_GET['type'];
     } else {
-	    $cID 	= 0;
-	    $type	= 0;
+	    $cID = 0;
+	    $type = 0;
     }
 
-    if($type==0)     $info = defaultInfo($uip,$tPort,$port);
-    elseif($type==1) $info = channelInfo($uip,$tPort,$port,$cID);
+    if ($type == 0) {
+		$info = defaultInfo($uip, $tPort, $port);
+	} else if ($type == 1) {
+		$info = channelInfo($uip, $tPort, $port, $cID);
+	}
 
     $outp_str = show("teamspeak", array("name" => $name,
                                            "os" => $os,

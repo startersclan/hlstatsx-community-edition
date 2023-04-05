@@ -36,18 +36,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 	
 	flush();
 	
 	$realgame = getRealGame($game);
 	
 	$result  = $db->query("SELECT `code`,`name` FROM hlstats_Weapons WHERE game='$game'");
-	while ($rowdata = $db->fetch_row($result)) 
-	{ 
+	while ($rowdata = $db->fetch_row($result)) {
 		$code = $rowdata[0];
 		$fname[$code] = htmlspecialchars($rowdata[1]);
 	}

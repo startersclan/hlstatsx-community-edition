@@ -36,19 +36,17 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	
-	
+	if (!defined('IN_HLSTATS')) {
+		die('Do not access this file directly.');
+	}
+
 	// Player Details
-	
 	$player = valid_request(intval($_GET['player']), true);
 	$uniqueid  = valid_request(strval($_GET['uniqueid']), false);
 	$game = valid_request(strval($_GET['game']), false);
 	
-	if (!$player && $uniqueid)
-	{
-		if (!$game)
-		{
+	if (!$player && $uniqueid) {
+		if (!$game) {
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid");
 			exit;
 		}
@@ -63,23 +61,16 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 				AND game='$game'
 		");
 		
-		if ($db->num_rows() > 1)
-		{
+		if ($db->num_rows() > 1) {
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid&game=$game");
 			exit;
-		}
-		elseif ($db->num_rows() < 1)
-		{
+		} elseif ($db->num_rows() < 1) {
 			error("No players found matching uniqueId '$uniqueid'");
-		}
-		else
-		{
+		} else {
 			list($player) = $db->fetch_row();
 			$player = intval($player);
 		}
-	}
-	elseif (!$player && !$uniqueid)
-	{
+	} elseif (!$player && !$uniqueid) {
 		error('No player ID specified.');
 	}
 	

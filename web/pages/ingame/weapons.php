@@ -36,21 +36,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+	if (!defined('IN_HLSTATS')) {
+		die('Do not access this file directly.');
+	}
+
 	// Player Details
 	
 	$player = valid_request(intval($_GET['player']), true);
 	$uniqueid  = valid_request(strval($_GET['uniqueid']), false);
 	$game = valid_request(strval($_GET['game']), false);
 
-	if (!$player && $uniqueid)
-	{
-		if (!$game)
-		{
+	if (!$player && $uniqueid) {
+		if (!$game) {
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid");
 			exit;
 		}
-		
+
 		$db->query("
 			SELECT
 				playerId
@@ -61,23 +62,16 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 				AND game='$game'
 		");
 		
-		if ($db->num_rows() > 1)
-		{
+		if ($db->num_rows() > 1) {
 			header('Location: ' . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid&game=$game");
 			exit;
-		}
-		elseif ($db->num_rows() < 1)
-		{
+		} elseif ($db->num_rows() < 1) {
 			error("No players found matching uniqueId '$uniqueid'");
-		}
-		else
-		{
+		} else {
 			list($player) = $db->fetch_row();
 			$player = intval($player);
 		}
-	}
-	elseif (!$player && !$uniqueid)
-	{
+	} elseif (!$player && !$uniqueid) {
 		error('No player ID specified.');
 	}
 	
@@ -91,33 +85,32 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 		WHERE
 			playerId=$player
 	");
-	if ($db->num_rows() != 1)
+
+	if ($db->num_rows() != 1) {
 		error("No such player '$player'.");
-	
+	}
+
 	$playerdata = $db->fetch_array();
 	$db->free_result();
 	
 	$pl_name = $playerdata['lastName'];
-	if (strlen($pl_name) > 10)
-	{
+	if (strlen($pl_name) > 10) {
 		$pl_shortname = substr($pl_name, 0, 8) . '...';
-	}
-	else
-	{
+	} else {
 		$pl_shortname = $pl_name;
 	}
+
 	$pl_name = htmlspecialchars($pl_name, ENT_COMPAT);
 	$pl_shortname = htmlspecialchars($pl_shortname, ENT_COMPAT);
 	$pl_urlname = urlencode($playerdata['lastName']);
-	
-	
+
 	$game = $playerdata['game'];
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
+	if ($db->num_rows() != 1) {
 		$gamename = ucfirst($game);
-	else
+	} else {
 		list($gamename) = $db->fetch_row();
-	
+	}
 	
 	$tblWeapons = new Table(
 		array(
@@ -188,6 +181,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 			WHERE
 				hlstats_Servers.game='$game' AND killerId=$player
 	");
+
 	list($realkills) = $db->fetch_row();
 
 	$db->query("
@@ -201,6 +195,7 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 				hlstats_Servers.game='$game' AND killerId=$player
 				AND headshot=1      
 	");
+
 	list($realheadshots) = $db->fetch_row();
 
 	$result = $db->query("
@@ -229,4 +224,4 @@ if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
 	");
 
 		$tblWeapons->draw($result, $db->num_rows($result), 100);
-	?>
+?>

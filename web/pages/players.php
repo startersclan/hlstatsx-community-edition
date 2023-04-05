@@ -36,13 +36,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
-// Player Rankings
-	$db->query
-	("
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+    // Player Rankings
+	$db->query("
 		SELECT
 			hlstats_Games.name
 		FROM
@@ -50,26 +49,32 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
-	list($gamename) = $db->fetch_row();
-	$db->free_result();
-	if (isset($_GET['minkills']))
-	{
-		$minkills = valid_request($_GET['minkills'], true);
+
+	if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
 	}
-	else
-	{
+
+    list($gamename) = $db->fetch_row();
+
+    $db->free_result();
+
+    if (isset($_GET['minkills'])) {
+		$minkills = valid_request($_GET['minkills'], true);
+	} else {
 		$minkills = 1;
 	}
+
 	pageHeader
 	(
 		array ($gamename, 'Player Rankings'),
 		array ($gamename=>"%s?game=$game", 'Player Rankings'=>'')
 	);
+
 	$rank_type = 0;
-	if (isset($_GET['rank_type']))
+	if (isset($_GET['rank_type'])) {
 		$rank_type = valid_request(strval($_GET['rank_type']), false);
-		
+	}
+
 // Autocomplete function below implemented by KingJ. Heavy modified to use HTML request instead of JSON.
 ?>
 
@@ -401,11 +406,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 		<div style="float:left;">
 			<form method="get" action="<?php echo $g_options['scripturl']; ?>">
 				<?php					
-					foreach ($_GET as $k=>$v)
-					{
+					foreach ($_GET as $k=>$v) {
 						$v = valid_request($v, false);
-						if ($k != 'minkills')
-						{
+
+                        if ($k != 'minkills') {
 							echo "<input type=\"hidden\" name=\"" . htmlspecialchars($k) . "\" value=\"" . htmlspecialchars($v) . "\" />\n";
 						}
 					}

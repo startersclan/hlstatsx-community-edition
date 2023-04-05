@@ -44,7 +44,9 @@ For support and installation notes visit http://www.hlxcommunity.com
  For support and installation notes visit http://ovrsized.neo-soft.org!
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
+	if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 	//
 	// Message of the day
 	//
@@ -54,7 +56,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 	//
   
 	$db->query("SELECT name FROM hlstats_Games WHERE code='$game'");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
+	if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
+	}
 	
 	list($gamename) = $db->fetch_row();
 	$db->free_result();
@@ -63,16 +67,19 @@ For support and installation notes visit http://www.hlxcommunity.com
 	$minmembers = 3;
   
 	$players = 10;  
-	if ((isset($_GET['players'])) && (is_numeric($_GET['players'])))
+	if (isset($_GET['players']) && is_numeric($_GET['players'])) {
 		$players = valid_request($_GET['players'], true);
-  
+	}
+
 	$clans = 3;  
-	if ((isset($_GET['clans'])) && (is_numeric($_GET['clans'])))
+	if (isset($_GET['clans']) && is_numeric($_GET['clans'])) {
 		$clans = valid_request($_GET['clans'], true;
-  
+	}
+
 	$servers = 9001;  
-	if ((isset($_GET['servers'])) && (is_numeric($_GET['servers'])))
+	if (isset($_GET['servers']) && is_numeric($_GET['servers'])) {
 		$servers = valid_request($_GET['servers'], true);
+    ]
 
 	//
 	// Top 10 Players

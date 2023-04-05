@@ -36,10 +36,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
 // Action Statistics
 // Addon Created by Rufus (rufus@nonstuff.de)
 	$db->query
@@ -51,14 +51,20 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
+
+	if ($db->num_rows() < 1) {
+        error("No such game '$game'.");
+	}
+
 	list($gamename) = $db->fetch_row();
 	$db->free_result();
+
 	pageHeader
 	(
 		array ($gamename, 'Action Statistics'),
 		array ($gamename=>"%s?game=$game", 'Action Statistics'=>'')
 	);
+
 	$tblPlayerActions = new Table
 	(
 		array
@@ -91,8 +97,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'obj_sort',
 		'obj_sortorder'
 	);
-	$result = $db->query
-	("
+
+	$result = $db->query("
 		SELECT
 			hlstats_Actions.code,
 			hlstats_Actions.description,

@@ -1,12 +1,10 @@
 <?php
 
-	if ( !defined('IN_HLSTATS') )
-	{
+	if (!defined('IN_HLSTATS')) {
 		die('Do not access this file directly.');
 	}
 	
-	if ( !file_exists("./updater") )
-	{
+	if (!file_exists("./updater")) {
 		die('Updater directory is missing.');
 	}
 	

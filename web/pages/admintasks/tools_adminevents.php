@@ -36,8 +36,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
-	if ( !defined('IN_HLSTATS') ) { die('Do not access this file directly.'); }
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
+
+	if ($auth->userdata["acclevel"] < 80) {
+        die ("Access denied!");
+	}
 ?>
 
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo IMAGE_PATH; ?>/downarrow.gif" width=9 height=6 class="imageformat"><b>&nbsp;<?php echo $task->title; ?></b> (Last <?php echo $g_options["DeleteDays"]; ?> Days)<p>
@@ -144,12 +149,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Servers.serverId = <table>.serverId
 	");
 	
-	if (isset($_GET['type']) && $_GET['type'] != '')
-	{
-		$where = "WHERE eventType='".$db->escape($_GET['type'])."'";
-	}
-	else
-	{
+	if (isset($_GET['type']) && $_GET['type'] != '') {
+		$where = "WHERE eventType='" . $db->escape($_GET['type']) . "'";
+	} else {
 		$where = "";
 	}
 	

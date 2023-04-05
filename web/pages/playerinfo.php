@@ -35,27 +35,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 For support and installation notes visit http://www.hlxcommunity.com
 */
-	if ( !defined('IN_HLSTATS') )
-	{
-		die('Do not access this file directly.');
-	}
+
+    if (!defined('IN_HLSTATS')) {
+        die('Do not access this file directly.');
+    }
 
 	// Player Details
 	$player = valid_request(intval($_GET['player'] ?? ''), true);
 	$uniqueid = valid_request(strval($_GET['uniqueid'] ?? ''), false);
 	$game = valid_request(strval($_GET['game'] ?? ''), false);
 
-	if (!$player && $uniqueid)
-	{
-		if (!$game)
-		{
+	if (!$player && $uniqueid) {
+		if (!$game) {
 			header("Location: " . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid");
 			exit;
 		}
 
 		$uniqueid = preg_replace('/^STEAM_\d+?\:/i','',$uniqueid);
-		$db->query
-		("
+
+        $db->query("
 			SELECT
 				hlstats_PlayerUniqueIds.playerId
 			FROM
@@ -63,28 +61,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 			WHERE
 				hlstats_PlayerUniqueIds.uniqueId = '$uniqueid'
 		");
-		if ($db->num_rows() > 1)
-		{
+
+		if ($db->num_rows() > 1) {
 			header("Location: " . $g_options['scripturl'] . "&mode=search&st=uniqueid&q=$uniqueid&game=$game");
 			exit;
-		}
-		elseif ($db->num_rows() < 1)
-		{
+		} elseif ($db->num_rows() < 1) {
 			error("No players found matching uniqueId '$uniqueid'");
-		}
-		else
-		{
+		} else {
 			list($player) = $db->fetch_row();
 			$player = intval($player);
 		}
-	}
-	elseif (!$player && !$uniqueid)
-	{
+	} elseif (!$player && !$uniqueid) {
 		error("No player ID specified.");
 	}
 
-	$db->query
-	("
+	$db->query("
 		SELECT
 			hlstats_Players.playerId,
 			hlstats_Players.connection_time,
@@ -125,25 +116,27 @@ For support and installation notes visit http://www.hlxcommunity.com
 		LIMIT
 			1
 	");
-	if ($db->num_rows() != 1)
-	{
+
+	if ($db->num_rows() != 1) {
 		error("No such player '$player'.");
 	}
+
 	$playerdata = $db->fetch_array();
 	$db->free_result();
 	$pl_name = $playerdata['lastName'];
-	if (strlen($pl_name) > 10)
-	{
+
+    if (strlen($pl_name) > 10) {
 		$pl_shortname = substr($pl_name, 0, 8) . '...';
 	} else {
 		$pl_shortname = $pl_name;
 	}
+
 	$pl_name = htmlspecialchars($pl_name, ENT_COMPAT);
 	$pl_shortname = htmlspecialchars($pl_shortname, ENT_COMPAT);
 	$pl_urlname = urlencode($playerdata['lastName']);
 	$game = $playerdata['game'];
-	$db->query
-	("
+
+    $db->query("
 		SELECT
 			hlstats_Games.name
 		FROM
@@ -151,27 +144,24 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Games.code = '$game'
 	");
-	if ($db->num_rows() != 1)
-	{
+
+	if ($db->num_rows() != 1) {
 		$gamename = ucfirst($game);
-	}
-	else
-	{
+	} else {
 		list($gamename) = $db->fetch_row();
 	}
+
 	$hideranking = $playerdata['hideranking'];
-	if( $hideranking == 2 )
-	{
+
+    if ($hideranking == 2) {
 		$statusmsg = '<span style="color:red;font-weight:bold;">Banned</span>';
-	}
-	else
-	{
+	} else {
 		$statusmsg = '<span style="color:green;font-weight:bold;">In good standing</span>';
 	}
 // Required on a few pages, just decided to add it here
 // May get moved in the future
-	$db->query
-	("
+
+$db->query("
 		SELECT
 			COUNT(hlstats_Events_Frags.killerId)
 		FROM
@@ -180,9 +170,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.killerId = '$player'
 			AND hlstats_Events_Frags.headshot = 1
 	");
+
 	list($realheadshots) = $db->fetch_row();
-	$db->query
-	("
+
+    $db->query("
 		SELECT
 			COUNT(hlstats_Events_Frags.killerId)
 		FROM
@@ -190,9 +181,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Events_Frags.killerId = '$player'
 	");
+
 	list($realkills) = $db->fetch_row();
-	$db->query
-	("
+
+    $db->query("
 		SELECT
 			COUNT(hlstats_Events_Frags.victimId)
 		FROM
@@ -200,9 +192,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 		WHERE
 			hlstats_Events_Frags.victimId = '$player'
 	");
+
 	list($realdeaths) = $db->fetch_row();
-	$db->query
-	("
+
+    $db->query("
 		SELECT
 			COUNT(hlstats_Events_Teamkills.killerId)
 		FROM
@@ -213,19 +206,17 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	list($realteamkills) = $db->fetch_row();
 
-	if (!isset($_GET['killLimit']))
+	if (!isset($_GET['killLimit'])) {
 		$killLimit = 5;
-	else 
+	} else {
 		$killLimit = valid_request($_GET['killLimit'], true);
+	}
 
-	if (isset($_GET['type']) && $_GET['type'] == 'ajax')
-	{
+	if (isset($_GET['type']) && $_GET['type'] == 'ajax') {
 		$tabs = explode('_', preg_replace('[^a-z]', '', $_GET['tab']));
 
-		foreach ($tabs as $tab)
-		{
-			if (file_exists(PAGE_PATH . "/playerinfo_$tab.php"))
-			{
+		foreach ($tabs as $tab) {
+			if (file_exists(PAGE_PATH . "/playerinfo_$tab.php")) {
 				@include(PAGE_PATH . "/playerinfo_$tab.php");
 			}
 		}
