@@ -45,6 +45,7 @@ For support and installation notes visit http://www.hlxcommunity.com
  * @version 2008
  * @access public
  */
+
 class Table
 {
 	var $columns;
@@ -104,7 +105,6 @@ class Table
 			}
 		}
 
-
 		if (!is_array($this->columnlist) || !in_array($this->sort, $this->columnlist))
 		{
 			$this->sort = $sort_default;
@@ -134,7 +134,6 @@ class Table
 <div class="subblock">
 
 <table class="data-table">
-
 	<tr class="data-table-head">
 <?php
 		$totalwidth = 0;
@@ -236,10 +235,11 @@ class Table
 			foreach ($this->columns as $col)
 			{
 				$c = ($i % 2) + 1;
-				$class="";          
+				$class = "";
 
 				$cellbody = '';
 				$colval = $rowdata[$col->name];
+                $colval_lower = (!empty($rowdata[$col->name])) ? strtolower($rowdata[$col->name]) : null;
 
 				if ($col->align != 'left')
 				{
@@ -299,12 +299,12 @@ class Table
 					}                
 				}  
 				
-				switch ($col->type)
-				{
+				switch ($col->type) {
 					case 'elorank':
-	                                        if ($colval == '') {
-        	                                      $colval = '0';
-                	                        }
+                        if (empty($colval)) {
+                              $colval = '0';
+                        }
+
 						$cellbody = '<img src="' . IMAGE_PATH  . "/mmranks/" . $colval . ".png\" class=\"tableicon\" alt=\"elorank\" style=\"height:20px;width:50px;\" />";
 						break;
 					case 'timestamp':
@@ -312,41 +312,42 @@ class Table
 						break;           
 
 					case 'roleimg':
-						$image = getImage("/games/$game/roles/".strtolower($colval));
+						$image = getImage("/games/$game/roles/" . $colval_lower);
 						// check if image exists for game -- otherwise check realgame
 						if ($image)
 						{
-							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval] . '" title="' . $col->fname[$colval] . '" />&nbsp;';
+							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval_lower] . '" title="' . $col->fname[$colval_lower] . '" />&nbsp;';
 						}
-						elseif ($image = getImage("/games/$realgame/roles/".strtolower($colval)))
+						elseif ($image = getImage("/games/$realgame/roles/" . $colval_lower))
 						{
-							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval] . '" title="' . $col->fname[$colval] . '" />&nbsp;';
+							$cellbody .= '<img src="' . $image['url'] . '" alt="' . $col->fname[$colval_lower] . '" title="' . $col->fname[$colval_lower] . '" />&nbsp;';
 						}
 						
-						if ($col->fname[$colval] != '')
+						if (!empty($col->fname[$colval_lower]))
 						{
-							$cellbody .= '<b>'.$col->fname[$colval].'</b>';
+							$cellbody .= '<b>' . $col->fname[$colval_lower] . '</b>';
 						}
 						else
 						{
-							$cellbody .= '<b>'.ucwords(preg_replace('/_/', ' ', $colval)).'</b>';
+							$cellbody .= '<b>' . ucwords(preg_replace('/_/', ' ', $colval)) . '</b>';
 						}
+
 						break;
 					  
 					case 'weaponimg':
 						// Check if game has the image -- if not, failback to real game.  If not, no image.
-						$image = getImage("/games/$realgame/weapons/".strtolower($colval));
+						$image = getImage("/games/$realgame/weapons/" . $colval_lower);
 						if ($image)
 						{
-							$cellbody .= '<img src="' . $image['url'] . '" ' . $image['size'] . ' alt="'.$col->fname[$colval].'" title="'.$col->fname[$colval].'" />';
+							$cellbody .= '<img src="' . $image['url'] . '" ' . $image['size'] . ' alt="' . $col->fname[$colval_lower] . '" title="' . $col->fname[$colval_lower] . '" />';
 						}
-						elseif ($image = getImage("/games/$realgame/weapons/".strtolower($colval)))
+						elseif ($image = getImage("/games/$realgame/weapons/" . $colval_lower))
 						{
-							$cellbody .= '<img src="' . $image['url'] . '" ' . $image['size'] . ' alt="'.$col->fname[$colval].'" title="'.$col->fname[$colval].'" />';
+							$cellbody .= '<img src="' . $image['url'] . '" ' . $image['size'] . ' alt="' . $col->fname[$colval_lower] . '" title="' . $col->fname[$colval_lower] . '" />';
 						}
 						else
 						{
-							$cellbody .= '<b>' . (($col->fname[$colval] != '') ? $col->fname[$colval] : ucwords(preg_replace('/_/', ' ', $colval))) . '</b>';
+							$cellbody .= '<b>' . (!empty($col->fname[$colval_lower])) ? $col->fname[$colval_lower] : ucwords(preg_replace('/_/', ' ', $colval)) . '</b>';
 						}
 						break;
 
