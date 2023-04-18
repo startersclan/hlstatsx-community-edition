@@ -98,6 +98,8 @@ define("IMAGE_PATH", './hlstatsimg');
 // How often dynamicly generated images are updated (in seconds)
 define("IMAGE_UPDATE_INTERVAL", 300);
 
+define('GOOGLE_MAPS_API_KEY', "");
+
 //define("DB_DEBUG", true);
 
 ?>
