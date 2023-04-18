@@ -149,7 +149,7 @@ function printMap($type = 'main')
 					$servers_js = array();
 					foreach ($map_location['servers'] as $server)
 					{
-						$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`´':;ß²³#+~_\-|<>\/@{}äöüÄÖÜ ]/");
+						$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`Ò‘':;Ğ¯Ğ†Ñ–#+~_\-|<>\/@{}Ğ´Ñ†ÑŒĞ”Ğ¦Ğ¬ ]/");
 						$replace_pattern = array("");
 						$server['name'] = preg_replace($search_pattern, $replace_pattern, $server['name']);
 						$temp = "[" . $server['serverId'] . ',';
@@ -182,7 +182,7 @@ function printMap($type = 'main')
 					{
 						$players[$row['cli_lat'] . ',' . $row['cli_lng']] = array('cli_lat' => $row['cli_lat'], 'cli_lng' => $row['cli_lng'], 'cli_city' => $row['cli_city'], 'cli_country' => $row['cli_country']);
 					}
-					$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`´':;ß²³#+~_\-|<>\/@{}äöüÄÖÜ ]/");
+					$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`Ò‘':;Ğ¯Ğ†Ñ–#+~_\-|<>\/@{}Ğ´Ñ†ÑŒĞ”Ğ¦Ğ¬ ]/");
 					$replace_pattern = array("");
 					$row['name'] = preg_replace($search_pattern, $replace_pattern, $row['name']);
 
@@ -245,16 +245,17 @@ function printMap($type = 'main')
 							'country' => $row['country']
 						);
 					}
-					$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`´':;ß²³#+~_\-|<>\/@{}äöüÄÖÜ ]/");
+					$search_pattern = array("/[^A-Za-z0-9\[\]*.,=()!\"$%&^`Ò‘':;Ğ¯Ğ†Ñ–#+~_\-|<>\/@{}Ğ´Ñ†ÑŒĞ”Ğ¦Ğ¬ ]/");
 					$replace_pattern = array("");
-					$row['name'] = preg_replace($search_pattern, $replace_pattern, $row['name']);
+					$row['lastName'] = preg_replace($search_pattern, $replace_pattern, $row['lastName']);
 					
 					$players[ $row['lat'] . ',' . $row['lng'] ]['players'][] = array(
 						'playerId' => $row['playerId'],
 						'name' => $row['lastName'],
 						'kills' => $row['kills'],
 						'deaths' => $row['deaths'],
-						'connected' => $row['connected']
+                        // Where should this information come from??
+						//'connected' => $row['connected']
 					);
 				}
 				
