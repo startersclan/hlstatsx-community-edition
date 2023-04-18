@@ -249,23 +249,30 @@ printSectionTitle('Clan Information');
 							kills desc, headshots desc
 						LIMIT 1
                     ");
-                     
+
+					$weap_name = "";
+					$fav_weapon = "";
+
 					while ($rowdata = $db->fetch_row($result))
 					{ 
 						$fav_weapon = $rowdata[0];
 						$weap_name = htmlspecialchars($rowdata[1]);
 					}
+
 					if ($fav_weapon == '')
 						$fav_weapon = 'Unknown';
 					$image = getImage("/games/$game/weapons/$fav_weapon");
                     // check if image exists
 					$weaponlink = "<a href=\"hlstats.php?mode=weaponinfo&amp;weapon=$fav_weapon&amp;game=$game\">";
-						$cellbody = "$weaponlink<img src=\"" . $image['url'] . "\" alt=\"$weap_name\" title=\"$weap_name\" />";
+
                     if ($image) {
+						$cellbody = "$weaponlink<img src=\"" . $image['url'] . "\" alt=\"$weap_name\" title=\"$weap_name\" />";
                     } else {
 						$cellbody = "$weaponlink<strong> $weaponlink$weap_name</strong>";
                     }
+
 					$cellbody .= "</a>";
+
                     echo $cellbody;
                ?></td>
             </tr>
