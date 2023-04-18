@@ -77,8 +77,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		'desc',
 		true
 	);
-	
-    
+
 	$db->query("
 		SELECT
 			COUNT(*)

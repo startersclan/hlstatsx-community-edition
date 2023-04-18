@@ -71,7 +71,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	while ($rowdata = $db->fetch_row($result))
 	{ 
 		$code = $rowdata[0];
-		$fname[$code] = $rowdata[1];
+		$fname[strToLower($code)] = $rowdata[1];
 	}
 	$tblWeapons = new Table
 	(
