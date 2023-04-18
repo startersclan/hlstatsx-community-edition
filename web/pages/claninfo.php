@@ -106,17 +106,14 @@
 		$gamename = ucfirst($game);
 	} else {
 		list($gamename) = $db->fetch_row();
-	}	
-	
-	if ( $_GET['type'] == 'ajax' )
-	{
+	}
+
+    if (!empty($_GET['type']) && $_GET['type'] == 'ajax') {
 		unset($_GET['type']);
 		$tabs = explode('|', preg_replace('[^a-z]', '', $_GET['tab']));
 		
-		foreach ( $tabs as $tab )
-		{
-			if ( file_exists(PAGE_PATH . '/claninfo_' . $tab . '.php') )
-			{
+		foreach ($tabs as $tab) {
+			if (file_exists(PAGE_PATH . '/claninfo_' . $tab . '.php')) {
 				@include(PAGE_PATH . '/claninfo_' . $tab . '.php');
 			}
 		}
