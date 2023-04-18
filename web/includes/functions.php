@@ -437,7 +437,7 @@ function getEmailLink($email, $maxlength = 40)
  * @param string $filename
  * @return mixed Either the image if exists, or false otherwise
  */
-function getImage($filename)
+function getImage($filename) : mixed
 {
 	preg_match('/^(.*\/)(.+)$/', $filename, $matches);
 	$relpath = $matches[1];
@@ -469,10 +469,8 @@ function getImage($filename)
 		return array('url' => "$url.$ext", 'path' => "$path.$ext", 'width' => $size[0], 'height' => $size[1],
 			'size' => $size[3]);
 	}
-	else
-	{
-		return false;
-	}
+
+    return false;
 }
 
 function mystripslashes($text)

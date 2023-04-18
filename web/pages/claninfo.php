@@ -109,14 +109,15 @@
 	}
 
     if (!empty($_GET['type']) && $_GET['type'] == 'ajax') {
-		unset($_GET['type']);
 		$tabs = explode('|', preg_replace('[^a-z]', '', $_GET['tab']));
-		
+		unset($_GET['type']);
+
 		foreach ($tabs as $tab) {
 			if (file_exists(PAGE_PATH . '/claninfo_' . $tab . '.php')) {
 				@include(PAGE_PATH . '/claninfo_' . $tab . '.php');
 			}
 		}
+
 		exit;
 	}
 
