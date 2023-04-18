@@ -133,6 +133,8 @@
 	if ($g_options['show_google_map'] == 1) {
 		echo ('<script src="http://maps.google.com/maps/api/js?key' . GOOGLE_MAPS_API_KEY . '" type="text/javascript"></script>');
 	}
+
+    $members_page = (empty($_GET['members_page'])) ? "Unknown" : valid_request($_GET['members_page'], true);
 ?>
 
 <div class="block" id="main">
@@ -160,10 +162,13 @@
 	<script type="text/javascript">
 	var Tabs = new Tabs($('main_content'), $$('#main ul.subsection_tabs a'), {
 		'mode': 'claninfo',
-		'game': '<?php echo $game; ?>',
-		'loadingImage': '<?php echo IMAGE_PATH; ?>/ajax.gif',
+		'game': '<?=$game;?>',
+		'loadingImage': '<?=IMAGE_PATH;?>/ajax.gif',
 		'defaultTab': 'general',
-		'extra': {'clan': '<?php echo $clan; ?>','members_page': '<?php echo valid_request($_GET['members_page'], true); ?>'}
+		'extra': {
+            'clan': '<?=$clan;?>',
+            'members_page': '<?=$members_page;?>'
+        }
 	});
 	</script>
 <?php
