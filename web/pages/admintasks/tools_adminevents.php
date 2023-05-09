@@ -148,11 +148,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 		LEFT JOIN hlstats_Servers ON
 			hlstats_Servers.serverId = <table>.serverId
 	");
-	
+
+	$where = "";
+    $select_type = "";
+
 	if (isset($_GET['type']) && $_GET['type'] != '') {
+		$select_type = $_GET['type'];
 		$where = "WHERE eventType='" . $db->escape($_GET['type']) . "'";
-	} else {
-		$where = "";
 	}
 	
 	$result = $db->query("
@@ -200,13 +202,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	$types[""] = "(All)";
 	
-	while (list($k) = $db->fetch_row($resultTypes))
-	{
+	while (list($k) = $db->fetch_row($resultTypes)) {
 		$types[$k] = $k;
 	}
 	
-	echo getSelect("type", $types, $type);
-?> <input type="submit" value="Filter" class="smallsubmit" /><br /><br />
+	echo getSelect("type", $types, $select_type);
+?>
+<input type="submit" value="Filter" class="smallsubmit" /><br /><br />
 </form>
 <?php
 	$table->draw($result, $numitems, 95, "center");
