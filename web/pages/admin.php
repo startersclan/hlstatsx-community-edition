@@ -774,8 +774,7 @@ class EditList
 					}
 
 					$onClick = '';
-					if ($this->helpKey != '')
-					{
+					if (!empty($this->helpKey) && !empty($rowdata[$this->helpKey])) {
 						$onClick = "onmouseover=\"javascript:showHelp('" . strtolower($rowdata[$this->helpKey]) . "')\" onmouseout=\"javascript:hideHelp()\"";
 					}
 
