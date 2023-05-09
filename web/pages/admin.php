@@ -763,10 +763,11 @@ class EditList
 					/* else fall through to default */
 
 				default:
-					if ($col->type == 'password')
-					{
+					$onclick = '';
+					if ($col->type == 'password') {
 						$onclick = " onclick=\"if (this.value == '(encrypted)') this.value='';\"";
 					}
+
 					if ($col->datasource != '' && !isset($rowdata[$col->name]))
 					{
 						$value = $col->datasource;
