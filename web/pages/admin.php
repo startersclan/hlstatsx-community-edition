@@ -434,7 +434,7 @@ class EditList
 						continue;
 					}
 
-					$value = mystripslashes($_POST[$row . "_" . $col->name]);
+					$value = (!empty($_POST[$row . "_" . $col->name])) ? mystripslashes($_POST[$row . "_" . $col->name]) : null;
 					
 					//  legacy code that should have never been here. these should never be html-escaped in the db.
 					//  if there's a problem with removing this, it needs to be fixed on the web/display end
