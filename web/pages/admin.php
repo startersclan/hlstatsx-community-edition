@@ -409,12 +409,11 @@ class EditList
 		
 		foreach ($_POST['rows'] as $row)
 		{
-			if ($_POST[$row . '_delete'])
-			{
-				if ( !empty($this->deleteCallback) && is_callable($this->deleteCallback) )
-				{
+			if (!empty($_POST[$row . '_delete'])) {
+				if (!empty($this->deleteCallback) && is_callable($this->deleteCallback)) {
 					call_user_func($this->deleteCallback, $row);
 				}
+
 				$db->query("
 					DELETE FROM
 						$this->table
@@ -493,14 +492,11 @@ class EditList
 			}
 		}
 
-		if ($this->error())
-		{
+		if ($this->error()) {
 			return false;
 		}
-		else
-		{
-			return true;
-		}
+
+        return true;
 	}
 
 	function draw($result, $draw_new = true)
