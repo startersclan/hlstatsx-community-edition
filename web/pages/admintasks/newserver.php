@@ -92,7 +92,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 	{
 		return trim(htmlspecialchars(mystripslashes($data)));
 	}
-	
+
+    $server_ip = (!empty($_POST['server_address'])) ? clean_data($_POST['server_address']) : "";
+    $server_port = (!empty($_POST['server_port'])) ? clean_data($_POST['server_port']) : "" ;
+    $server_name = (!empty($_POST['server_name'])) ? clean_data($_POST['server_name']) : "";
+    $server_rcon = (!empty($_POST['server_rcon'])) ? clean_data($_POST['server_rcon']) : "";
+    $server_public_address = (!empty($_POST['public_address'])) ? clean_data($_POST['public_address']) : "";
 ?>
 Enter the address of a server that you want to accept data from.<br /><br />
 The "Public Address" should be the address you want shown to users. If left blank, it will be generated from the IP Address and Port. If you are using any kind of log relaying utility (i.e. hlstats.pl will not be receiving data directly from the game servers), you will want to set the IP Address and Port to the address of the log relay program, and set the Public Address to the real address of the game server. You will need a separate log relay for each game server. You can specify a hostname (or anything at all) in the Public Address.<p>
@@ -117,23 +122,23 @@ The "Public Address" should be the address you want shown to users. If left blan
 		<table width="100%" border=0 cellspacing=1 cellpadding=4>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Server IP Address</td>
-				<td class='fSmall'><input type="text" name="server_address" maxlength="15" size="15" value="<?php echo clean_data($_POST['server_address']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="server_address" maxlength="15" size="15" value="<?=$server_ip;?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Server Port</td>
-				<td class='fSmall'><input type="text" name="server_port" maxlength="5" size="5" value="<?php echo clean_data($_POST['server_port']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="server_port" maxlength="5" size="5" value="<?=$server_port;?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Server Name</td>
-				<td class='fSmall'><input type="text" name="server_name" maxlength="255" size="35" value="<?php echo clean_data($_POST['server_name']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="server_name" maxlength="255" size="35" value="<?=$server_name;?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Rcon Password</td>
-				<td class='fSmall'><input type="text" name="server_rcon" maxlength="128" size="15" value="<?php echo clean_data($_POST['server_rcon']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="server_rcon" maxlength="128" size="15" value="<?=$server_rcon;?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Public Address</td>
-				<td class='fSmall'><input type="text" name="public_address" maxlength="128" size="15" value="<?php echo clean_data($_POST['public_address']); ?>" /></td>
+				<td class='fSmall'><input type="text" name="public_address" maxlength="128" size="15" value="<?=$server_public_address;?>" /></td>
 			</tr>
 			<tr valign="bottom" class="head">
 				<td class='fSmall'>Admin Mod</td>
@@ -141,11 +146,11 @@ The "Public Address" should be the address you want shown to users. If left blan
 					<select name="game_mod">
 					<option value="PLEASESELECT">PLEASE SELECT</option>
 					<?php
-					$db->query("SELECT code, name FROM `hlstats_Mods_Supported`");
-					while ( $row = $db->fetch_array() )
-					{
-						echo '<option value="' . $row['code'] . '">' . $row['name'] . '</option>';
-					}
+                        $db->query("SELECT code, name FROM `hlstats_Mods_Supported`");
+
+                        while ($row = $db->fetch_array()) {
+                            echo '<option value="' . $row['code'] . '">' . $row['name'] . '</option>';
+                        }
 					?>
 					</select>
 				</td>
@@ -154,7 +159,7 @@ The "Public Address" should be the address you want shown to users. If left blan
 	</td>
 </tr>
 	<table width="75%" border=0 cellspacing=0 cellpadding=0>
-	<tr>
-		<td align="center"><input type="submit" value="  Add Server  " class="submit" onclick="checkMod();return false;"></td>
-	</tr>
+        <tr>
+            <td align="center"><input type="submit" value="  Add Server  " class="submit" onclick="checkMod();return false;"></td>
+        </tr>
 	</table>
