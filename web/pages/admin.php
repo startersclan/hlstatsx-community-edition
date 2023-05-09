@@ -329,9 +329,8 @@ class EditList
 		global $db;
 
 		$okcols = 0;
-		foreach ($this->columns as $col)
-		{
-			$value = mystripslashes($_POST["new_$col->name"]);
+		foreach ($this->columns as $col) {
+			$value = (!empty($_POST["new_$col->name"])) ? mystripslashes($_POST["new_$col->name"]) : '';
 			//  legacy code that should have never been here. these should never be html-escaped in the db.
 			//  if there's a problem with removing this, it needs to be fixed on the web/display end
 			//  -psychonic
