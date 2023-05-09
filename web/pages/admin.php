@@ -1057,7 +1057,7 @@ $admintasks['tools_settings_copy'] = new AdminTask('Duplicate Game settings', 80
 
 
 // Show Tool
-if ($admintasks[$selTask] && ($admintasks[$selTask]->type == 'tool' || $admintasks[$selTask]->type == 'subtool'))
+if (!empty($admintasks[$selTask]) && ($admintasks[$selTask]->type == 'tool' || $admintasks[$selTask]->type == 'subtool'))
 {
 	$task = $admintasks[$selTask];
 
