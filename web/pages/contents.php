@@ -56,8 +56,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 	
 	$num_games = $db->num_rows($resultGames);
 	$redirect_to_game = 0;  
-	
-	if ($num_games == 1 || $game = valid_request($_GET['game'], false)) {
+	$game = (!empty($_GET['game'])) ? valid_request($_GET['game'], false) : null;
+
+	if ($num_games == 1 || !empty($game)) {
 		$redirect_to_game++;
 		if ($num_games == 1) {
 			list($game) = $db->fetch_row($resultGames);
