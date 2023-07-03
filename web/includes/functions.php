@@ -437,7 +437,7 @@ function getEmailLink($email, $maxlength = 40)
  * @param string $filename
  * @return mixed Either the image if exists, or false otherwise
  */
-function getImage($filename) : mixed
+function getImage($filename)
 {
 	preg_match('/^(.*\/)(.+)$/', $filename, $matches);
 	$relpath = $matches[1];
