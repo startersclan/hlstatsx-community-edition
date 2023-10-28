@@ -1,4 +1,5 @@
 /.idea
 /web/.idea
-/.vscode
+/.vscode/*
+!/.vscode/launch.json
 /.vagrant
