@@ -28,7 +28,7 @@ services:
     image: startersclan/source-udp-forwarder:latest
     environment:
       - UDP_LISTEN_ADDR=:26999
-      - UDP_FORWARD_ADDR=127.0.0.1:27500
+      - UDP_FORWARD_ADDR=daemon:27500
       - FORWARD_PROXY_KEY=somedaemonsecret # The daemon's proxy_key secret
       - FORWARD_GAMESERVER_IP=192.168.1.100 # The gameserver's IP as registered in the HLStatsX:CE database
       - FORWARD_GAMESERVER_PORT=27015 # The gameserver's IP as registered in the HLStatsX:CE database
@@ -52,7 +52,7 @@ services:
           exec /source-udp-forwarder
 
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
-  # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel and not via env vars
+  # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
   # HLStatsX:CE perl daemon: https://github.com/startersclan/docker-hlstatsxce-daemon
   # NOTE: Currently, as of v1.6.19, the daemon crashes upon startup. You will need to fix perl errors and rebuild the image.
   daemon:
@@ -78,7 +78,7 @@ services:
     networks:
       - default
 
-  # 4. The DB for HLStatsX:CE
+  # 4. HLStatsX:CE DB
   db:
     image: mysql:5.7
     environment:
@@ -93,7 +93,9 @@ services:
     networks:
       - default
 
-  # 5. The web frontend
+  # 5a. HLStatsX:CE web - nginx
+  # Available at http://localhost:8083
+  # Admin Panel username: admin, password: 123456
   web-nginx:
     build:
       dockerfile: Dockerfile.web-nginx
@@ -111,6 +113,7 @@ services:
       - web-php
     working_dir: /web
 
+  # 5b. HLStatsX:CE web - php
   web-php:
     build:
       dockerfile: Dockerfile.web-php
@@ -118,7 +121,7 @@ services:
       target: dev
     volumes:
       - ./web:/web
-      - ./config/web/config.php:/web/config.php:ro # Main config file
+      - ./config/web/config.php:/web/config.php:ro # Main config file.
       - ./config/web/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - ./config/web/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     networks:
@@ -139,6 +142,7 @@ services:
     networks:
       - default
 
+  # Init container to set permissions in mounted folders and volumes
   init-container:
     image: alpine:latest
     volumes:

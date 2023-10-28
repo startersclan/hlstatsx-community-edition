@@ -3,3 +3,5 @@
 /.vscode/*
 !/.vscode/launch.json
 /.vagrant
+/web/hlstatsimg/progress
+/web/hlstatsimg/graph

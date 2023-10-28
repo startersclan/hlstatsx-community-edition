@@ -203,17 +203,20 @@ $valid_modes = array(
 	'profile'
 );
    
-if (file_exists('./updater') && $mode != 'updater')
-{
-	pageHeader(array('Update Notice'), array('Update Notice' => ''));
-	echo "<div class=\"warning\">\n" . 
-	"<span class=\"warning-heading\"><img src=\"".IMAGE_PATH."/warning.gif\" alt=\"Warning\"> Warning:</span><br />\n" .
-	"<span class=\"warning-text\">The updater folder was detected in your web directory.<br />
-	To perform a Database Update, please go to <strong><a href=\"{$g_options['scripturl']}?mode=updater\">HLX:CE Database Updater</a></strong> to perform the database update.<br /><br />
-	<strong>If you have already performed the database update, <strong>you must delete the \"updater\" folder from your web folder.</span>\n</div>";
-	pageFooter();
-	die();
-}
+// In docker, the updater folder will always be present, to allow
+// DB upgrades to be done using this updater. Hence, this code is 
+// commented out to allow things to work correctly after the DB upgrade in docker.
+// if (file_exists('./updater') && $mode != 'updater')
+// {
+// 	pageHeader(array('Update Notice'), array('Update Notice' => ''));
+// 	echo "<div class=\"warning\">\n" . 
+// 	"<span class=\"warning-heading\"><img src=\"".IMAGE_PATH."/warning.gif\" alt=\"Warning\"> Warning:</span><br />\n" .
+// 	"<span class=\"warning-text\">The updater folder was detected in your web directory.<br />
+// 	To perform a Database Update, please go to <strong><a href=\"{$g_options['scripturl']}?mode=updater\">HLX:CE Database Updater</a></strong> to perform the database update.<br /><br />
+// 	<strong>If you have already performed the database update, <strong>you must delete the \"updater\" folder from your web folder.</span>\n</div>";
+// 	pageFooter();
+// 	die();
+// }
    
 if ( !in_array($mode, $valid_modes) )
 {

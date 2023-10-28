@@ -58,15 +58,15 @@ RUN set -eux; \
 FROM base AS prod
 
 # Set permissions for 'www-data' user
+# COPY --chown=www-data:www-data --chmod=640  /web /web
 COPY ./web /web
-WORKDIR /web
-RUN chown -R www-data:www-data . \
-    && find . -type d -exec chmod 750 {} \; \
-    && find . -type f -exec chmod 640 {} \;
+RUN set -eux; \
+    chown -R www-data:www-data /web; \
+    find /web -type d -exec chmod 750 {} \; ; \
+    find /web -type f -exec chmod 640 {} \; ;
 
 # Add default configs
-# COPY --from=build /web /web
-COPY ./config/ASP/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
-COPY ./config/ASP/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./config/web/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
+COPY ./config/web/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /web
