@@ -31,6 +31,27 @@ docker-compose up
 # HLStatsX:CE web frontend available at http://localhost:8081/. Admin Panel username: admin, password 123456
 # phpmyadmin available at http://localhost:8083. Root username: root, root password: root. Username: hlstatsxce, password: hlstatsxce
 
+# 2. Once setup, login to Admin Panel at http://localhost:8081/?mode=admin. Click HLstatsX:CE Settings > Proxy Settings, change the daemon's proxy key to 'somedaemonsecret'
+# This enables gameserver logs forwarded via source-udp-forwarder to be accepted by the daemon.
+# Then, restart the daemon.
+docker-compose restart daemon
+
+# 3. Finally, add a Counter-Strike 1.6 server. click Games > and unhide 'cstrike' game. 
+# Then, click Game Settings > Counter-Strike (cstrike) > Add Server. 
+#   IP: 192.168.1.100
+#   Port: 27015
+#   Name: My Counter-Strike 1.6 server
+#   Rcon Password: password
+#   Public Address: example.com:27015
+#   Admin Mod: AMX Mod X
+# On the next page, click Apply.
+
+# 4. Reload the daemon via Tools > HLstatsX: CE Daemon Control, using Daemon IP: daemon, port: 27500. You should see the daemon reloaded in the logs.
+# The stats of the gameserver is now recorded :)
+
+# 5. To verify stats recording works, restart the gameserver. You should see the daemon recording the gameserver logs. All the best :)
+docker-compose restart cstrike
+
 # Development - Install vscode extensions
 # Once installed, set breakpoints in code, and press F5 to start debugging.
 code --install-extension bmewburn.vscode-intelephense-client # PHP intellisense
@@ -42,13 +63,20 @@ sudo iptables -A INPUT -i br+ -j ACCEPT
 
 # CS 1.6 server - Restart server
 docker-compose restart cstrike
-# CS 1.6 server - Attach to the CS 1.6 server console
+# CS 1.6 server - Attach to the CS 1.6 server console. Press CTRL+P and then CTRL+Q to detach
 docker attach $( docker-compose ps -q cstrike )
 # CS 1.6 server - Exec into container
 docker exec -it $( docker-compose ps -q cstrike) bash
 
-# asp-php - Exec into container
+# web-nginx - Exec into container
+docker exec -it $( docker-compose ps -q web-nginx ) sh
+# web-php - Exec into container
 docker exec -it $( docker-compose ps -q web-php ) sh
+# db - Exec into container
+docker exec -it $( docker-compose ps -q db ) sh
+
+# Test routes
+docker-compose -f docker-compose.test.yml up
 
 # Test production builds locally
 docker build -t startersclan/hlstatsx-community-edition:daemon -f Dockerfile.daemon .

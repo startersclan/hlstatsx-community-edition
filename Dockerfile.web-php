@@ -32,6 +32,8 @@ RUN set -eux; \
     docker-php-ext-install sockets; \
     apk del .deps
 
+WORKDIR /web
+
 FROM base AS dev
 
 # Xdebug: https://stackoverflow.com/questions/46825502/how-do-i-install-xdebug-on-dockers-official-php-fpm-alpine-image
@@ -68,5 +70,3 @@ RUN set -eux; \
 # Add default configs
 COPY ./config/web/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./config/web/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
-
-WORKDIR /web
