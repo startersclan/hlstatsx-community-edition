@@ -10,7 +10,7 @@
             "request": "launch",
             "port": 9000,
             "pathMappings": {
-                "/src": "${workspaceRoot}/src",
+                "/web": "${workspaceRoot}/web",
             },
             "xdebugSettings": {
                 "max_data": 10000,

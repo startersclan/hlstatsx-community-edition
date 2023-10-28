@@ -97,3 +97,9 @@ docker-compose down
 docker volume rm hlstatsx-community-edition_dns-volume
 docker volume rm hlstatsx-community-edition_db-volume
 ```
+
+## FAQ
+
+### Q: `Xdebug: [Step Debug] Could not connect to debugging client. Tried: host.docker.internal:9000 (through xdebug.client_host/xdebug.client_port)` appears in the php logs
+
+A: The debugger is not running. Press `F5` in `vscode` to start the `php` `xdebug` debugger. If you stopped the debugger, it is safe to ignore this message.
