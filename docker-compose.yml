@@ -6,7 +6,6 @@ services:
     image: goldsourceservers/cstrike:latest
     volumes:
       - dns-volume:/dns:ro
-    # network_mode: host
     networks:
       - default
     stdin_open: true
@@ -36,7 +35,6 @@ services:
       - LOG_FORMAT=txt
     volumes:
       - dns-volume:/dns
-    # network_mode: host
     networks:
       - default
     entrypoint:
@@ -74,7 +72,6 @@ services:
       - --debug
       # - --debug
       # - --help
-    # network_mode: host
     networks:
       - default
 
@@ -89,7 +86,6 @@ services:
     volumes:
       - db-volume:/var/lib/mysql
       - ./sql/install.sql:/docker-entrypoint-initdb.d/install.sql:ro
-    # network_mode: host
     networks:
       - default
 
