@@ -148,29 +148,27 @@ RUN apt-get update \
         openssl \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./docker-entrypoint.daemon.sh /docker-entrypoint.sh
-
-RUN chmod +x /docker-entrypoint.sh
-
 EXPOSE 27500/udp
 
 STOPSIGNAL SIGINT
 
 WORKDIR /scripts
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["perl", "./hlstats.pl"]
 
-FROM base AS prod
-
 # Copy scripts and set permissions
-COPY scripts /scripts
-RUN apt-get update && apt-get install git -y \
-    && find /scripts -type d -exec chmod 750 {} \; \
-    && find /scripts -type f -exec chmod 640 {} \; \
-    && find /scripts -type f -name '*.sh' -exec chmod 750 {} \; \
-    && find /scripts -type f -name '*.pl' -exec chmod 750 {} \; \
-    && find /scripts -type f -name 'run_*' -exec chmod 750 {} \; \
-    && rm -rf /hlstatsx-community-edition \
-    && apt-get purge --auto-remove -y git \
-    && rm -rf /var/lib/apt/lists/*
+COPY scripts /scripts2
+RUN set -eux; \
+    ls /scripts2 | grep -v GeoLiteCity | while read -r i; do mv -v "/scripts2/$i" /scripts; done; \
+    mv -v /scripts2/GeoLiteCity/* /scripts/GeoLiteCity/; \
+    # rm -rf /scripts2; \
+    find /scripts; \
+    find /scripts -type d -exec chmod 750 {} \;; \
+    find /scripts -type f -exec chmod 640 {} \;; \
+    find /scripts -type f -name '*.sh' -exec chmod 750 {} \;; \
+    find /scripts -type f -name '*.pl' -exec chmod 750 {} \;; \
+    find /scripts -type f -name 'run_*' -exec chmod 750 {} \;;
+
+FROM base AS dev
+
+FROM base AS prod

@@ -59,21 +59,21 @@ services:
     build:
       dockerfile: Dockerfile.daemon
       context: .
-    environment:
-      - LOG_LEVEL=2
-      # - DB_HOST=db:3306
-      # - DB_NAME=hlstatsxce
-      # - DB_USER=hlstatsxce
-      # - DB_PASSWORD=hlstatsxce
-      - DNS_RESOLVE_IP=false
-      - LISTEN_IP=
-      - LISTEN_PORT=27500
-      - RCON=true
-    volumes:
-      - ./scripts:/scripts:ro
-    # command:
-    #   - perl
-    #   - hlstats.pl
+      target: dev
+    command:
+      - perl
+      - hlstats.pl
+      - --ip=0.0.0.0
+      - --port=27500
+      - --db-host=db:3306
+      - --db-name=hlstatsxce
+      - --db-username=hlstatsxce
+      - --db-password=hlstatsxce
+      - --nodns-resolveip
+      - --rcon
+      - --debug
+      # - --debug
+      # - --help
     # network_mode: host
     networks:
       - default
@@ -95,9 +95,12 @@ services:
 
   # 5. The web frontend
   web-nginx:
-    image: nginx:1.21-alpine
+    build:
+      dockerfile: Dockerfile.web-nginx
+      context: .
+      target: dev
     volumes:
-      - ./src/web:/src/web
+      - ./web:/web
       - ./config/web/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8081:80
@@ -106,15 +109,16 @@ services:
     depends_on:
       - init-container
       - web-php
-    working_dir: /src
+    working_dir: /web
 
   web-php:
     build:
-      dockerfile: Dockerfile.web-php.dev
+      dockerfile: Dockerfile.web-php
       context: .
+      target: dev
     volumes:
-      - ./src/web:/src/web
-      - ./config/web/config.php:/src/web/config.php:ro # Main config file
+      - ./web:/web
+      - ./config/web/config.php:/web/config.php:ro # Main config file
       - ./config/web/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - ./config/web/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     networks:
@@ -138,7 +142,7 @@ services:
   init-container:
     image: alpine:latest
     volumes:
-      - ./:/src
+      - ./web:/web
       - db-volume:/var/lib/mysql
     networks:
       - default
@@ -150,12 +154,12 @@ services:
           set -eu
 
           echo "Granting web nginx and php read permissions"
-          find /src/web -type d -exec chmod 755 {} \;
-          find /src/web -type f -exec chmod 644 {} \;
+          find /web -type d -exec chmod 755 {} \;
+          find /web -type f -exec chmod 644 {} \;
 
           echo "Granting web php write permissions"
-          chmod 777 /src/web/hlstatsimg/progress
-          chmod 777 /src/web/hlstatsimg/graph
+          chmod 777 /web/hlstatsimg/progress
+          chmod 777 /web/hlstatsimg/graph
 
           echo "Granting db write permissions"
           chown -R 999:999 /var/lib/mysql
