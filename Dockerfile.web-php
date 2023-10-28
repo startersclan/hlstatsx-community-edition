@@ -67,6 +67,12 @@ RUN set -eux; \
     find /web -type d -exec chmod 750 {} \; ; \
     find /web -type f -exec chmod 640 {} \; ;
 
+COPY ./heatmaps /heatmaps
+RUN set -eux; \
+    chown -R www-data:www-data /heatmaps; \
+    find /heatmaps -type d -exec chmod 750 {} \; ; \
+    find /heatmaps -type f -exec chmod 640 {} \; ;
+
 # Add default configs
 COPY ./config/web/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./config/web/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf

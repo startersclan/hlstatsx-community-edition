@@ -118,6 +118,8 @@ services:
     volumes:
       - ./web:/web
       - ./config/web/config.php:/web/config.php:ro # Main config file.
+      - ./heatmaps:/heatmaps
+      - ./config/heatmaps/config.inc.php:/heatmaps/config.inc.php:ro # Heatmaps config file.
       - ./config/web/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       - ./config/web/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     networks:
@@ -128,6 +130,17 @@ services:
       - host.docker.internal:host-gateway
     depends_on:
       - init-container
+
+  # Heatmaps
+  heatmaps:
+    build:
+      dockerfile: Dockerfile.web-php
+      context: .
+      target: dev
+    volumes:
+      - ./web:/web
+      - ./config/web/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./config/web/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
 
   phpmyadmin:
     image: phpmyadmin:5.2
