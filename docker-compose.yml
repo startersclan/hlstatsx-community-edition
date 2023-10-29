@@ -199,6 +199,8 @@ services:
       - ./web:/web
       - ./heatmaps:/heatmaps
       - ./config/heatmaps/config.inc.php:/heatmaps/config.inc.php:ro # Heatmaps config file.
+    working_dir: /heatmaps
+    stop_signal: SIGKILL
     entrypoint:
       - /bin/sh
     command:
