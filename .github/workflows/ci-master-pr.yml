@@ -21,13 +21,21 @@ jobs:
       id: buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Cache Docker layers
+    - name: Cache Docker layers (daemon)
       uses: actions/cache@v3
       with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-test-${{ github.sha }}
+        path: /tmp/.buildx-cache-daemon
+        key: ${{ runner.os }}-buildx-daemon-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-buildx-test-
+          ${{ runner.os }}-buildx-daemon-
+
+    - name: Cache Docker layers (web)
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache-web
+        key: ${{ runner.os }}-buildx-web-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-web-
 
     - name: Print buildx and compose
       run: |
@@ -45,9 +53,8 @@ jobs:
     strategy:
       matrix:
         variant:
-          - web-nginx
-          - web-php
           - daemon
+          - web
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
