@@ -32,11 +32,11 @@ a PHP frontend.
 
 ---
 
-## Usage
+## Usage (docker)
 
 Tag convention: `<version>-<service>` or `<version>-<sha>-<service>`. For instance, for release `v1.2.3` on sha `0abcdef`:
 
-- `web` image: `1-web`, `1.2-web`, `1.2.3-web`, `1-0abcdef-web`, `1.2-0abcdef-web`, `1.2.3-0abcdef-web`.
+- `web` image: `1-web`, `1.2-web`, `1.2.3-web`, `1-0abcdef-web`, `1.2-0abcdef-web`, `1.2.3-0abcdef-web`
 - `daemon` image: `1-daemon`, `1.2-daemon`, `1.2.3-daemon`, `1-0abcdef-daemon`, `1.2-0abcdef-daemon`, `1.2.3-0abcdef-daemon`
 
 ```sh
