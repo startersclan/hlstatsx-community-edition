@@ -2,7 +2,8 @@
 
 [![github-actions](https://github.com/startersclan/hlstatsx-community-edition/workflows/ci-master-pr/badge.svg)](https://github.com/startersclan/hlstatsx-community-edition/actions)
 [![github-release](https://img.shields.io/github/v/release/startersclan/hlstatsx-community-edition?style=flat-square)](https://github.com/startersclan/hlstatsx-community-edition/releases/)
-[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/asp-nginx)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
+[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/web)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
+[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/daemon)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
 
 HLstatsX Community Edition is an open-source project licensed
 under GNU General Public License v2 and is a real-time stats
