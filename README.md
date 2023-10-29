@@ -34,9 +34,14 @@ a PHP frontend.
 
 ## Usage
 
+Tag convention: `<version>-<service>` or `<version>-<sha>-<service>`. For instance, for release `v1.2.3` on sha `0abcdef`:
+
+- `web` image: `1-web`, `1.2-web`, `1.2.3-web`, `1-0abcdef-web`, `1.2-0abcdef-web`, `1.2.3-0abcdef-web`.
+- `daemon` image: `1-daemon`, `1.2-daemon`, `1.2.3-daemon`, `1-0abcdef-daemon`, `1.2-0abcdef-daemon`, `1.2.3-0abcdef-daemon`
+
 ```sh
-docker run --rm -it -p 80:80 startersclan/hlstatsx-community-edition:v1.7.0-web
-docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:v1.7.0-daemon --help
+docker run --rm -it -p 80:80 startersclan/hlstatsx-community-edition:1.7.0-web
+docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1.7.0-daemon --help
 ```
 
 ## Development
