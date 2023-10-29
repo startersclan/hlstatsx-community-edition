@@ -72,7 +72,7 @@ docker exec -it $( docker compose ps -q web-nginx ) sh
 # web-php - Exec into container
 docker exec -it $( docker compose ps -q web-php ) sh
 # web-php - Generate heatmaps
-docker exec -it $( docker compose ps -q web-php ) php /heatmaps/generate.php
+docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php
 # db - Exec into container
 docker exec -it $( docker compose ps -q db ) sh
 
