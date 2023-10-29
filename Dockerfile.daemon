@@ -78,9 +78,8 @@ STOPSIGNAL SIGINT
 
 WORKDIR /scripts
 
-CMD ["perl", "./hlstats.pl"]
+ENTRYPOINT ["perl", "./hlstats.pl"]
 
-RUN
 FROM base AS dev
 
 FROM base AS prod
