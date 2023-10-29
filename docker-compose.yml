@@ -6,6 +6,8 @@ services:
     image: goldsourceservers/cstrike:latest
     volumes:
       - dns-volume:/dns:ro
+    ports:
+      - 27015:27015/udp
     networks:
       - default
     stdin_open: true
@@ -21,8 +23,8 @@ services:
           set -eu
           exec hlds_linux -console -noipx -secure -game cstrike +map de_dust2 +maxplayers 32 +sv_lan 0 +ip 0.0.0.0 +port 27015 +rcon_password password +log on +logaddress_add "$$( cat /dns/source-udp-forwarder )" 26999
 
-  # 2. The proxy forwards gameserver logs to the daemon
-  # source-udp-forwarder: https://github.com/startersclan/source-udp-forwarder
+  # 2. source-udp-forwarder proxy forwards gameserver logs to the daemon
+  # See: https://github.com/startersclan/source-udp-forwarder
   source-udp-forwarder:
     image: startersclan/source-udp-forwarder:latest
     environment:
@@ -62,6 +64,8 @@ services:
         - type=local,src=/tmp/.buildx-cache
       cache_to:
         - type=local,dest=/tmp/.buildx-cache,mode=max
+    ports:
+      - 27500:27500/udp   # For external servers to send logs to the daemon
     networks:
       - default
     command:
@@ -78,7 +82,7 @@ services:
       - --debug
       # - --debug
       # - --help
-  
+
   # This container should run as a cron
   awards:
     build:
@@ -93,8 +97,8 @@ services:
       - /bin/sh
     command:
       - -c
-      - | 
-          set -eu 
+      - |
+          set -eu
 
           echo "Creating /awards.sh"
           cat - > /awards.sh <<'EOF'
@@ -173,6 +177,10 @@ services:
       dockerfile: Dockerfile.web-php
       context: .
       target: base
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
     volumes:
       - ./web:/web
       - ./heatmaps:/heatmaps
