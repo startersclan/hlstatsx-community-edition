@@ -29,24 +29,28 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-test-
 
+    - run: |
+        set -eu 
+        docker buildx ls
+        docker compose version
+
     - name: Test (integration)
       env:
-        # Use a : https://github.com/docker/compose/pull/10745
+        # See: https://github.com/docker/compose/pull/10745
         BUILDX_BUILDER: ${{ steps.buildx.outputs.name }}
       run: |
         set -eu
-        docker buildx ls
-        docker compose version
-        docker compose up --build  -d
-        docker compose -f docker-compose.test.yml up
+        docker compose -f docker-compose.tmp.yml up --build
+        # docker compose up --build -d
+        # docker compose -f docker-compose.test.yml up
         
     # Temp fix
     # https://github.com/docker/build-push-action/issues/252
-    # https://github.com/moby/buildkit/issues/1896
-    - name: Move cache
-      run: |
-        rm -rf /tmp/.buildx-cache
-        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+    # # https://github.com/moby/buildkit/issues/1896
+    # - name: Move cache
+    #   run: |
+    #     rm -rf /tmp/.buildx-cache
+    #     mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   build:
     strategy:
