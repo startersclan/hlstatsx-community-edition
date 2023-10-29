@@ -1,4 +1,4 @@
-## HLstatsX : Community Edition
+# HLstatsX : Community Edition
 
 [![github-actions](https://github.com/startersclan/hlstatsx-community-edition/workflows/ci-master-pr/badge.svg)](https://github.com/startersclan/hlstatsx-community-edition/actions)
 [![github-release](https://img.shields.io/github/v/release/startersclan/hlstatsx-community-edition?style=flat-square)](https://github.com/startersclan/hlstatsx-community-edition/releases/)
@@ -11,19 +11,24 @@ Edition uses a Perl daemon to parse the log streamed from the
 game server. The data is stored in a MySQL Database and has
 a PHP frontend.
 
+## :loudspeaker: Important changes
 
-#### :loudspeaker: Important changes
 | Date  | Description | Additional information |
 | ------------- | ------------- | ------------- |
 | 07.01.2020  | [#45](https://github.com/NomisCZ/hlstatsx-community-edition/issues/45) GeoIP2 Linux script updated, GeoLite2 MaxMind database (GDPR and CCPA) | https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/ |
 
 > Date format: DD.MM.YYYY
+
 ---
 
-### :book: Documentation
-* https://github.com/NomisCZ/hlstatsx-community-edition/wiki 🚧 Wiki - work in progress 🚧
-### :speech_balloon: Help
-*  https://forums.alliedmods.net/forumdisplay.php?f=156
+## :book: Documentation
+
+- https://github.com/NomisCZ/hlstatsx-community-edition/wiki 🚧 Wiki - work in progress 🚧
+
+## :speech_balloon: Help
+
+- https://forums.alliedmods.net/forumdisplay.php?f=156
+
 ---
 
 ## Development
