@@ -33,6 +33,8 @@ jobs:
         set -eu 
         docker buildx ls
         docker compose version
+        ls -al /tmp/.buildx-cache
+        find /tmp/.buildx-cache
 
     - name: Test (integration)
       # env:
