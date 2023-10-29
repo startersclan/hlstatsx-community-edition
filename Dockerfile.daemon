@@ -1,0 +1,86 @@
+FROM perl:5.38.0-slim-buster AS base
+
+# Install modules
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y build-essential; \
+    \
+    cpanm DBI; \
+    \
+    # Install DBD::mysql, requires mysql 8. See: https://stackoverflow.com/q/4729722
+    apt-get update; \
+    apt-get install -y wget; \
+    # See: https://dev.mysql.com/downloads/repo/apt/
+    wget -q https://dev.mysql.com/get/mysql-apt-config_0.8.28-1_all.deb; \
+    DEBIAN_FRONTEND=noninteractive apt install -y ./mysql-apt-config_*; \
+    apt-get update; \
+    apt-get install -y libmysqlclient-dev; \
+    apt-get install -y libmysqlclient21; \
+    cpanm DBD::mysql; \
+    # apt purge --auto-remove -y mysql-community-client; \
+    # apt purge --auto-remove -y mysql-server; \
+    apt purge --auto-remove -y libmysqlclient-dev; \
+    apt purge --auto-remove -y mysql-apt-config; \
+    rm -fv ./mysql-apt-config_*; \
+    \
+    cpanm Geo::IP::PurePerl; \
+    cpanm GeoIP2::Database::Reader; \
+    cpanm MaxMind::DB::Reader; \
+    cpanm Syntax::Keyword::Try; \
+    \
+    # Optional modules: Email
+    cpanm Email::Sender::Simple; \
+    apt-get purge --auto-remove -y build-essential; \
+    rm -rf /var/lib/apt/lists/* /root/.cpan/ /root/.cpanm/
+
+# Install tools
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y \
+        procps \
+        # Cron tools
+        cron \
+        curl \
+        wget \
+        openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN set -eux; \
+    mkdir -p /scripts /scripts/GeoLiteCity; \
+    cd /scripts/GeoLiteCity; \
+    # Download the GeoIP binary. Maxmind discontinued distributing the GeoLite Legacy databases. See: https://support.maxmind.com/geolite-legacy-discontinuation-notice/
+    # So let's download it from our fork of GeoLiteCity.dat
+    wget -qO- https://github.com/startersclan/GeoLiteCity-data/raw/c14d99c42446f586e3ca9c89fe13714474921d65/GeoLiteCity.dat > GeoLiteCity.dat; \
+    chmod 666 GeoLiteCity.dat; \
+    # Download the GeoIP2 binary. Maxmind discontinued distributing the GeoLite2 databases publicly, so a license key is needed. See: https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-geolite2-databases/
+    # In order to obtain the secret MAXMIND_LICENSE_KEY, we assume we have a sidecar secrets-server which will serve the secret MAXMIND_LICENSE_KEY at: http://localhost:8000/MAXMIND_LICENSE_KEY
+    wget -qO- https://cdn.jsdelivr.net/npm/geolite2-city@1.0.0/GeoLite2-City.mmdb.gz > GeoLite2-City.mmdb.gz; \
+    gzip -d GeoLite2-City.mmdb.gz; \
+    chmod 666 GeoLite2-City.mmdb; \
+    ls -al
+
+# Copy scripts and set permissions
+COPY scripts /scripts2
+RUN set -eux; \
+    ls /scripts2 | grep -v GeoLiteCity | while read -r i; do mv -v "/scripts2/$i" /scripts; done; \
+    mv -v /scripts2/GeoLiteCity/* /scripts/GeoLiteCity/; \
+    rm -rf /scripts2; \
+    find /scripts; \
+    find /scripts -type d -exec chmod 750 {} \;; \
+    find /scripts -type f -exec chmod 640 {} \;; \
+    find /scripts -type f -name '*.sh' -exec chmod 750 {} \;; \
+    find /scripts -type f -name '*.pl' -exec chmod 750 {} \;; \
+    find /scripts -type f -name 'run_*' -exec chmod 750 {} \;;
+
+EXPOSE 27500/udp
+
+STOPSIGNAL SIGINT
+
+WORKDIR /scripts
+
+CMD ["perl", "./hlstats.pl"]
+
+RUN
+FROM base AS dev
+
+FROM base AS prod
