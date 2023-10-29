@@ -137,7 +137,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		GROUP BY
 			flag,
 			lastName,
-			hlstats_Players.playerId
+			hlstats_Players.playerId,
+			hlstats_Awards.name
 		HAVING
 			COUNT(hlstats_Awards.name) >= $awardmin  	
 		ORDER BY
@@ -174,7 +175,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		GROUP BY
 			flag,
 			lastName,
-			hlstats_Players.playerId
+			hlstats_Players.playerId,
+			hlstats_Awards.name
 		HAVING
 			COUNT(hlstats_Awards.name) >= $awardmin  	
 	");

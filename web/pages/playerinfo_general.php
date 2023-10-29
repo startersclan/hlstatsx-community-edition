@@ -327,7 +327,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 								WHERE
 									hlstats_Events_Frags.killerId=$player
 								GROUP BY
-									hlstats_Events_Frags.weapon
+									hlstats_Events_Frags.weapon,
+									hlstats_Weapons.name
 								ORDER BY
 									kills desc, headshots desc
 								LIMIT
@@ -822,7 +823,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 				OR hlstats_Ribbons.special = 2
 			)
 		GROUP BY
-			hlstats_Ribbons.awardCode
+			hlstats_Ribbons.awardCode,
+			hlstats_Ribbons.image
 	");
 	$res = $db->query
 	("
