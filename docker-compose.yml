@@ -85,7 +85,7 @@ services:
       # - --debug
       # - --help
 
-  # This container should run as a cron
+  # Cron - awards
   awards:
     build:
       dockerfile: Dockerfile.daemon
@@ -185,7 +185,7 @@ services:
     depends_on:
       - init-container
 
-  # Heatmaps
+  # Cron - Heatmaps
   heatmaps:
     build:
       dockerfile: Dockerfile.web-php
@@ -216,6 +216,8 @@ services:
           echo "Running crond"
           exec crond -f
 
+  # PHPMyAdmin to manage DB
+  # Available at http://localhost:8083
   phpmyadmin:
     image: phpmyadmin:5.2
     environment:
