@@ -39,6 +39,8 @@ services:
       - dns-volume:/dns
     networks:
       - default
+    depends_on:
+      - daemon
     entrypoint:
       - /bin/sh
     command:
@@ -93,6 +95,7 @@ services:
         - type=local,src=/tmp/.buildx-cache
       cache_to:
         - type=local,dest=/tmp/.buildx-cache,mode=max
+    stop_signal: SIGKILL
     entrypoint:
       - /bin/sh
     command:
