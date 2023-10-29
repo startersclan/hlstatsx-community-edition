@@ -58,6 +58,10 @@ services:
       dockerfile: Dockerfile.daemon
       context: .
       target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
     command:
       - perl
       - hlstats.pl
@@ -97,6 +101,10 @@ services:
       dockerfile: Dockerfile.web-nginx
       context: .
       target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
     volumes:
       - ./web:/web
       - ./config/web/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
@@ -115,6 +123,10 @@ services:
       dockerfile: Dockerfile.web-php
       context: .
       target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
     volumes:
       - ./web:/web
       - ./config/web/config.php:/web/config.php:ro # Main config file.
