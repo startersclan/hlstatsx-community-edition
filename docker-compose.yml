@@ -105,12 +105,23 @@ services:
 
           echo "Creating /awards.sh"
           cat - > /awards.sh <<'EOF'
+          #!/bin/sh
+          set -eu
+          cd /scripts
           perl hlstats-awards.pl --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
           EOF
           chmod +x /awards.sh
 
-          echo "Sleeping forever"
-          sleep infinity
+          # Run at 00:00 daily. To customize your cron schedule, use https://crontab.guru
+          echo "Creating crontab"
+          crontab - <<'EOF'
+          PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          0 0 * * * /awards.sh > /proc/1/fd/1 2>/proc/1/fd/2
+          EOF
+          crontab -l
+
+          echo "Running cron forever"
+          cron -f
 
   # 4. HLStatsX:CE DB
   db:

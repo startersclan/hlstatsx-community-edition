@@ -33,10 +33,13 @@ RUN set -eux; \
     apt-get purge --auto-remove -y build-essential; \
     rm -rf /var/lib/apt/lists/* /root/.cpan/ /root/.cpanm/
 
-# Install basic tools for cron
+# Install tools
 RUN set -eux; \
     apt-get update; \
     apt-get install -y \
+        procps \
+        # Cron tools
+        cron \
         curl \
         wget \
         openssl \
