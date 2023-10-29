@@ -88,13 +88,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 				}
 			?>
 					<table class="data-table" style="width:30%;">
-						<tr valign="middle" class="bg1">
+						<tr style="vertical-align:middle;" class="bg1">
 							<td nowrap="nowrap" style="width:30%;">Search For:</td>
 							<td style="width:70%;">
 								<input type="text" name="q" size="20" maxlength="128" value="<?php echo htmlspecialchars($this->query, ENT_QUOTES); ?>" style="width:300px;" />
 							</td>
 						</tr>
-						<tr valign="middle" class="bg1">
+						<tr style="vertical-align:middle;" class="bg1">
 							<td nowrap="nowrap" style="width:30%;">In:</td>
 							<td style="width:70%;">
 								<?php
@@ -102,7 +102,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 								?>
 							</td>
 						</tr>
-						<tr valign="middle" class="bg1">
+						<tr style="vertical-align:middle" class="bg1">
 							<td nowrap="nowrap" style="width:30%;">Game:</td>
 							<td style="width:70%;">
 								<?php
@@ -133,9 +133,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 							</td> 
 						</tr>
 					</table>
-				</td>
-			</tr>
-		</table>
 		</form>
 	</div>
 </div><br /><br />
@@ -149,8 +146,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			if ($link_clan == -1) $link_clan = "mode=claninfo&amp;clan=%k";
 ?>
 
-</div class="block">
-	<a name="results"></a>
+<div class="block">
+	<a id="results"></a>
 	<?php printSectionTitle('Search Results'); ?>
 	<br /><br />
 
