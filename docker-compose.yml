@@ -1,0 +1,263 @@
+version: '2.2'
+services:
+  # 1. Counter-Strike 1.6 gameserver sends UDP logs to source-udp-forwarder
+  # See: https://github.com/startersclan/docker-sourceservers
+  cstrike:
+    image: goldsourceservers/cstrike:latest
+    volumes:
+      - dns-volume:/dns:ro
+    ports:
+      - 27015:27015/udp
+    networks:
+      - default
+    stdin_open: true
+    tty: true
+    stop_signal: SIGKILL
+    depends_on:
+      - source-udp-forwarder
+    entrypoint:
+      - /bin/bash
+    command:
+      - -c
+      - |
+          set -eu
+          exec hlds_linux -console -noipx -secure -game cstrike +map de_dust2 +maxplayers 32 +sv_lan 0 +ip 0.0.0.0 +port 27015 +rcon_password password +log on +logaddress_add "$$( cat /dns/source-udp-forwarder )" 26999
+
+  # 2. source-udp-forwarder proxy forwards gameserver logs to the daemon
+  # See: https://github.com/startersclan/source-udp-forwarder
+  source-udp-forwarder:
+    image: startersclan/source-udp-forwarder:latest
+    environment:
+      - UDP_LISTEN_ADDR=:26999
+      - UDP_FORWARD_ADDR=daemon:27500
+      - FORWARD_PROXY_KEY=somedaemonsecret # The daemon's proxy_key secret
+      - FORWARD_GAMESERVER_IP=192.168.1.100 # The gameserver's IP as registered in the HLStatsX:CE database
+      - FORWARD_GAMESERVER_PORT=27015 # The gameserver's IP as registered in the HLStatsX:CE database
+      - LOG_LEVEL=INFO
+      - LOG_FORMAT=txt
+    volumes:
+      - dns-volume:/dns
+    networks:
+      - default
+    depends_on:
+      - daemon
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          echo "Outputting my IP address"
+          ip addr show eth0 | grep 'inet ' | awk '{print $$2}' | cut -d '/' -f1 | tee /dns/source-udp-forwarder
+
+          exec /source-udp-forwarder
+
+  # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
+  # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
+  # HLStatsX:CE perl daemon: https://github.com/startersclan/docker-hlstatsxce-daemon
+  # NOTE: Currently, as of v1.6.19, the daemon crashes upon startup. You will need to fix perl errors and rebuild the image.
+  daemon:
+    build:
+      dockerfile: Dockerfile.daemon
+      context: .
+      target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    ports:
+      - 27500:27500/udp   # For external servers to send logs to the daemon
+    networks:
+      - default
+    command:
+      - perl
+      - hlstats.pl
+      - --ip=0.0.0.0
+      - --port=27500
+      - --db-host=db:3306
+      - --db-name=hlstatsxce
+      - --db-username=hlstatsxce
+      - --db-password=hlstatsxce
+      - --nodns-resolveip
+      - --rcon
+      - --debug
+      # - --debug
+      # - --help
+
+  # Cron - awards
+  awards:
+    build:
+      dockerfile: Dockerfile.daemon
+      context: .
+      target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    stop_signal: SIGKILL
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          echo "Creating /awards.sh"
+          cat - > /awards.sh <<'EOF'
+          #!/bin/sh
+          set -eu
+          cd /scripts
+          perl hlstats-awards.pl --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
+          EOF
+          chmod +x /awards.sh
+
+          # Run at 00:00 daily. To customize your cron schedule, use https://crontab.guru
+          echo "Creating crontab"
+          crontab - <<'EOF'
+          PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+          0 0 * * * /awards.sh > /proc/1/fd/1 2>/proc/1/fd/2
+          EOF
+          crontab -l
+
+          echo "Running cron"
+          cron -f
+
+  # 4. HLStatsX:CE DB
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root    # Username 'root', password 'root'
+      - MYSQL_USER=hlstatsxce
+      - MYSQL_PASSWORD=hlstatsxce
+      - MYSQL_DATABASE=hlstatsxce
+    volumes:
+      - db-volume:/var/lib/mysql
+      - ./sql/install.sql:/docker-entrypoint-initdb.d/install.sql:ro
+    networks:
+      - default
+
+  # 5a. HLStatsX:CE web - nginx
+  # Available at http://localhost:8083
+  # Admin Panel username: admin, password: 123456
+  web-nginx:
+    build:
+      dockerfile: Dockerfile.web-nginx
+      context: .
+      target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    volumes:
+      - ./web:/web
+      - ./config/web/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8081:80
+    networks:
+      - default
+    depends_on:
+      - init-container
+      - web-php
+    working_dir: /web
+
+  # 5b. HLStatsX:CE web - php
+  web-php:
+    build:
+      dockerfile: Dockerfile.web-php
+      context: .
+      target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    volumes:
+      - ./web:/web
+      - ./config/web/config.php:/web/config.php:ro # Main config file.
+      - ./config/web/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
+      - ./config/web/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+    networks:
+      - default
+    extra_hosts:
+      # For xdebug to reach the host via `host.docker.internal`. See: https://github.com/moby/moby/pull/40007#issuecomment-578729356 and https://stackoverflow.com/questions/49907308/installing-xdebug-in-docker
+      # If xdebug does not work, you may need to add an iptables rule to the INPUT chain: iptables -A INPUT -i br+ -j ACCEPT
+      - host.docker.internal:host-gateway
+    depends_on:
+      - init-container
+
+  # Cron - Heatmaps
+  heatmaps:
+    build:
+      dockerfile: Dockerfile.web-php
+      context: .
+      target: base
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    volumes:
+      - ./web:/web
+      - ./heatmaps:/heatmaps
+      - ./config/heatmaps/config.inc.php:/heatmaps/config.inc.php:ro # Heatmaps config file.
+    working_dir: /heatmaps
+    stop_signal: SIGKILL
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          # Run at 00:00 daily. To customize your cron schedule, use https://crontab.guru
+          echo "Creating crontab"
+          crontab - <<'EOF'
+          0 0 * * * php /heatmaps/generate.php > /proc/1/fd/1 2>/proc/1/fd/2
+          EOF
+          crontab -l
+
+          echo "Running crond"
+          exec crond -f
+
+  # PHPMyAdmin to manage DB
+  # Available at http://localhost:8083
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    environment:
+      - PMA_HOST=db
+    ports:
+      - 8083:80
+    networks:
+      - default
+
+  # Init container to set permissions in mounted folders and volumes
+  init-container:
+    image: alpine:latest
+    volumes:
+      - ./web:/web
+      - db-volume:/var/lib/mysql
+    networks:
+      - default
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          echo "Granting web nginx and php read permissions"
+          find /web -type d -exec chmod 755 {} \;
+          find /web -type f -exec chmod 644 {} \;
+
+          echo "Granting web php write permissions"
+          chmod 777 /web/hlstatsimg/progress
+          chmod 777 /web/hlstatsimg/graph
+
+          echo "Granting db write permissions"
+          chown -R 999:999 /var/lib/mysql
+
+networks:
+  default:
+
+volumes:
+  dns-volume:
+  db-volume:

@@ -1,0 +1,58 @@
+version: '2.2'
+services:
+  test-routes:
+    image: alpine:latest
+    environment:
+      URLS: |
+        http://web-nginx/ 302
+        http://web-nginx/css/spinner.gif 200
+        http://web-nginx/hlstatsimg/ajax.gif 200
+        http://web-nginx/includes/ 401
+        http://web-nginx/pages/ 401
+        http://web-nginx/pages/.htaccess 401
+        http://web-nginx/styles/classic.css 200
+        http://web-nginx/updater/ 401
+        http://web-nginx/autocomplete.php 200
+        http://web-nginx/config.php 200
+        http://web-nginx/hlstats.php 200
+        http://web-nginx/index.php 302
+        http://web-nginx/ingame.php 200
+        http://web-nginx/show_graph.php 200
+        http://web-nginx/sig.php 200
+        http://web-nginx/status.php 200
+        http://web-nginx/trend_graph.php 200
+    networks:
+      - default
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          echo "Waiting for stack to be ready"
+          s=0
+          while true; do
+              nc -vz -w 1 web-nginx 80 \
+                  && nc -vz -w 1 web-php 9000 \
+                  && nc -vz -w 1 db 3306 \
+                  && break || true
+              s=$$(( $$s + 1 ))
+              if [ "$$s" -eq 600 ]; then
+                  exit 1
+              fi
+              echo "Retrying in 3 seconds"
+              sleep 3
+          done
+
+          echo "$$URLS" | awk NF | while read -r i j; do
+              if wget -q -SO- "$$i" 2>&1 | grep "HTTP/1.1 $$j " > /dev/null; then
+                  echo "PASS: $$i"
+              else
+                  echo "FAIL: $$i"
+                  exit 1
+              fi
+          done
+
+networks:
+  default:

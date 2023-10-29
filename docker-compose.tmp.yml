@@ -1,0 +1,12 @@
+version: '2.2'
+services:
+  test:
+    build:
+      dockerfile_inline: |
+        FROM alpine:3.17
+        RUN echo hello
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    

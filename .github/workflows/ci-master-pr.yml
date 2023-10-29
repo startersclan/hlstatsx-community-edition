@@ -1,0 +1,189 @@
+name: ci-master-pr
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - '**'
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-test-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-test-
+
+    - name: Print buildx and compose
+      run: |
+        set -eu
+        docker buildx ls
+        docker compose version
+
+    - name: Test (integration)
+      run: |
+        set -eu
+        docker compose up --build -d
+        docker compose -f docker-compose.test.yml up
+
+  build:
+    strategy:
+      matrix:
+        variant:
+          - web-nginx
+          - web-php
+          - daemon
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Display system info (linux)
+      run: |
+        set -e
+        hostname
+        whoami
+        cat /etc/*release
+        lscpu
+        free
+        df -h
+        pwd
+        docker info
+        docker version
+
+    # See: https://github.com/docker/build-push-action/blob/v2.6.1/docs/advanced/cache.md#github-cache
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ matrix.variant }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-${{ matrix.variant }}-
+          ${{ runner.os }}-buildx-
+
+    # This step generates the docker tags
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: |
+          ${{ github.repository }}
+        # type=ref,event=pr generates tag(s) on PRs only. E.g. 'pr-123-<variant>', 'pr-123-abc0123-<variant>'
+        # type=ref,event=branch generates tag(s) on branch only. E.g. 'master-<variant>', 'master-abc0123-<variant>'
+        # type=ref,event=tag generates tag(s) on tags only. E.g. 'v0.0.0-<variant>', 'v0.0.0-abc0123-<variant>'
+        tags: |
+          type=ref,suffix=-${{ matrix.variant }},event=pr
+          type=ref,suffix=-{{sha}}-${{ matrix.variant }},event=pr
+          type=ref,suffix=-${{ matrix.variant }},event=branch
+          type=ref,suffix=-{{sha}}-${{ matrix.variant }},event=branch
+          type=ref,suffix=-${{ matrix.variant }},event=tag
+          type=ref,suffix=-{{sha}}-${{ matrix.variant }},event=tag
+        # Disable 'latest' tag
+        flavor: |
+          latest=false
+
+    - name: Login to Docker Hub registry
+      # Run on master and tags
+      if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_REGISTRY_USER }}
+        password: ${{ secrets.DOCKERHUB_REGISTRY_PASSWORD }}
+
+    - name: Build (PRs)
+      # Run on pull requests
+      if: github.event_name == 'pull_request'
+      uses: docker/build-push-action@v3
+      with:
+        file: Dockerfile.${{ matrix.variant }}
+        context: '.'
+        platforms: linux/amd64
+        push: false
+        tags: ${{ steps.meta.outputs.tags }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    - name: Build and push
+      # Run on master and tags
+      if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
+      uses: docker/build-push-action@v3
+      with:
+        file: Dockerfile.${{ matrix.variant }}
+        context: '.'
+        platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/s390x
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+    # Temp fix
+    # https://github.com/docker/build-push-action/issues/252
+    # https://github.com/moby/buildkit/issues/1896
+    - name: Move cache
+      run: |
+        rm -rf /tmp/.buildx-cache
+        mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  update-draft-release:
+    needs: [test, build]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+          publish: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-draft-release:
+    needs: [test, build]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter.yml
+          publish: true
+          name: ${{ github.ref_name }} # E.g. 'master' or 'v1.2.3'
+          tag: ${{ github.ref_name }} # E.g. 'master' or 'v1.2.3'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update-dockerhub-description:
+    needs: [test, build]
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Docker Hub Description
+      uses: peter-evans/dockerhub-description@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_REGISTRY_USER }}
+        password: ${{ secrets.DOCKERHUB_REGISTRY_PASSWORD }}
+        repository: ${{ github.repository }}
+        short-description: ${{ github.event.repository.description }}
