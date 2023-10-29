@@ -29,7 +29,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-test-
 
-    - run: Print buildx and compose
+    - name: Print buildx and compose
+      run: |
         set -eu
         docker buildx ls
         docker compose version
