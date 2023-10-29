@@ -66,7 +66,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Ribbons.game='$game'
 			AND hlstats_Ribbons.special=0
 		GROUP BY
-			hlstats_Ribbons.ribbonId
+			hlstats_Ribbons.ribbonId,
+			awardName
 		ORDER BY
 			awardCount,
 			ribbonName,

@@ -59,7 +59,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			AND hlstats_Ranks.game='$game'
 		GROUP BY
 			rankName,
-			minKills
+			minKills,
+			rankId
 	");
 	
 	while ($r = $db->fetch_array())

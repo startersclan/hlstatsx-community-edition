@@ -153,7 +153,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 				OR hlstats_Weapons.weaponId IS NULL
 			)
 		GROUP BY
-			hlstats_Events_Frags.weapon
+			hlstats_Events_Frags.weapon,
+			hlstats_Weapons.modifier
 		ORDER BY
 			$tblWeapons->sort $tblWeapons->sortorder,
 			$tblWeapons->sort2 $tblWeapons->sortorder
