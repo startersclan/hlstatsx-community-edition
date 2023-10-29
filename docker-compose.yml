@@ -62,6 +62,8 @@ services:
         - type=local,src=/tmp/.buildx-cache
       cache_to:
         - type=local,dest=/tmp/.buildx-cache,mode=max
+    networks:
+      - default
     command:
       - perl
       - hlstats.pl
@@ -76,8 +78,32 @@ services:
       - --debug
       # - --debug
       # - --help
-    networks:
-      - default
+  
+  # This container should run as a cron
+  awards:
+    build:
+      dockerfile: Dockerfile.daemon
+      context: .
+      target: dev
+      cache_from:
+        - type=local,src=/tmp/.buildx-cache
+      cache_to:
+        - type=local,dest=/tmp/.buildx-cache,mode=max
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - | 
+          set -eu 
+
+          echo "Creating /awards.sh"
+          cat - > /awards.sh <<'EOF'
+          perl hlstats-awards.pl --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
+          EOF
+          chmod +x /awards.sh
+
+          echo "Sleeping forever"
+          sleep infinity
 
   # 4. HLStatsX:CE DB
   db:
