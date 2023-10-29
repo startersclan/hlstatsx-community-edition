@@ -2,10 +2,10 @@
 
 [![github-actions](https://github.com/startersclan/hlstatsx-community-edition/workflows/ci-master-pr/badge.svg)](https://github.com/startersclan/hlstatsx-community-edition/actions)
 [![github-release](https://img.shields.io/github/v/release/startersclan/hlstatsx-community-edition?style=flat-square)](https://github.com/startersclan/hlstatsx-community-edition/releases/)
-[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/web)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
-[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/daemon)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
+[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/master-web?label=web)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
+[![docker-image-size](https://img.shields.io/docker/image-size/startersclan/hlstatsx-community-edition/master-daemon?label=daemon)](https://hub.docker.com/r/startersclan/hlstatsx-community-edition)
 
-HLstatsX Community Edition is an open-source project licensed
+HLstatsX Community Edition is a∑n open-source project licensed
 under GNU General Public License v2 and is a real-time stats
 and ranking for Source engine based games. HLstatsX Community
 Edition uses a Perl daemon to parse the log streamed from the
@@ -31,6 +31,13 @@ a PHP frontend.
 - https://forums.alliedmods.net/forumdisplay.php?f=156
 
 ---
+
+## Usage
+
+```sh
+docker run --rm -it -p 80:80 startersclan/hlstatsx-community-edition:v1.7.0-web
+docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:v1.7.0-daemon --help
+```
 
 ## Development
 
@@ -76,10 +83,8 @@ docker attach $( docker compose ps -q cstrike )
 # CS 1.6 server - Exec into container
 docker exec -it $( docker compose ps -q cstrike) bash
 
-# web-nginx - Exec into container
-docker exec -it $( docker compose ps -q web-nginx ) sh
-# web-php - Exec into container
-docker exec -it $( docker compose ps -q web-php ) sh
+# web - Exec into container
+docker exec -it $( docker compose ps -q web ) sh
 # Run awards
 docker exec -it $( docker compose ps -q awards) sh -c /awards.sh
 # Generate heatmaps
@@ -92,8 +97,7 @@ docker compose -f docker compose.test.yml up
 
 # Test production builds locally
 docker build -t startersclan/hlstatsx-community-edition:daemon -f Dockerfile.daemon .
-docker build -t startersclan/hlstatsx-community-edition:web-nginx -f Dockerfile.web-nginx .
-docker build -t startersclan/hlstatsx-community-edition:web-php -f Dockerfile.web-php .
+docker build -t startersclan/hlstatsx-community-edition:web -f Dockerfile.web .
 
 # Dump the DB
 docker exec $( docker compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz

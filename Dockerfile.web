@@ -3,6 +3,9 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 
+# Install nginx and supervisor for multi-process container
+RUN apk add --no-cache ca-certificates nginx supervisor
+
 # opcache
 RUN docker-php-ext-install opcache
 
@@ -56,6 +59,19 @@ RUN set -eux; \
     php -i; \
     php -m
 
+# Add default configs
+COPY ./config/web/supervisor.conf /supervisor.conf
+COPY ./config/web/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./config/web/usr/local/etc/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
+COPY ./config/web/usr/local/etc/php-fpm.d/php-fpm.conf /usr/local/etc/php-fpm.d/php-fpm.conf
+# Disable the built-in php-fpm configs, since we're using our own config
+RUN set -eux; \
+    mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled; \
+    mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled; \
+    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled;
+
+CMD ["/usr/bin/supervisord", "-c", "/supervisor.conf", "--pidfile", "/run/supervisord.pid"]
+
 FROM base AS prod
 
 # Set permissions for 'www-data' user
@@ -71,7 +87,3 @@ RUN set -eux; \
     chown -R www-data:www-data /heatmaps; \
     find /heatmaps -type d -exec chmod 750 {} \; ; \
     find /heatmaps -type f -exec chmod 640 {} \; ;
-
-# Add default configs
-COPY ./config/web/php/conf.d/php.ini /usr/local/etc/php/conf.d/php.ini
-COPY ./config/web/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf

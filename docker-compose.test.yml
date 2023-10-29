@@ -4,23 +4,23 @@ services:
     image: alpine:latest
     environment:
       URLS: |
-        http://web-nginx/ 302
-        http://web-nginx/css/spinner.gif 200
-        http://web-nginx/hlstatsimg/ajax.gif 200
-        http://web-nginx/includes/ 401
-        http://web-nginx/pages/ 401
-        http://web-nginx/pages/.htaccess 401
-        http://web-nginx/styles/classic.css 200
-        http://web-nginx/updater/ 401
-        http://web-nginx/autocomplete.php 200
-        http://web-nginx/config.php 200
-        http://web-nginx/hlstats.php 200
-        http://web-nginx/index.php 302
-        http://web-nginx/ingame.php 200
-        http://web-nginx/show_graph.php 200
-        http://web-nginx/sig.php 200
-        http://web-nginx/status.php 200
-        http://web-nginx/trend_graph.php 200
+        http://web/ 302
+        http://web/css/spinner.gif 200
+        http://web/hlstatsimg/ajax.gif 200
+        http://web/includes/ 401
+        http://web/pages/ 401
+        http://web/pages/.htaccess 401
+        http://web/styles/classic.css 200
+        http://web/updater/ 401
+        http://web/autocomplete.php 200
+        http://web/config.php 200
+        http://web/hlstats.php 200
+        http://web/index.php 302
+        http://web/ingame.php 200
+        http://web/show_graph.php 200
+        http://web/sig.php 200
+        http://web/status.php 200
+        http://web/trend_graph.php 200
     networks:
       - default
     entrypoint:
@@ -33,8 +33,8 @@ services:
           echo "Waiting for stack to be ready"
           s=0
           while true; do
-              nc -vz -w 1 web-nginx 80 \
-                  && nc -vz -w 1 web-php 9000 \
+              nc -vz -w 1 web 80 \
+                  && nc -vz -w 1 web 9000 \
                   && nc -vz -w 1 db 3306 \
                   && break || true
               s=$$(( $$s + 1 ))
