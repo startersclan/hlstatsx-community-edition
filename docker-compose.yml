@@ -120,7 +120,7 @@ services:
           EOF
           crontab -l
 
-          echo "Running cron forever"
+          echo "Running cron"
           cron -f
 
   # 4. HLStatsX:CE DB
@@ -199,6 +199,22 @@ services:
       - ./web:/web
       - ./heatmaps:/heatmaps
       - ./config/heatmaps/config.inc.php:/heatmaps/config.inc.php:ro # Heatmaps config file.
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          # Run at 00:00 daily. To customize your cron schedule, use https://crontab.guru
+          echo "Creating crontab"
+          crontab - <<'EOF'
+          0 0 * * * php /heatmaps/generate.php > /proc/1/fd/1 2>/proc/1/fd/2
+          EOF
+          crontab -l
+
+          echo "Running crond"
+          exec crond -f
 
   phpmyadmin:
     image: phpmyadmin:5.2

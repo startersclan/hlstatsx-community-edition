@@ -36,8 +36,8 @@ docker compose up
 # Then, restart the daemon.
 docker compose restart daemon
 
-# 3. Finally, add a Counter-Strike 1.6 server. click Games > and unhide 'cstrike' game. 
-# Then, click Game Settings > Counter-Strike (cstrike) > Add Server. 
+# 3. Finally, add a Counter-Strike 1.6 server. click Games > and unhide 'cstrike' game.
+# Then, click Game Settings > Counter-Strike (cstrike) > Add Server.
 #   IP: 192.168.1.100
 #   Port: 27015
 #   Name: My Counter-Strike 1.6 server
@@ -74,7 +74,7 @@ docker exec -it $( docker compose ps -q web-php ) sh
 # Run awards
 docker exec -it $( docker compose ps -q awards) sh -c /awards.sh
 # Generate heatmaps
-docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php
+docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php #--disable-cache=true
 # db - Exec into container
 docker exec -it $( docker compose ps -q db ) sh
 
