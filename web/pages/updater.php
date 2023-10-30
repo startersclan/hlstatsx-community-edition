@@ -55,5 +55,8 @@
 		}
 	}
 	
-	echo "<br /><br /><img src=\"".IMAGE_PATH."/warning.gif\" alt=\"Warning\"> <span class=\"warning-header\">You <strong>must delete</strong> the \"updater\" folder from your web site before your site will be operational.</span>\n</div>\n";
+	// In docker, the updater folder will always be present, to allow
+	// DB upgrades to be done using this updater. Hence, this code is
+	// commented out to allow things to work correctly after the DB upgrade in docker.
+	// echo "<br /><br /><img src=\"".IMAGE_PATH."/warning.gif\" alt=\"Warning\"> <span class=\"warning-header\">You <strong>must delete</strong> the \"updater\" folder from your web site before your site will be operational.</span>\n</div>\n";
 ?>
