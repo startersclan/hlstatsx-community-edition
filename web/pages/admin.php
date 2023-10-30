@@ -1012,6 +1012,24 @@ $selGame = valid_request($_GET['game'], false);
 <tr valign="top">
 	<td><?php
 
+$updateDbHtml = "<div>
+					Current Version: <span style=\"color: #C40000;font-weight:bold\">{$g_options['version']}</span><br />
+					Current DB version: <span style=\"color: #C40000;font-weight:bold\">{$g_options['dbversion']}</span><br />";
+if (file_exists('./updater') && $mode != 'updater') {
+	if (file_exists("./updater/" . ($g_options['dbversion'] + 1) . ".php")) {
+		$updateDbHtml .= "
+					<div class=\"block\">
+					<div class=\"warning\">
+						<span class=\"fHeading\"><img src=\"" . IMAGE_PATH . "/warning.gif\" alt=\"Warning\"> Warning:</span> Your database needs an upgrade. To perform a Database Update, please go to the Updater page.
+							<div style=\"text-align: center;\"><strong><a class=\"fMediumLarge\" href=\"{$g_options['scripturl']}?mode=updater&task=tools_updater\"><span>HLX:CE Database Updater</span></a></strong></div>
+						</span>
+					</div>";
+	} else {
+		$updateDbHtml .= "Great. Your database is the latest version.";
+	}
+}
+$updateDbHtml .= "</div>";
+
 // General Settings
 $admintasks['options'] = new AdminTask('HLstatsX:CE Settings', 80);
 $admintasks['adminusers'] = new AdminTask('Admin Users', 100);
@@ -1036,6 +1054,7 @@ $admintasks['ranks'] = new AdminTask('Ranks (triggered by Kills)', 80, 'game');
 $admintasks['ribbons'] = new AdminTask('Ribbons (triggered by Awards)', 80, 'game');
 
 // Tools
+$admintasks['tools_updater'] = new AdminTask('DB Updater', 100, 'tool', $updateDbHtml);
 $admintasks['tools_perlcontrol'] = new AdminTask('HLstatsX: CE Daemon Control', 80, 'tool', 'Reload or stop your HLX: CE Daemons');
 $admintasks['tools_editdetails'] = new AdminTask('Edit Player or Clan Details', 80, 'tool', 'Edit a player or clan\'s profile information.');
 $admintasks['tools_adminevents'] = new AdminTask('Admin-Event History', 80, 'tool', 'View event history of logged Rcon commands and Admin Mod messages.');
