@@ -34,10 +34,6 @@ RUN set -eux; \
     docker-php-ext-install sockets; \
     apk del .deps
 
-WORKDIR /web
-
-FROM base AS dev
-
 # Xdebug: https://stackoverflow.com/questions/46825502/how-do-i-install-xdebug-on-dockers-official-php-fpm-alpine-image
 # PHPIZE_DEPS: autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c
 RUN apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
@@ -67,9 +63,18 @@ RUN set -eux; \
     mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled; \
     mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled;
 
+WORKDIR /web
+
 CMD ["/usr/bin/supervisord", "-c", "/supervisor.conf", "--pidfile", "/run/supervisord.pid"]
 
-FROM base AS prod
+FROM base AS dev
+
+FROM dev AS prod
+
+# Disable xdebug
+RUN set -eux; \
+    rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+    php -m;
 
 # Set permissions for 'www-data' user
 # COPY --chown=www-data:www-data --chmod=640  /web /web
