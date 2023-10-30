@@ -2,11 +2,11 @@
 # Copyleft (L) 2008-20XX Nicholas Hastings (nshastings@gmail.com)
 # http://www.hlxcommunity.com
 #
-# HLstatsX Community Edition is a continuation of
+# HLstatsX Community Edition is a continuation of 
 # ELstatsNEO - Real-time player and clan rankings and statistics
 # Copyleft (L) 2008-20XX Malte Bayer (steam@neo-soft.org)
 # http://ovrsized.neo-soft.org/
-#
+# 
 # ELstatsNEO is an very improved & enhanced - so called Ultra-Humongus Edition of HLstatsX
 # HLstatsX - Real-time player and clan rankings and statistics for Half-Life 2
 # http://www.hlstatsx.com/
@@ -16,7 +16,7 @@
 # HLstats - Real-time player and clan rankings and statistics for Half-Life
 # http://sourceforge.net/projects/hlstats/
 # Copyright (C) 2001  Simon Garner
-#
+#             
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -30,7 +30,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
+# 
 # For support and installation notes visit http://www.hlxcommunity.com
 
 
@@ -95,12 +95,12 @@ sub number_format {
 
 sub date_format {
   my $timestamp = shift;
-  return sprintf('%dd %02d:%02d:%02dh',
-                  $timestamp / 86400,
-                  $timestamp / 3600 % 24,
-                  $timestamp / 60 % 60,
-                  $timestamp % 60
-                 );
+  return sprintf('%dd %02d:%02d:%02dh', 
+                  $timestamp / 86400, 
+                  $timestamp / 3600 % 24, 
+                  $timestamp / 60 % 60, 
+                  $timestamp % 60 
+                 );     
 }
 
 
@@ -114,7 +114,7 @@ sub date_format {
 sub error
 {
 	my $errormsg = $_[0];
-
+	
 	if ($g_mailto && $g_mailpath)
 	{
 		system("echo \"$errormsg\" | $g_mailpath -s \"HLstatsX:CE crashed `date`\" $g_mailto");
@@ -137,7 +137,7 @@ sub quoteSQL
 
 	$varQuote =~ s/\\/\\\\/g;	# replace \ with \\
 	$varQuote =~ s/'/\\'/g;		# replace ' with \'
-
+	
 	return $varQuote;
 }
 
@@ -154,7 +154,7 @@ sub doConnect
 		$db_user, $db_pass, { mysql_enable_utf8 => 1 }
 	);
 	while(!$db_conn) {
-		&printEvent("MYSQL", "\nCan't connect to MySQL database '$db_name' on '$db_host' and user '$db_user' and pass '$db_pass'\n" .
+		&printEvent("MYSQL", "\nCan't connect to MySQL database '$db_name' on '$db_host'\n" .
 			"Server error: $DBI::errstr\n");
 		sleep(5);
 		$db_conn = DBI->connect(
@@ -183,7 +183,7 @@ sub doQuery
 
 	my $result = $db_conn->prepare($query) or die("Unable to prepare query:\n$query\n$DBI::errstr\n$callref");
 	$result->execute or die("Unable to execute query:\n$query\n$DBI::errstr\n$callref");
-
+	
 	return $result;
 }
 
@@ -200,16 +200,16 @@ sub execNonQuery
 
 sub execCached {
 	my ($query_id,$query, @bind_args) = @_;
-
+	
 	if(!$db_conn->ping()) {
 		&printEvent("HLSTATSX", "Lost database connection. Trying to reconnect...", 1);
 		&doConnect();
 	}
-
+	
 	if(!$db_stmt_cache{$query_id}) {
 		$db_stmt_cache{$query_id} = $db_conn->prepare($query) or die("Unable to prepare query ($query_id):\n$query\n$DBI::errstr");
 		#&printEvent("HLSTATSX", "Prepared a statement ($query_id) for the first time.", 1);
-	}
+	} 
 	$db_stmt_cache{$query_id}->execute(@bind_args) or die ("Unable to execute query ($query_id):\n$query\n$DBI::errstr");
 	return $db_stmt_cache{$query_id};
 }
@@ -225,13 +225,13 @@ sub resolveIp
 {
 	my ($ip, $quiet) = @_;
 	my ($host) = "";
-
+	
 	unless ($g_dns_resolveip)
 	{
 		return "";
 	}
-
-
+	
+	
 	eval
 	{
 		$SIG{ALRM} = sub { die "DNS Timeout\n" };
@@ -239,7 +239,7 @@ sub resolveIp
 		$host = gethostbyaddr(inet_aton($ip), AF_INET);
 		alarm 0;
 	};
-
+	
 	if ($@)
 	{
 		my $error = $@;
@@ -292,13 +292,13 @@ sub getHostGroup
 {
 	my ($hostname, $result) = @_;
 	my $hostgroup = "";
-
+	
 	# User can define special named hostgroups in hlstats_HostGroups, i.e.
 	# '.adsl.someisp.net' => 'SomeISP ADSL'
-
+	
 	$result = &queryHostGroups()  unless ($result);
 	$result->execute();
-
+	
 	while (my($pattern, $name) = $result->fetchrow_array())
 	{
 		$pattern = quotemeta($pattern);
@@ -310,7 +310,7 @@ sub getHostGroup
 		}
 	}
 	$result->finish;
-
+	
 	if (!$hostgroup)
 	{
 		#
@@ -325,7 +325,7 @@ sub getHostGroup
 		#
 		# Please mail sgarner@hlstats.org with any additions.
 		#
-
+		
 		my @dom_nosld = (
 			"ca", # Canada
 			"ch", # Switzerland
@@ -341,9 +341,9 @@ sub getHostGroup
 			"ru", # Russia
 			"se", # Sweden
 		);
-
+		
 		my $dom_nosld = join("|", @dom_nosld);
-
+		
 		if ($hostname =~ /([\w-]+\.(?:$dom_nosld|\w\w\w))$/)
 		{
 			$hostgroup = $1;
@@ -357,7 +357,7 @@ sub getHostGroup
 			$hostgroup = $hostname;
 		}
 	}
-
+	
 	return $hostgroup;
 }
 
@@ -371,7 +371,7 @@ sub getHostGroup
 sub doConf
 {
 	my ($conf, %directives) = @_;
-
+	
 	while (($directive, $variable) = each(%directives))
 	{
         if ($directive eq "Servers") {
@@ -392,7 +392,7 @@ sub doConf
 sub setOptionsConf
 {
 	my (%optionsconf) = @_;
-
+	
 	while (($thekey, $theval) = each(%optionsconf))
 	{
 		if($theval)
@@ -414,9 +414,9 @@ sub setOptionsConf
 sub abbreviate
 {
 	my ($thestring, $maxlength) = @_;
-
+	
 	$maxlength = 12  unless ($maxlength);
-
+	
 	if (length($thestring) > $maxlength)
 	{
 		$thestring = substr($thestring, 0, $maxlength - 3);
@@ -442,13 +442,13 @@ sub printEvent
 		my ($sec,$min,$hour,$mday,$mon,$year) = localtime(time());
 		my $timestamp = sprintf("%04d-%02d-%02d %02d:%02d:%02d", $year+1900, $mon+1, $mday, $hour, $min, $sec);
 		if ($update_timestamp == 0) {
-			$timestamp = $ev_timestamp;
-		}
+			$timestamp = $ev_timestamp; 
+		}  
 		if (is_number($code)) {
 			printf("%s: %21s - E%03d: %s\n", $timestamp, $s_addr, $code, $description);
 		} else {
 			printf("%s: %21s - %s: %s\n", $timestamp, $s_addr, $code, $description);
-		}
+		}  
 	}
 }
 
