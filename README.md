@@ -80,6 +80,9 @@ echo '127.0.0.1 phpmyadmin.example.com' | sudo tee -a /etc/hosts
 ## Development
 
 ```sh
+# Setup docker buildx builder
+docker buildx create --name mybuilder --driver docker-container --use
+
 # 1. Start Counter-strike 1.6 server, source-udp-forwarder, HLStatsX:CE stack
 docker compose up --build
 # HLStatsX:CE web frontend available at http://localhost:8081/. Admin Panel username: admin, password 123456
@@ -132,12 +135,12 @@ docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php #--
 # db - Exec into container
 docker exec -it $( docker compose ps -q db ) sh
 
-# Test routes
-docker compose -f docker-compose.test.yml up test-routes
+# Test
+docker compose -f docker-compose.test.yml --profile dev up
 
 # Test production builds locally
 docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build
-docker compose -f docker-compose.test.yml up
+docker compose -f docker-compose.test.yml --profile prod up
 
 # Dump the DB
 docker exec $( docker compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz
