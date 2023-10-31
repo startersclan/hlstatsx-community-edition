@@ -55,8 +55,6 @@ services:
 
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
   # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
-  # HLStatsX:CE perl daemon: https://github.com/startersclan/docker-hlstatsxce-daemon
-  # NOTE: Currently, as of v1.6.19, the daemon crashes upon startup. You will need to fix perl errors and rebuild the image.
   daemon:
     build:
       dockerfile: Dockerfile.daemon
@@ -78,7 +76,6 @@ services:
       - --db-username=hlstatsxce
       - --db-password=hlstatsxce
       - --nodns-resolveip
-      - --rcon
       - --debug
       # - --debug
       # - --help
@@ -182,9 +179,23 @@ services:
       cache_to:
         - type=local,dest=/tmp/.buildx-cache-web,mode=max
     volumes:
-      - ./web:/web
       - ./heatmaps:/heatmaps
-      - ./config/heatmaps/config.inc.php:/heatmaps/config.inc.php:ro  # Heatmaps config file
+      - ./web:/web
+    environment:
+      - DB_HOST=db
+      - DB_NAME=hlstatsxce
+      - DB_USER=hlstatsxce
+      - DB_PASS=hlstatsxce
+      - HLXCE_WEB=/web
+      - HUD_URL=http://www.hlxcommunity.com
+      - OUTPUT_SIZE=medium
+      - DEBUG=1
+    extra_hosts:
+      # For xdebug to reach the host via `host.docker.internal`. See: https://github.com/moby/moby/pull/40007#issuecomment-578729356 and https://stackoverflow.com/questions/49907308/installing-xdebug-in-docker
+      # If xdebug does not work, you may need to add an iptables rule to the INPUT chain: iptables -A INPUT -i br+ -j ACCEPT
+      - host.docker.internal:host-gateway
+    depends_on:
+      - init-container
     working_dir: /heatmaps
     stop_signal: SIGKILL
     entrypoint:
