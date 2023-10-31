@@ -80,9 +80,6 @@ echo '127.0.0.1 phpmyadmin.example.com' | sudo tee -a /etc/hosts
 ## Development
 
 ```sh
-# Setup docker buildx builder
-docker buildx create --name mybuilder --driver docker-container --use
-
 # 1. Start Counter-strike 1.6 server, source-udp-forwarder, HLStatsX:CE stack
 docker compose up --build
 # HLStatsX:CE web frontend available at http://localhost:8081/. Admin Panel username: admin, password 123456
