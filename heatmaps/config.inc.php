@@ -1,20 +1,31 @@
 <?php
+function iniSet($name, $default) {
+	$value = getenv($name) ? getenv($name) : $default;
+	ini_set($name, $value);
+}
+function defineVar($name, $default) {
+	$value = getenv($name) ? getenv($name) : $default;
+	$value = gettype($default) == 'boolean' && $value == 'false' ? false : $value; // Fix string 'false' becoming true for boolean when using settype
+	settype($value, gettype($default));
+	define($name, $value);
+}
+
 error_reporting(E_ALL);
-ini_set("memory_limit", "32M");
-ini_set("max_execution_time", "0");
+iniSet("memory_limit", "32M");
+iniSet("max_execution_time", "0");
 
-define('DB_HOST',	'localhost');
-define('DB_USER',	'');
-define('DB_PASS',	'');
-define('DB_NAME',	'');
-define('HLXCE_WEB',	'/path/to/where/you/have/your/hlstats/web');
-define('HUD_URL',	'http://www.hlxcommunity.com');
-define('OUTPUT_SIZE',	'medium');
+defineVar('DB_HOST',	'localhost');
+defineVar('DB_USER',	'');
+defineVar('DB_PASS',	'');
+defineVar('DB_NAME',	'');
+defineVar('HLXCE_WEB',	'/path/to/where/you/have/your/hlstats/web');
+defineVar('HUD_URL',	'http://www.hlxcommunity.com');
+defineVar('OUTPUT_SIZE',	'medium');
 
-define('DB_PREFIX',	'hlstats');
-define('KILL_LIMIT',	10000);
-define('DEBUG', 1);
+defineVar('DB_PREFIX',	'hlstats');
+defineVar('KILL_LIMIT',	10000);
+defineVar('DEBUG', 1);
 
 // No need to change this unless you are on really low disk.
-define('CACHE_DIR',	dirname(__FILE__) . '/cache');
+defineVar('CACHE_DIR',	dirname(__FILE__) . '/cache');
 
