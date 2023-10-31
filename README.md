@@ -129,8 +129,7 @@ docker exec -it $( docker compose ps -q db ) sh
 docker compose -f docker-compose.test.yml up
 
 # Test production builds locally
-docker build -t startersclan/hlstatsx-community-edition:daemon -f Dockerfile.daemon .
-docker build -t startersclan/hlstatsx-community-edition:web -f Dockerfile.web .
+docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build
 
 # Dump the DB
 docker exec $( docker compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz
