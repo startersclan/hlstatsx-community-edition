@@ -56,14 +56,7 @@ services:
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
   # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
   daemon:
-    build:
-      dockerfile: Dockerfile.daemon
-      context: .
-      target: dev
-      cache_from:
-        - type=local,src=/tmp/.buildx-cache-daemon
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-daemon,mode=max
+    image: startersclan/hlstatsx-community-edition:1.8.0-daemon
     ports:
       - 27500:27500/udp   # For external servers to send logs to the daemon
     networks:
@@ -82,14 +75,7 @@ services:
 
   # Cron - awards
   awards:
-    build:
-      dockerfile: Dockerfile.daemon
-      context: .
-      target: dev
-      cache_from:
-        - type=local,src=/tmp/.buildx-cache-daemon
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-daemon,mode=max
+    image: startersclan/hlstatsx-community-edition:1.8.0-daemon
     stop_signal: SIGKILL
     entrypoint:
       - /bin/sh
@@ -136,20 +122,9 @@ services:
   # Available at http://localhost:8081
   # Admin Panel username: admin, password: 123456
   web:
-    build:
-      dockerfile: Dockerfile.web
-      context: .
-      target: dev
-      cache_from:
-        - type=local,src=/tmp/.buildx-cache-web
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-web,mode=max
+    image: startersclan/hlstatsx-community-edition:1.8.0-web
     volumes:
-      - ./web:/web
-      # - ./config/web/supervisor.conf:/supervisor.conf:ro
-      # - ./config/web/etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      # - ./config/web/usr/local/etc/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
-      # - ./config/web/usr/local/etc/php-fpm.d/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf:ro
+      - games-volume:/web/hlstatsimg/games  # Stateful games volume, which also contains heatmaps
     environment:
       - DB_ADDR=db
       - DB_NAME=hlstatsxce
@@ -161,26 +136,14 @@ services:
       - 9000
     networks:
       - default
-    extra_hosts:
-      # For xdebug to reach the host via `host.docker.internal`. See: https://github.com/moby/moby/pull/40007#issuecomment-578729356 and https://stackoverflow.com/questions/49907308/installing-xdebug-in-docker
-      # If xdebug does not work, you may need to add an iptables rule to the INPUT chain: iptables -A INPUT -i br+ -j ACCEPT
-      - host.docker.internal:host-gateway
     depends_on:
       - init-container
 
   # Cron - Heatmaps
   heatmaps:
-    build:
-      dockerfile: Dockerfile.web
-      context: .
-      target: base
-      cache_from:
-        - type=local,src=/tmp/.buildx-cache-web
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-web,mode=max
+    image: startersclan/hlstatsx-community-edition:1.8.0-web
     volumes:
-      - ./heatmaps:/heatmaps
-      - ./web:/web
+      - games-volume:/web/hlstatsimg/games  # Stateful games volume, which also contains heatmaps
     environment:
       - DB_HOST=db
       - DB_NAME=hlstatsxce
@@ -190,10 +153,6 @@ services:
       - HUD_URL=http://www.hlxcommunity.com
       - OUTPUT_SIZE=medium
       - DEBUG=1
-    extra_hosts:
-      # For xdebug to reach the host via `host.docker.internal`. See: https://github.com/moby/moby/pull/40007#issuecomment-578729356 and https://stackoverflow.com/questions/49907308/installing-xdebug-in-docker
-      # If xdebug does not work, you may need to add an iptables rule to the INPUT chain: iptables -A INPUT -i br+ -j ACCEPT
-      - host.docker.internal:host-gateway
     depends_on:
       - init-container
     working_dir: /heatmaps
@@ -230,7 +189,6 @@ services:
   init-container:
     image: alpine:latest
     volumes:
-      - ./web:/web
       - db-volume:/var/lib/mysql
     networks:
       - default
@@ -241,14 +199,6 @@ services:
       - |
           set -eu
 
-          echo "Granting web nginx and php read permissions"
-          find /web -type d -exec chmod 755 {} \;
-          find /web -type f -exec chmod 644 {} \;
-
-          echo "Granting web php write permissions"
-          chmod 777 /web/hlstatsimg/progress
-          chmod 777 /web/hlstatsimg/graph
-
           echo "Granting db write permissions"
           chown -R 999:999 /var/lib/mysql
 
@@ -258,3 +208,4 @@ networks:
 volumes:
   dns-volume:
   db-volume:
+  games-volume:
