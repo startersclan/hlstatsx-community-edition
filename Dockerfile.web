@@ -1,7 +1,21 @@
-FROM php:8.1-fpm-alpine AS base
-ARG TARGETPLATFORM
-ARG BUILDPLATFORM
-RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
+ARG IMAGE=php:8.1-fpm-alpine
+FROM $IMAGE AS build
+
+# Set permissions for 'www-data' user
+# COPY --chown=www-data:www-data --chmod=640  /web /web
+COPY ./web /web
+RUN set -eux; \
+    chown -R www-data:www-data /web; \
+    find /web -type d -exec chmod 750 {} \; ; \
+    find /web -type f -exec chmod 640 {} \; ;
+
+COPY ./heatmaps /heatmaps
+RUN set -eux; \
+    chown -R www-data:www-data /heatmaps; \
+    find /heatmaps -type d -exec chmod 750 {} \; ; \
+    find /heatmaps -type f -exec chmod 640 {} \; ;
+
+FROM $IMAGE AS dev
 
 # Install nginx and supervisor for multi-process container
 RUN apk add --no-cache ca-certificates nginx supervisor
@@ -67,8 +81,6 @@ WORKDIR /web
 
 CMD ["/usr/bin/supervisord", "-c", "/supervisor.conf", "--pidfile", "/run/supervisord.pid"]
 
-FROM base AS dev
-
 FROM dev AS prod
 
 # Disable xdebug
@@ -76,16 +88,5 @@ RUN set -eux; \
     rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
     php -m;
 
-# Set permissions for 'www-data' user
-# COPY --chown=www-data:www-data --chmod=640  /web /web
-COPY ./web /web
-RUN set -eux; \
-    chown -R www-data:www-data /web; \
-    find /web -type d -exec chmod 750 {} \; ; \
-    find /web -type f -exec chmod 640 {} \; ;
-
-COPY ./heatmaps /heatmaps
-RUN set -eux; \
-    chown -R www-data:www-data /heatmaps; \
-    find /heatmaps -type d -exec chmod 750 {} \; ; \
-    find /heatmaps -type f -exec chmod 640 {} \; ;
+COPY --from=build /web /web
+COPY --from=build /heatmaps /heatmaps
