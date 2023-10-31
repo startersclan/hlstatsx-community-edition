@@ -172,7 +172,7 @@ class Heatmap {
 									
 			// Check that the dir exists, else try to create it.
 			if (!is_dir($path)) {
-				if (!@mkdir($path)) {
+				if (!@mkdir($path, -1, true)) {
 					show::Event("PREPARE", "Couln't create outputfolder: $path", 1);
 				}
 			}
@@ -208,7 +208,7 @@ class Heatmap {
 				closedir($handle);
 				}
 			} else {
-				if (!@mkdir(CACHE_DIR . "/$code")) {
+				if (!@mkdir(CACHE_DIR . "/$code", -1, true)) {
 					show::Event("CACHE", "Can't create cache_dir: " . CACHE_DIR . "/$code", 1);
 				}
 			}
