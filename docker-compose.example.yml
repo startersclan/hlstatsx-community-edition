@@ -119,10 +119,24 @@ services:
       - default
 
   # 5. HLStatsX:CE web
-  # Available at http://localhost:8081
+  # Available at http://localhost:8081, or https://web.example.com
   # Admin Panel username: admin, password: 123456
   web:
     image: startersclan/hlstatsx-community-edition:1.8.0-web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=hlstatsx-community-edition_traefik-network"
+      # traefik v2
+      # http
+      - "traefik.http.routers.hlstatsx-community-edition-web-http.entrypoints=web"
+      - "traefik.http.routers.hlstatsx-community-edition-web-http.rule=Host(`web.example.com`)"
+      - "traefik.http.routers.hlstatsx-community-edition-web-http.middlewares=hlstatsx-community-edition-web-http-myRedirectScheme" # Redirect http to https
+      - "traefik.http.middlewares.hlstatsx-community-edition-web-http-myRedirectScheme.redirectScheme.scheme=https" # Redirect http to https
+      # https
+      - "traefik.http.routers.hlstatsx-community-edition-web.entrypoints=websecure"
+      - "traefik.http.routers.hlstatsx-community-edition-web.tls="
+      - "traefik.http.routers.hlstatsx-community-edition-web.rule=Host(`web.example.com`)"
+      - "traefik.http.services.hlstatsx-community-edition-web.loadbalancer.server.port=80"
     volumes:
       - games-volume:/web/hlstatsimg/games  # Stateful games volume, which also contains heatmaps
     environment:
@@ -132,9 +146,10 @@ services:
       - DB_PASS=hlstatsxce
       - DB_DEBUG=0
     ports:
-      - 8081:80
+      - 127.0.0.1:8081:80
       - 9000
     networks:
+      - traefik-network
       - default
     depends_on:
       - init-container
@@ -175,14 +190,29 @@ services:
           exec crond -f
 
   # PHPMyAdmin to manage DB
-  # Available at http://localhost:8083
+  # Available at http://localhost:8083, or https://phpmyadmin.example.com
   phpmyadmin:
     image: phpmyadmin:5.2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=hlstatsx-community-edition_traefik-network"
+      # traefik v2
+      # http
+      - "traefik.http.routers.hlstatsx-community-edition-phpmyadmin-http.entrypoints=web"
+      - "traefik.http.routers.hlstatsx-community-edition-phpmyadmin-http.rule=Host(`phpmyadmin.example.com`)"
+      - "traefik.http.routers.hlstatsx-community-edition-phpmyadmin-http.middlewares=hlstatsx-community-edition-phpmyadmin-http-myRedirectScheme" # Redirect http to https
+      - "traefik.http.middlewares.hlstatsx-community-edition-phpmyadmin-http-myRedirectScheme.redirectScheme.scheme=https" # Redirect http to https
+      # https
+      - "traefik.http.routers.hlstatsx-community-edition-phpmyadmin.entrypoints=websecure"
+      - "traefik.http.routers.hlstatsx-community-edition-phpmyadmin.tls="
+      - "traefik.http.routers.hlstatsx-community-edition-phpmyadmin.rule=Host(`phpmyadmin.example.com`)"
+      - "traefik.http.services.hlstatsx-community-edition-phpmyadmin.loadbalancer.server.port=80"
     environment:
       - PMA_HOST=db
     ports:
-      - 8083:80
+      - 127.0.0.1:8083:80
     networks:
+      - traefik-network
       - default
 
   # Init container to set permissions in mounted folders and volumes
@@ -202,10 +232,44 @@ services:
           echo "Granting db write permissions"
           chown -R 999:999 /var/lib/mysql
 
+  # The reverse proxy for our web containers
+  # See https://github.com/traefik/traefik/tree/v2.7/docs/content/user-guides/docker-compose for some examples for enabling HTTPS using ACME
+  # You will need a domain name. E.g. 'example.com'
+  traefik:
+    image: traefik:v2.10
+    volumes:
+      # Allow traefik to listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-acme-volume:/letsencrypt
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - traefik-public-network
+      - traefik-network
+    restart: unless-stopped
+    command:
+      - --global.checknewversion=false
+      - --global.sendanonymoususage=false
+      # - --log.level=DEBUG
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.dnschallenge=true
+      - --certificatesresolvers.myresolver.acme.dnschallenge.provider=ovh
+      # - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.myresolver.acme.email=postmaster@example.com
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+
 networks:
   default:
+  traefik-public-network:
+  traefik-network:
+    internal: true
 
 volumes:
   dns-volume:
   db-volume:
   games-volume:
+  traefik-acme-volume:

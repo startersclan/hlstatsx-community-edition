@@ -48,15 +48,18 @@ jobs:
         docker buildx ls
         docker compose version
 
-    - name: Test (integration)
+    - name: Integration test (dev)
+      if: matrix.testenv == 'dev'
       run: |
-        set -eu
-        if [ "${{ matrix.testenv }}" == 'dev' ]; then
-            docker compose up --build -d
-        fi
-        if [ "${{ matrix.testenv }}" == 'prod' ]; then
-            docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build -d
-        fi
+        set -eux
+        docker compose up --build -d
+        docker compose -f docker-compose.test.yml up test-routes
+
+    - name: Integration test (prod)
+      if: matrix.testenv == 'prod'
+      run: |
+        set -eux
+        docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build -d
         docker compose -f docker-compose.test.yml up
 
   build:
