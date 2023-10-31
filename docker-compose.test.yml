@@ -1,26 +1,10 @@
 version: '2.2'
 services:
-  test-routes:
+  test-ready:
+    profiles:
+      - dev
+      - prod
     image: alpine:latest
-    environment:
-      URLS: |
-        http://web/ 302
-        http://web/css/spinner.gif 200
-        http://web/hlstatsimg/ajax.gif 200
-        http://web/includes/ 401
-        http://web/pages/ 401
-        http://web/pages/.htaccess 401
-        http://web/styles/classic.css 200
-        http://web/updater/ 401
-        http://web/autocomplete.php 200
-        http://web/config.php 401
-        http://web/hlstats.php 200
-        http://web/index.php 302
-        http://web/ingame.php 200
-        http://web/show_graph.php 200
-        http://web/sig.php 200
-        http://web/status.php 200
-        http://web/trend_graph.php 200
     networks:
       - default
     stop_signal: SIGKILL
@@ -46,6 +30,42 @@ services:
               sleep 3
           done
 
+  test-routes:
+    profiles:
+      - dev
+      - prod
+    image: alpine:latest
+    environment:
+      URLS: |
+        http://web/ 302
+        http://web/css/spinner.gif 200
+        http://web/hlstatsimg/ajax.gif 200
+        http://web/includes/ 401
+        http://web/pages/ 401
+        http://web/pages/.htaccess 401
+        http://web/styles/classic.css 200
+        http://web/updater/ 401
+        http://web/autocomplete.php 200
+        http://web/config.php 401
+        http://web/hlstats.php 200
+        http://web/index.php 302
+        http://web/ingame.php 200
+        http://web/show_graph.php 200
+        http://web/sig.php 200
+        http://web/status.php 200
+        http://web/trend_graph.php 200
+    networks:
+      - default
+    depends_on:
+      test-ready:
+        condition: service_completed_successfully
+    stop_signal: SIGKILL
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
           echo "$$URLS" | awk NF | while read -r i j; do
               if wget -q -SO- "$$i" 2>&1 | grep "HTTP/1.1 $$j " > /dev/null; then
                   echo "PASS: $$i"
@@ -56,6 +76,8 @@ services:
           done
 
   test-endpoints:
+    profiles:
+      - prod
     build:
       dockerfile_inline: |
         FROM alpine:latest
@@ -66,7 +88,7 @@ services:
         phpmyadmin.example.com 200
     network_mode: host
     depends_on:
-      test-routes:
+      test-ready:
         condition: service_completed_successfully
     stop_signal: SIGKILL
     entrypoint:
@@ -75,7 +97,6 @@ services:
       - -c
       - |
           set -eu
-
           echo "$$ENDPOINTS" | awk NF | while read -r i j; do
               if curl --head -kL http://$$i --resolve $$i:80:127.0.0.1 --resolve $$i:443:127.0.0.1 2>&1 | grep "^HTTP/2 $$j " > /dev/null; then
                   echo "PASS: $$i"
@@ -84,6 +105,33 @@ services:
                   exit 1
               fi
           done
+
+  test-awards: &test-docker
+    profiles:
+      - dev
+      - prod
+    image: docker:cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./:/src:ro
+    networks:
+      - default
+    depends_on:
+      test-ready:
+        condition: service_completed_successfully
+    working_dir: /src
+    stop_signal: SIGKILL
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - docker exec -i $( docker compose ps -q awards) sh -c /awards.sh
+
+  test-heatmaps:
+    <<: *test-docker
+    command:
+      - -c
+      - docker exec -i $( docker compose ps -q heatmaps) php /heatmaps/generate.php
 
 networks:
   default:
