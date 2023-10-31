@@ -173,7 +173,7 @@ services:
     build:
       dockerfile: Dockerfile.web
       context: .
-      target: base
+      target: dev
       cache_from:
         - type=local,src=/tmp/.buildx-cache-web
       cache_to:
