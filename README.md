@@ -56,9 +56,16 @@ To deploy using Docker Compose:
 
 ```sh
 docker compose -f docker-compose.example.yml up
+# `web` is available at http://localhost:8081 or https://web.example.com
+# `phpmyadmin` is available at http://localhost:8083 or https://phpmyadmin.example.com
+
+# You may need to add these DNS records in the hosts file
+echo '127.0.0.1 web.example.com' | sudo tee -a /etc/hosts
+echo '127.0.0.1 phpmyadmin.example.com' | sudo tee -a /etc/hosts
 ```
 
 - [install.sql](./sql/install.sql) is mounted in `mysql` container which automatically installs the DB only on the first time. If you prefer not to mount `install.sql`, you may manually install the DB by logging into PHPMyAdmin and importing the `install.sql` there.
+- `traefik` serves HTTPS with a self-signed cert. All HTTP requests are redirected to HTTPS.
 
 ### Upgrading (docker)
 
@@ -126,10 +133,11 @@ docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php #--
 docker exec -it $( docker compose ps -q db ) sh
 
 # Test routes
-docker compose -f docker-compose.test.yml up
+docker compose -f docker-compose.test.yml up test-routes
 
 # Test production builds locally
 docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build
+docker compose -f docker-compose.test.yml up
 
 # Dump the DB
 docker exec $( docker compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz

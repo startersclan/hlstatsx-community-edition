@@ -23,6 +23,7 @@ services:
         http://web/trend_graph.php 200
     networks:
       - default
+    stop_signal: SIGKILL
     entrypoint:
       - /bin/sh
     command:
@@ -47,6 +48,36 @@ services:
 
           echo "$$URLS" | awk NF | while read -r i j; do
               if wget -q -SO- "$$i" 2>&1 | grep "HTTP/1.1 $$j " > /dev/null; then
+                  echo "PASS: $$i"
+              else
+                  echo "FAIL: $$i"
+                  exit 1
+              fi
+          done
+
+  test-endpoints:
+    build:
+      dockerfile_inline: |
+        FROM alpine:latest
+        RUN apk add --no-cache curl
+    environment:
+      ENDPOINTS: |
+        web.example.com 200
+        phpmyadmin.example.com 200
+    network_mode: host
+    depends_on:
+      test-routes:
+        condition: service_completed_successfully
+    stop_signal: SIGKILL
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          set -eu
+
+          echo "$$ENDPOINTS" | awk NF | while read -r i j; do
+              if curl --head -kL http://$$i --resolve $$i:80:127.0.0.1 --resolve $$i:443:127.0.0.1 2>&1 | grep "^HTTP/2 $$j " > /dev/null; then
                   echo "PASS: $$i"
               else
                   echo "FAIL: $$i"
