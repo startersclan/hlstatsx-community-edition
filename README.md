@@ -42,14 +42,14 @@ a PHP frontend.
 `web` image (See [./web/config.php](./web/config.php) for supported environment variables):
 
 ```sh
-docker run --rm -it -e DB_ADDR=db -e DB_NAME=hlstatsxce -e DB_USER=hlstatsxce -e DB_PASS=hlstatsxce -p 80:80 startersclan/hlstatsx-community-edition:1.8.0-web
+docker run --rm -it -e DB_ADDR=db -e DB_NAME=hlstatsxce -e DB_USER=hlstatsxce -e DB_PASS=hlstatsxce -p 80:80 startersclan/hlstatsx-community-edition:1.9.0-web
 ```
 
 `daemon` image:
 
 ```sh
 # Use --help for usage
-docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1.8.0-daemon --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
+docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1.9.0-daemon --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
 ```
 
 To deploy using Docker Compose:
@@ -155,6 +155,14 @@ docker compose down
 docker compose down
 docker volume rm hlstatsx-community-edition-dns-volume
 docker volume rm hlstatsx-community-edition-db-volume
+```
+
+## Release
+
+```sh
+./scripts/release.sh "1.2.3"
+git add .
+git commit -m "Chore: Release 1.2.3"
 ```
 
 ## FAQ
