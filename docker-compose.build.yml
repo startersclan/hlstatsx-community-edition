@@ -1,10 +1,7 @@
-# This is a docker compose override file, for testing production builds with caching for CI environments
+# This is a docker compose override file, for development builds with caching for CI environments
 services:
   daemon:
     build:
-      dockerfile: Dockerfile.daemon
-      context: .
-      target: prod
       cache_from:
         - type=local,src=/tmp/.buildx-cache-daemon
       cache_to:
@@ -12,9 +9,6 @@ services:
 
   awards:
     build:
-      dockerfile: Dockerfile.daemon
-      context: .
-      target: prod
       cache_from:
         - type=local,src=/tmp/.buildx-cache-daemon
       cache_to:
@@ -22,9 +16,6 @@ services:
 
   web:
     build:
-      dockerfile: Dockerfile.web
-      context: .
-      target: prod
       cache_from:
         - type=local,src=/tmp/.buildx-cache-web
       cache_to:
@@ -32,9 +23,6 @@ services:
 
   heatmaps:
     build:
-      dockerfile: Dockerfile.web
-      context: .
-      target: prod
       cache_from:
         - type=local,src=/tmp/.buildx-cache-web
       cache_to:
