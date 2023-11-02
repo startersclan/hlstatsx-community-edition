@@ -61,6 +61,8 @@ services:
       - 27500:27500/udp   # For external servers to send logs to the daemon
     networks:
       - default
+    depends_on:
+      - db
     command:
       - --ip=0.0.0.0
       - --port=27500
