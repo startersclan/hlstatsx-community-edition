@@ -157,7 +157,7 @@ docker volume rm hlstatsx-community-edition-db-volume
 ## Release
 
 ```sh
-./scripts/release.sh "1.2.3"
+./release.sh "1.2.3"
 git add .
 git commit -m "Chore: Release 1.2.3"
 ```
