@@ -145,6 +145,7 @@ jobs:
       with:
         file: Dockerfile.${{ matrix.variant }}
         context: '.'
+        target: prod
         platforms: linux/amd64
         push: false
         tags: ${{ steps.meta.outputs.tags }}
@@ -158,6 +159,7 @@ jobs:
       with:
         file: Dockerfile.${{ matrix.variant }}
         context: '.'
+        target: prod
         platforms: ${{ matrix.variant == 'daemon' && 'linux/amd64' || 'linux/386,linux/amd64,linux/arm64' }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
