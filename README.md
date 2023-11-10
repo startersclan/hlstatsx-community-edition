@@ -55,7 +55,7 @@ docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1
 To deploy using Docker Compose:
 
 ```sh
-docker compose -f docker-compose.example.yml up
+docker-compose -f docker-compose.example.yml up
 # `web` is available at http://localhost:8081 or https://web.example.com
 # `phpmyadmin` is available at http://localhost:8083 or https://phpmyadmin.example.com
 
@@ -79,16 +79,18 @@ echo '127.0.0.1 phpmyadmin.example.com' | sudo tee -a /etc/hosts
 
 ## Development
 
+To use Docker Compose v2, use `docker compose` instead of `docker-compose`.
+
 ```sh
 # 1. Start Counter-strike 1.6 server, source-udp-forwarder, HLStatsX:CE stack
-docker compose up --build
+docker-compose up --build
 # HLStatsX:CE web frontend available at http://localhost:8081/. Admin Panel username: admin, password 123456
 # phpmyadmin available at http://localhost:8083. Root username: root, root password: root. Username: hlstatsxce, password: hlstatsxce
 
 # 2. Once setup, login to Admin Panel at http://localhost:8081/?mode=admin. Click HLstatsX:CE Settings > Proxy Settings, change the daemon's proxy key to 'somedaemonsecret'
 # This enables gameserver logs forwarded via source-udp-forwarder to be accepted by the daemon.
 # Then, restart the daemon.
-docker compose restart daemon
+docker-compose restart daemon
 
 # 3. Finally, add a Counter-Strike 1.6 server. click Games > and unhide 'cstrike' game.
 # Then, click Game Settings > Counter-Strike (cstrike) > Add Server.
@@ -104,7 +106,7 @@ docker compose restart daemon
 # The stats of the gameserver is now recorded :)
 
 # 5. To verify stats recording works, restart the gameserver. You should see the daemon recording the gameserver logs. All the best :)
-docker compose restart cstrike
+docker-compose restart cstrike
 
 # Development - Install vscode extensions
 # Once installed, set breakpoints in code, and press F5 to start debugging.
@@ -115,22 +117,22 @@ code --install-extension xdebug.php-debug # PHP remote debugging via xdebug
 sudo iptables -A INPUT -i br+ -j ACCEPT
 
 # CS 1.6 server - Restart server
-docker compose restart cstrike
+docker-compose restart cstrike
 # CS 1.6 server - Attach to the CS 1.6 server console. Press CTRL+P and then CTRL+Q to detach
-docker attach $( docker compose ps -q cstrike )
+docker attach $( docker-compose ps -q cstrike )
 # CS 1.6 server - Exec into container
-docker exec -it $( docker compose ps -q cstrike) bash
+docker exec -it $( docker-compose ps -q cstrike) bash
 
 # daemon - Exec into container
-docker exec -it $( docker compose ps -q daemon ) sh
+docker exec -it $( docker-compose ps -q daemon ) sh
 # web - Exec into container
-docker exec -it $( docker compose ps -q web ) sh
+docker exec -it $( docker-compose ps -q web ) sh
 # Run awards
-docker exec -it $( docker compose ps -q awards) sh -c /awards.sh
+docker exec -it $( docker-compose ps -q awards) sh -c /awards.sh
 # Generate heatmaps
-docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php #--disable-cache=true
+docker exec -it $( docker-compose ps -q heatmaps) php /heatmaps/generate.php #--disable-cache=true
 # db - Exec into container
-docker exec -it $( docker compose ps -q db ) sh
+docker exec -it $( docker-compose ps -q db ) sh
 
 # Test
 ./test/test.sh dev 1
@@ -139,16 +141,16 @@ docker exec -it $( docker compose ps -q db ) sh
 ./test/test.sh prod 1
 
 # Dump the DB
-docker exec $( docker compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz
+docker exec $( docker-compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz
 
 # Restore the DB
-zcat hlstatsxce.sql.gz | docker exec -i $( docker compose ps -q db ) mysql -uroot -proot hlstatsxce
+zcat hlstatsxce.sql.gz | docker exec -i $( docker-compose ps -q db ) mysql -uroot -proot hlstatsxce
 
 # Stop Counter-strike 1.6 server, source-udp-forwarder, HLStatsX:CE stack
-docker compose down
+docker-compose down
 
 # Cleanup
-docker compose down
+docker-compose down
 docker volume rm hlstatsx-community-edition-dns-volume
 docker volume rm hlstatsx-community-edition-db-volume
 ```
