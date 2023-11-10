@@ -4,26 +4,26 @@ services:
     build:
       cache_from:
         - type=local,src=/tmp/.buildx-cache-daemon
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-daemon,mode=max
+      # cache_to:
+      #   - type=local,dest=/tmp/.buildx-cache-daemon,mode=max
 
   awards:
     build:
       cache_from:
         - type=local,src=/tmp/.buildx-cache-daemon
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-daemon,mode=max
+      # cache_to:
+      #   - type=local,dest=/tmp/.buildx-cache-daemon,mode=max
 
   web:
     build:
       cache_from:
         - type=local,src=/tmp/.buildx-cache-web
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-web,mode=max
+      # cache_to:
+      #   - type=local,dest=/tmp/.buildx-cache-web,mode=max
 
   heatmaps:
     build:
       cache_from:
         - type=local,src=/tmp/.buildx-cache-web
-      cache_to:
-        - type=local,dest=/tmp/.buildx-cache-web,mode=max
+      # cache_to:
+      #   - type=local,dest=/tmp/.buildx-cache-web,mode=max
