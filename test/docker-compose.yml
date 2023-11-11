@@ -1,0 +1,33 @@
+version: '2.2'
+services:
+  test-container-networking:
+    image: alpine:latest
+    volumes:
+      - ./:/test:ro
+    networks:
+      - default
+    stop_signal: SIGKILL
+    working_dir: /test
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          sleep infinity
+
+  test-host-networking:
+    image: alpine:latest
+    volumes:
+      - ./:/test:ro
+    network_mode: host
+    stop_signal: SIGKILL
+    working_dir: /test
+    entrypoint:
+      - /bin/sh
+    command:
+      - -c
+      - |
+          sleep infinity
+
+networks:
+  default:

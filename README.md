@@ -133,11 +133,10 @@ docker exec -it $( docker compose ps -q heatmaps) php /heatmaps/generate.php #--
 docker exec -it $( docker compose ps -q db ) sh
 
 # Test
-docker compose -f docker-compose.test.yml --profile dev up
+./test/test.sh dev 1
 
 # Test production builds locally
-docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build
-docker compose -f docker-compose.test.yml --profile prod up
+./test/test.sh prod 1
 
 # Dump the DB
 docker exec $( docker compose ps -q db ) mysqldump -uroot -proot hlstatsxce | gzip > hlstatsxce.sql.gz
