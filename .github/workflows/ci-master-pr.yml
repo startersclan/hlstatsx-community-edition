@@ -54,15 +54,13 @@ jobs:
       if: matrix.testenv == 'dev'
       run: |
         set -eux
-        docker compose -f docker-compose.yml -f docker-compose.build.yml up --build -d
-        docker compose -f docker-compose.test.yml --profile dev up
+        ./test/test.sh dev 1 1
 
     - name: Integration test (prod)
       if: matrix.testenv == 'prod'
       run: |
         set -eux
-        docker compose -f docker-compose.example.yml -f docker-compose.example.build.yml up --build -d
-        docker compose -f docker-compose.test.yml --profile prod up
+        ./test/test.sh prod 1 1
 
   build:
     strategy:
