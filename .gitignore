@@ -1,7 +1,7 @@
 /.idea
-/web/.idea
+/src/web/.idea
 /.vscode/*
 !/.vscode/launch.json
 /.vagrant
-/web/hlstatsimg/progress
-/web/hlstatsimg/graph
+/src/web/hlstatsimg/progress
+/src/web/hlstatsimg/graph

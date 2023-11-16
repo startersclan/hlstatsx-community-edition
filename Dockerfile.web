@@ -3,13 +3,13 @@ FROM $IMAGE AS build
 
 # Set permissions for 'www-data' user
 # COPY --chown=www-data:www-data --chmod=640  /web /web
-COPY ./web /web
+COPY ./src/web /web
 RUN set -eux; \
     chown -R www-data:www-data /web; \
     find /web -type d -exec chmod 750 {} \; ; \
     find /web -type f -exec chmod 640 {} \; ;
 
-COPY ./heatmaps /heatmaps
+COPY ./src/heatmaps /heatmaps
 RUN set -eux; \
     chown -R www-data:www-data /heatmaps; \
     find /heatmaps -type d -exec chmod 750 {} \; ; \
