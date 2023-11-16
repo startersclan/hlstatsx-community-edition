@@ -116,7 +116,7 @@ services:
       - MYSQL_DATABASE=hlstatsxce
     volumes:
       - db-volume:/var/lib/mysql
-      - ./sql/install.sql:/docker-entrypoint-initdb.d/install.sql:ro  # This seeds the DB only on the first time
+      - ./src/sql/install.sql:/docker-entrypoint-initdb.d/install.sql:ro  # This seeds the DB only on the first time
     networks:
       - default
 

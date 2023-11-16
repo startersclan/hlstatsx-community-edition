@@ -122,7 +122,7 @@ services:
       - MYSQL_DATABASE=hlstatsxce
     volumes:
       - db-volume:/var/lib/mysql
-      - ./sql/install.sql:/docker-entrypoint-initdb.d/install.sql:ro  # This seeds the DB only on the first time
+      - ./src/sql/install.sql:/docker-entrypoint-initdb.d/install.sql:ro  # This seeds the DB only on the first time
     networks:
       - default
 
@@ -135,7 +135,7 @@ services:
       context: .
       target: dev
     volumes:
-      - ./web:/web
+      - ./src/web:/web
       # - ./config/web/supervisor.conf:/supervisor.conf:ro
       # - ./config/web/etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       # - ./config/web/usr/local/etc/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
@@ -165,8 +165,8 @@ services:
       context: .
       target: dev
     volumes:
-      - ./heatmaps:/heatmaps
-      - ./web:/web
+      - ./src/heatmaps:/heatmaps
+      - ./src/web:/web
     environment:
       - DB_HOST=db
       - DB_NAME=hlstatsxce
@@ -216,7 +216,7 @@ services:
   init-container:
     image: alpine:latest
     volumes:
-      - ./web:/web
+      - ./src/web:/web
       - db-volume:/var/lib/mysql
     networks:
       - default
