@@ -50,6 +50,7 @@ RUN set -eux; \
     cpanm GeoIP2::Database::Reader; \
     cpanm MaxMind::DB::Reader; \
     cpanm Syntax::Keyword::Try; \
+    cpanm JSON:XS; \
     \
     # Optional modules: Email
     cpanm Email::Sender::Simple; \
