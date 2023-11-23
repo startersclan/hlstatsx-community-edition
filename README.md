@@ -34,12 +34,7 @@ a PHP frontend.
 
 ## Usage (docker)
 
-> The tag convention is `<version>-<service>` or `<version>-<sha>-<service>`. For instance, for release `v1.2.3` on sha `0abcdef`:
->
-> - `web` image tags: `1-web`, `1.2-web`, `1.2.3-web`, `1-0abcdef-web`, `1.2-0abcdef-web`, `1.2.3-0abcdef-web`
-> - `daemon` image tags: `1-daemon`, `1.2-daemon`, `1.2.3-daemon`, `1-0abcdef-daemon`, `1.2-0abcdef-daemon`, `1.2.3-0abcdef-daemon`
-
-`web` image (See [./web/config.php](./web/config.php) for supported environment variables):
+`web` image (See [./src/web/config.php](./src/web/config.php) for supported environment variables):
 
 ```sh
 docker run --rm -it -e DB_ADDR=db -e DB_NAME=hlstatsxce -e DB_USER=hlstatsxce -e DB_PASS=hlstatsxce -p 80:80 startersclan/hlstatsx-community-edition:1.9.0-web
@@ -51,6 +46,8 @@ docker run --rm -it -e DB_ADDR=db -e DB_NAME=hlstatsxce -e DB_USER=hlstatsxce -e
 # Use --help for usage
 docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1.9.0-daemon --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
 ```
+
+### Docker Compose
 
 To deploy using Docker Compose:
 
