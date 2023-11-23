@@ -24,16 +24,16 @@ fi
 VERSION=$( echo "$TAG" | sed 's/^v//' )
 VERSION_PREV=$( echo "$TAG_PREV" | sed 's/^v//' )
 VERSION_PREV_REGEX=$( echo "$VERSION_PREV" | sed 's/\./\\./g' ) # '1.0.0' -> '1\.0\.0'
-DBVERSION_PREV=$( ls web/updater | grep -E '^[0-9]+\.php$' | sort -n | tail -n1 | cut -d '.' -f1 )
+DBVERSION_PREV=$( ls src/web/updater | grep -E '^[0-9]+\.php$' | sort -n | tail -n1 | cut -d '.' -f1 )
 DBVERSION=$(( $DBVERSION_PREV + 1 ))
 
 # Bump version in docs, .php, and .sql files
 sed -i "s/$VERSION_PREV/$VERSION/" README.md
 sed -i "s/$VERSION_PREV/$VERSION/" docker-compose.example.yml
-sed -i "s/^SET @DBVERSION=.*/SET @DBVERSION=\"$DBVERSION\";/" sql/install.sql
-sed -i "s/^SET @VERSION=.*/SET @VERSION=\"$VERSION\";/" sql/install.sql
-echo "Creating web/updater/$DBVERSION.php"
-cat - > web/updater/$DBVERSION.php <<EOF
+sed -i "s/^SET @DBVERSION=.*/SET @DBVERSION=\"$DBVERSION\";/" src/sql/install.sql
+sed -i "s/^SET @VERSION=.*/SET @VERSION=\"$VERSION\";/" src/sql/install.sql
+echo "Creating src/web/updater/$DBVERSION.php"
+cat - > src/web/updater/$DBVERSION.php <<EOF
 <?php
     if ( !defined('IN_UPDATER') )
     {
