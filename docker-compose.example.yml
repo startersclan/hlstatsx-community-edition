@@ -172,6 +172,7 @@ services:
       - DEBUG=1
     depends_on:
       - init-container
+      - web
     working_dir: /heatmaps
     stop_signal: SIGKILL
     entrypoint:

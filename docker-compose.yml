@@ -182,6 +182,7 @@ services:
       - host.docker.internal:host-gateway
     depends_on:
       - init-container
+      - web
     working_dir: /heatmaps
     stop_signal: SIGKILL
     entrypoint:
