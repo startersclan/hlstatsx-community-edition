@@ -504,71 +504,104 @@ sub rcon_getplayers
 
 sub track_server_load
 {
-	my ($self) = @_;
+    my ($self) = @_;
 
-	if (($::g_stdin == 0) && ($self->{track_server_load} > 0))
-	{
-		my $last_timestamp = $self->{track_server_timestamp};
-		my $new_timestamp  = time();
-		if ($last_timestamp > 0)
-		{
-			if ($last_timestamp+299 < $new_timestamp)
-			{
-				# fetch fps and uptime via rcon
-				
-				# Old style stats output:
-				#$string = "          0.00  0.00  0.00      54     1  249.81       0 dhjdsk";
+    if (($::g_stdin == 0) && ($self->{track_server_load} > 0))
+    {
+        my $last_timestamp = $self->{track_server_timestamp};
+        my $new_timestamp  = time();
+        if ($last_timestamp > 0)
+        {
+            if ($last_timestamp+299 < $new_timestamp)
+            {
 
-				# New style stats output:
-				#CPU    In (KB/s)  Out (KB/s)  Uptime  Map changes  FPS      Players  Connects
-				#0.00   0.00       0.00        0      0            00.00    0        0
+                my $act_players;
+                my $max_players;
+                my $map;
+                my $uptime;
+                my $fps;
+                if ($self->{play_game} == CS2()) {
+                    $status_json = $self->dorcon("status_json");
+                    my @lines = split(/[\r\n]+/, $status_json);
+                    foreach my $line (@lines) {
+                        if ($line =~ /^\s*"map": "([^"]+)".*/) {
+                            $map = $1;
+                        }
+                        if ($line =~ /^\s*"process_uptime": (\d+)/) {
+                            $uptime = $1;
+                        }
+                        if ($line =~ /^\s*"frametime_ms": ([\d\.]+)/) {
+                            $fps = floor(1000 / $1);
+                        }
+                    }
+                }else {
 
+                    # fetch fps and uptime via rcon
 
-				$string = $self->dorcon("stats");
+                    # Old style stats output:
+                    #$string = "          0.00  0.00  0.00      54     1  249.81       0 dhjdsk";
 
-				# Remove first line of output
-				$string =~ /CPU.*\n(.*)\n*L{0,1}.*\Z/;
-				$string = $1;
+                    # New style stats output:
+                    #CPU    In (KB/s)  Out (KB/s)  Uptime  Map changes  FPS      Players  Connects
+                    #0.00   0.00       0.00        0      0            00.00    0        0
 
-				# Grab FPS and Uptime from the output
-				$string =~ /([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s*([^ ]*)/;
-				$uptime = $4;
-				$fps = $6;
+                    $string = $self->dorcon("stats");
 
-				my $act_players  = $self->{numplayers};
-				my $max_players  = $self->{maxplayers};
-				if ($max_players > 0) {
-					if ($act_players > $max_players)  {
-						$act_players = $max_players;
-					}
-				}
-				&::execCached("flush_server_load",
-					"INSERT IGNORE INTO hlstats_server_load
-						SET 
-							server_id=?,
-							timestamp=?,
-							act_players=?,
-							min_players=?,
-							max_players=?,
-							map=?,
-							uptime=?,
-							fps=?",
-					$self->{id},
-					$new_timestamp,
-					$act_players,
-					$self->{minplayers},
-					$max_players,
-					$self->{map},
-					(($uptime)?$uptime:0),
-					(($fps)?$fps:0)
-				);
-				$self->set("track_server_timestamp", $new_timestamp);
+                    # leo - no answer from the server. We wont record a server load.
+                    if ($string eq "") {
+                        # consider as tracked so we dont keep on tracking
+                        $self->set("track_server_timestamp", $new_timestamp);
+
+                        &::printEvent("[HLstats_Server][track_server_load]", "No answer from the server " . $self->{address}.":".$self->{port} . ", Returning. Answer: $string", 1);
+                        return;
+                    }
+
+                    # leo - debug
+                    $tmp = $string;
+
+                    # Remove first line of output
+                    $string =~ /CPU.*\n(.*)\n*L{0,1}.*\Z/;
+                    $string = $1;
+
+                    # Grab FPS and Uptime from the output
+                    $string =~ /([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s+([^ ]+)\s*([^ ]*)/;
+                    $uptime = $4;
+                    $fps = $6;
+                }
+                $act_players  = $self->{numplayers};
+                $max_players  = $self->{maxplayers};
+                if ($max_players > 0) {
+                    if ($act_players > $max_players)  {
+                        $act_players = $max_players;
+                    }
+                }
+                &::execCached("flush_server_load",
+                    "INSERT IGNORE INTO hlstats_server_load
+                        SET
+                            server_id=?,
+                            timestamp=?,
+                            act_players=?,
+                            min_players=?,
+                            max_players=?,
+                            map=?,
+                            uptime=?,
+                            fps=?",
+                    $self->{id},
+                    $new_timestamp,
+                    $act_players,
+                    $self->{minplayers},
+                    $max_players,
+                    $self->{map},
+                    (($uptime)?$uptime:0),
+                    (($fps)?$fps:0)
+                );
+                $self->set("track_server_timestamp", $new_timestamp);
 				&::printEvent("SERVER", "Insert new server load timestamp", 1);
-			}   
-		} else {
-			$self->set("track_server_timestamp", $new_timestamp);
-		}  
-	}
+            }
+        } else {
+            $self->set("track_server_timestamp", $new_timestamp);
+        }
+    }
 }
 
 sub dostats 

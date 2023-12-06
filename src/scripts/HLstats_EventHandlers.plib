@@ -2856,6 +2856,11 @@ sub doEvent_ChangeMap
 {
 	my ($type, $newmap) = @_;
 	
+    if ($newmap) {
+        # CS2 does not log 'Started map' event, but 'Loading map' event before it should have populated $newmap already
+        $g_servers{$s_addr}->set("map", $newmap);
+    }
+	
 	$g_servers{$s_addr}->set("map", $newmap);
 	$g_servers{$s_addr}->clear_winner();
 

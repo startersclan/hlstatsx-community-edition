@@ -26,6 +26,7 @@ use constant {
 	NUCLEARDAWN => 23,
 	DDD => 24,
 	CSGO => 25,
+	CS2 => 26,
 };
 
 %gamecode_to_game = (
@@ -55,4 +56,5 @@ use constant {
 	'nucleardawn' => NUCLEARDAWN(),
 	'dinodday' => DDD(),
 	'csgo' => CSGO(),
+	'cs2' => CS2(),
 );

@@ -9,58 +9,83 @@ services:
     ports:
       - 27015:27015/udp
     networks:
-      - default
+      default:
+        ipv4_address: 10.5.0.100  # Static IP
     stdin_open: true
     tty: true
     stop_signal: SIGKILL
-    depends_on:
-      - source-udp-forwarder
     entrypoint:
       - /bin/bash
     command:
       - -c
       - |
           set -eu
-          exec hlds_linux -console -noipx -secure -game cstrike +map de_dust2 +maxplayers 32 +sv_lan 0 +ip 0.0.0.0 +port 27015 +rcon_password password +log on +logaddress_add "$$( cat /dns/source-udp-forwarder )" 26999
+          exec hlds_linux -console -noipx -secure -game cstrike +map de_dust2 +maxplayers 32 +sv_lan 0 +ip 0.0.0.0 +port 27015 +rcon_password password +log on +logaddress_add 10.5.0.50 27500
 
+  # Uncomment to test CS2     
+  # 1. Counter-Strike 2 gameserver sends HTTP logs to source-udp-forwarder
+  # See: https://github.com/startersclan/docker-sourceservers
+  # cs2:
+  #   image: sourceservers/cs2:latest
+  #   volumes:
+  #     - dns-volume:/dns:ro
+  #   ports:
+  #     - 27016:27016/tcp
+  #     - 27016:27016/udp
+  #   networks:
+  #     default:
+  #       ipv4_address: 10.5.0.101  # Static IP
+  #   stdin_open: true
+  #   tty: true
+  #   stop_signal: SIGKILL
+  #   depends_on:
+  #     - source-udp-forwarder-cs2
+  #   entrypoint:
+  #     - /bin/bash
+  #   command:
+  #     - -c
+  #     - |
+  #         set -eu
+  #         exec game/bin/linuxsteamrt64/cs2 -dedicated -port 27016 +game_type 0 +game_mode 1 +mapgroup mg_active +map de_dust2 +rcon_password password +log on +logaddress_add_http "http://source-udp-forwarder-cs2:26999"
+
+  # Uncomment to test CS2     
   # 2. source-udp-forwarder proxy forwards gameserver logs to the daemon
   # See: https://github.com/startersclan/source-udp-forwarder
-  source-udp-forwarder:
-    image: startersclan/source-udp-forwarder:latest
-    environment:
-      - UDP_LISTEN_ADDR=:26999
-      - UDP_FORWARD_ADDR=daemon:27500
-      - FORWARD_PROXY_KEY=somedaemonsecret # The daemon's proxy_key secret
-      - FORWARD_GAMESERVER_IP=192.168.1.100 # The gameserver's IP as registered in the HLStatsX:CE database
-      - FORWARD_GAMESERVER_PORT=27015 # The gameserver's IP as registered in the HLStatsX:CE database
-      - LOG_LEVEL=INFO
-      - LOG_FORMAT=txt
-    volumes:
-      - dns-volume:/dns
-    networks:
-      - default
-    depends_on:
-      - daemon
-    entrypoint:
-      - /bin/sh
-    command:
-      - -c
-      - |
-          set -eu
-
-          echo "Outputting my IP address"
-          ip addr show eth0 | grep 'inet ' | awk '{print $$2}' | cut -d '/' -f1 | tee /dns/source-udp-forwarder
-
-          exec /source-udp-forwarder
+  # source-udp-forwarder-cs2:
+  #   image: startersclan/source-udp-forwarder:latest
+  #   environment:
+  #     - LISTEN_ADDR=:26999
+  #     - UDP_FORWARD_ADDR=daemon:27500
+  #     - FORWARD_PROXY_KEY=somedaemonsecret # The daemon's proxy_key secret
+  #     - FORWARD_GAMESERVER_IP=10.5.0.101 # The gameserver's IP as registered in the HLStatsX:CE database
+  #     - FORWARD_GAMESERVER_PORT=27016 # The gameserver's IP as registered in the HLStatsX:CE database
+  #     - LOG_LEVEL=INFO
+  #     - LOG_FORMAT=txt
+  #   volumes:
+  #     - dns-volume:/dns
+  #   networks:
+  #     - default
+  #   depends_on:
+  #     - daemon
+  #   entrypoint:
+  #     - /bin/sh
+  #   command:
+  #     - -c
+  #     - |
+  #         set -eu
+  #         echo "Outputting my IP address"
+  #         ip addr show eth0 | grep 'inet ' | awk '{print $$2}' | cut -d '/' -f1 | tee /dns/source-udp-forwarder-cs2
+  #         exec /source-udp-forwarder
 
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
   # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
   daemon:
-    image: startersclan/hlstatsx-community-edition:1.10.0-daemon
+    image: startersclan/hlstatsx-community-edition:1.11.0-daemon
     ports:
       - 27500:27500/udp   # For external servers to send logs to the daemon
     networks:
-      - default
+      default:
+        ipv4_address: 10.5.0.50  # Static IP
     depends_on:
       - db
     command:
@@ -77,7 +102,7 @@ services:
 
   # Cron - awards
   awards:
-    image: startersclan/hlstatsx-community-edition:1.10.0-daemon
+    image: startersclan/hlstatsx-community-edition:1.11.0-daemon
     stop_signal: SIGKILL
     entrypoint:
       - /bin/sh
@@ -124,7 +149,7 @@ services:
   # Available at http://localhost:8081, or https://web.example.com
   # Admin Panel username: admin, password: 123456
   web:
-    image: startersclan/hlstatsx-community-edition:1.10.0-web
+    image: startersclan/hlstatsx-community-edition:1.11.0-web
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=hlstatsx-community-edition_traefik-network"
@@ -158,7 +183,7 @@ services:
 
   # Cron - Heatmaps
   heatmaps:
-    image: startersclan/hlstatsx-community-edition:1.10.0-web
+    image: startersclan/hlstatsx-community-edition:1.11.0-web
     volumes:
       - games-volume:/web/hlstatsimg/games  # Stateful games volume, which also contains heatmaps
     environment:
@@ -267,6 +292,11 @@ services:
 
 networks:
   default:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
   traefik-public-network:
   traefik-network:
     internal: true

@@ -18,10 +18,10 @@ SCRIPT_DIR=$( cd "$( dirname "$0" )" && pwd )
 ERR=
 setup_test() {
     cd "$SCRIPT_DIR"
-    docker compose up -d
     if [ -n "$UP" ]; then
         setup
     fi
+    docker compose up -d
     run
 }
 cleanup_test() {
@@ -29,7 +29,7 @@ cleanup_test() {
     if [ -n "$UP" ]; then
         cleanup
     fi
-    docker compose stop
+    docker compose down
     if [ -z "$ERR" ] || [ "$ERR" = 0 ]; then
         echo "All tests succeeded"
     else
