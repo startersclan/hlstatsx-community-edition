@@ -67,15 +67,6 @@ services:
   #     - default
   #   depends_on:
   #     - daemon
-  #   entrypoint:
-  #     - /bin/sh
-  #   command:
-  #     - -c
-  #     - |
-  #         set -eu
-  #         echo "Outputting my IP address"
-  #         ip addr show eth0 | grep 'inet ' | awk '{print $$2}' | cut -d '/' -f1 | tee /dns/source-udp-forwarder-cs2
-  #         exec /source-udp-forwarder
 
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
   # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
