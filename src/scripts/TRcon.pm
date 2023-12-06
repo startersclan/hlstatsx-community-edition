@@ -410,7 +410,16 @@ sub getServerData
     {
       $map   = $1;
     }
-    elsif ($line =~ /^\s*players\s*:\s*\d+.+\((\d+)\smax.*$/)
+    elsif ($line =~ /^Game Time\s*(\d*?:?\d+:\d+),\s*Mod\s*"([^"]+)",\s*Map\s*"([^"]+)"\s*$/)
+    {
+        # srcds/cs2
+        $map   = $3;
+    }
+    elsif ($line =~ /^loaded spawngroup.*?\[1:\s*([^\s]+)\s*/) {
+        # srcds/cs2 non-workshop map
+        $map   = $1;
+    }
+    elsif ($line =~ /^\s*players\s*:\s*\d+[^(]+\((\d+)\/?\d?\smax.*$/)
     {
       $max_players = $1;
     }

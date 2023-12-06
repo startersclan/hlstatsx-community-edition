@@ -12,6 +12,8 @@ Edition uses a Perl daemon to parse the log streamed from the
 game server. The data is stored in a MySQL Database and has
 a PHP frontend.
 
+Counter-Strike 2 is supported (mostly).
+
 ## :loudspeaker: Important changes
 
 | Date  | Description | Additional information |
@@ -37,14 +39,14 @@ a PHP frontend.
 `web` image (See [./src/web/config.php](./src/web/config.php) for supported environment variables):
 
 ```sh
-docker run --rm -it -e DB_ADDR=db -e DB_NAME=hlstatsxce -e DB_USER=hlstatsxce -e DB_PASS=hlstatsxce -p 80:80 startersclan/hlstatsx-community-edition:1.10.0-web
+docker run --rm -it -e DB_ADDR=db -e DB_NAME=hlstatsxce -e DB_USER=hlstatsxce -e DB_PASS=hlstatsxce -p 80:80 startersclan/hlstatsx-community-edition:1.11.0-web
 ```
 
 `daemon` image:
 
 ```sh
 # Use --help for usage
-docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1.10.0-daemon --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
+docker run --rm -it -p 27500:27500/udp startersclan/hlstatsx-community-edition:1.11.0-daemon --db-host=db:3306 --db-name=hlstatsxce --db-username=hlstatsxce --db-password=hlstatsxce #--help
 ```
 
 ### Docker Compose
@@ -91,7 +93,7 @@ docker-compose restart daemon
 
 # 3. Finally, add a Counter-Strike 1.6 server. click Games > and unhide 'cstrike' game.
 # Then, click Game Settings > Counter-Strike (cstrike) > Add Server.
-#   IP: 192.168.1.100
+#   IP: 10.5.0.100
 #   Port: 27015
 #   Name: My Counter-Strike 1.6 server
 #   Rcon Password: password
@@ -148,8 +150,8 @@ docker-compose down
 
 # Cleanup
 docker-compose down
-docker volume rm hlstatsx-community-edition-dns-volume
-docker volume rm hlstatsx-community-edition-db-volume
+docker volume rm hlstatsx-community-edition_dns-volume
+docker volume rm hlstatsx-community-edition_db-volume
 ```
 
 ## Release

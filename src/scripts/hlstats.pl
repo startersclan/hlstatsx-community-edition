@@ -838,28 +838,53 @@ sub getServer
 
 sub queryServer
 {
-	my ($iaddr, $iport, @query)            = @_;
-	my $game = "";
-	my $timeout=2;
-	my $message = IO::Socket::INET->new(Proto=>"udp",Timeout=>$timeout,PeerPort=>$iport,PeerAddr=>$iaddr) or die "Can't make UDP socket: $@";
-	$message->send("\xFF\xFF\xFF\xFFTSource Engine Query\x00");
-	my ($datagram,$flags);
-	my $end = time + $timeout;
-	my $rin = '';
-	vec($rin, fileno($message), 1) = 1;
+    my ($iaddr, $iport, @query)            = @_;
+    my $socket;
+    $iaddr = gethostbyname($iaddr) or die("queryServer: could not resolve Host \"" . $iaddr . "\"\n");
+    my $proto;
 
-	my %hash = ();
+    # Open socket
+    socket($socket, PF_INET, SOCK_DGRAM, $proto) or die("queryServer(141): socket: $!\n");
+    my $hispaddr = sockaddr_in($iport, $iaddr);
 
-	while (1) {
-		my $timeleft = $end - time;
-		last if ($timeleft <= 0);
-		my ($nfound, $t) = select(my $rout = $rin, undef, undef, $timeleft);
-		last if ($nfound == 0); # either timeout or end of file
-		$message->recv($datagram,1024,$flags);
-		@hash{qw/key type netver hostname mapname gamedir gamename id numplayers maxplayers numbots dedicated os passreq secure gamever edf port/} = unpack("LCCZ*Z*Z*Z*vCCCCCCCZ*Cv",$datagram);
-	}
+    my $msg = "\xFF\xFF\xFF\xFFTSource Engine Query\x00";
 
-	return @hash{@query};
+    die("queryServer: send $iaddr:$iport : $!") unless(defined(send($socket, $msg, 0, $hispaddr)));
+
+    my %hash = ();
+
+    my $rin = "";
+    vec($rin, fileno($socket), 1) = 1;
+    my $ans = "TIMEOUT";
+    if (select($rin, undef, undef, 1.0))
+    {
+        $ans = "";
+        $hispaddr = recv($socket, $ans, 1024, 0);
+
+        if (length($ans) eq 9 && substr($ans, 4, 1) eq "\x41") {
+            # Counter-Strike 2 responds with challenge if client is non-local
+            $challenge = substr($ans, 5, 4);
+            my $msg = "\xFF\xFF\xFF\xFFTSource Engine Query\x00" . $challenge;
+            die("queryServer: send $iaddr:$iport : $!") unless(defined(send($socket, $msg, 0, sockaddr_in($iport, $iaddr))));
+            vec($rin, fileno($socket), 1) = 1;
+            $ans = "TIMEOUT";
+            if (select($rin, undef, undef, 1.0)) {
+                $ans = "";
+                $hispaddr = recv($socket, $ans, 1024, 0);
+            }
+        }
+
+        @hash{qw/key type netver hostname mapname gamedir gamename id numplayers maxplayers numbots dedicated os passreq secure gamever edf port/} = unpack("LCCZ*Z*Z*Z*vCCCCCCCZ*Cv",$ans);
+    }
+    # Close socket
+    close($socket);
+
+    if ($ans eq "TIMEOUT")
+    {
+        return @hash{@query};
+    }
+
+    return @hash{@query};
 }
 
 
@@ -1133,6 +1158,26 @@ sub getPlayerInfo
 		}
 		
 		$bot = botidcheck($uniqueid);
+		
+        if ($bot) {
+            if ($g_servers{$s_addr}->{play_game} == CSGO() || $g_servers{$s_addr}->{play_game} == CS2()) {
+                # leo - Give CSGO's GOTV BOT a team called 'TV', on doEvent_Connect and doEvent_EnterGame:
+                # 		e.g. L 05/14/2017 - 09:09:24: "GOTV<2><BOT><>" connected, address ""
+                #		e.g. L 06/09/2017 - 03:36:49: "GOTV<2><BOT><>" entered the game
+                #		Note that GOTV's $player->{userid} > 0 by default.  This means in the HLStats_Player constructor's it will call $self->insertPlayerLivestats() and GOTV will be added to the LiveStats table.
+                # For cs2 - Give the bot userid < 0, so it registers as a HLstats_Player
+                #       E.g. L 11/15/2023 - 03:22:54.003 - "SourceTV<0><BOT><>" connected, address "none"
+				# 		E.g. L 12/06/2023 - 07:34:16.564 - "Romanov<0><BOT><>" entered the game
+                if ($uniqueid eq "BOT" && index($name, "GOTV") != -1) {
+                    $team = 'TV';
+                }elsif ($uniqueid eq "BOT" && index($name, "SourceTV") != -1) {
+                    $userid = -1;
+                    $team = 'TV';
+                }elsif ($uniqueid eq "BOT" && $userid eq '0') {
+                    $userid = -1;
+                }
+            }
+        }
 		
 		if ($g_mode eq "NameTrack") {
 			$uniqueid = $name;
@@ -2346,7 +2391,7 @@ while ($loop = &getLine()) {
 		
 		# EXPLOIT FIX
 		
-		if ($s_output =~ s/^(?:.*?)?L (\d\d)\/(\d\d)\/(\d{4}) - (\d\d):(\d\d):(\d\d):\s*//) {
+		if ($s_output =~ s/^(?:.*?)?L (\d\d)\/(\d\d)\/(\d{4}) - (\d\d):(\d\d):(\d\d)\.?(\d\d\d)?\s*[:-]\s*//) {
 			$ev_month = $1;
 			$ev_day   = $2;
 			$ev_year  = $3;
@@ -3341,6 +3386,22 @@ while ($loop = &getLine()) {
 					$ev_obj_a
 				);
 			}
+		} elsif ($s_output =~ /^([^"\(]+):\s*"([^"]*)"$/) {
+            # Matches Counter-Strike 2 line
+            # 19. L 11/15/2023 - 18:54:31.849 - Started:  ""
+            $ev_verb   = $1;
+            $ev_obj_a  = $2;
+
+            if (like($ev_verb, "Started")) {
+                # leo - debug
+                printEvent('[MAP]', "line: $s_output");
+
+                $ev_type = 19;
+                $ev_status = &doEvent_ChangeMap(
+                    "started",
+                    ""
+                );
+            }
 		} elsif ($s_output =~ /^\[MANI_ADMIN_PLUGIN\]\s*(.+)$/) {
 			# Prototype: [MANI_ADMIN_PLUGIN] obj_a
 			# Matches:
