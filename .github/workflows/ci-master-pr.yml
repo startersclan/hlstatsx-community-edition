@@ -119,11 +119,8 @@ jobs:
           type=ref,suffix=-${{ matrix.variant }},event=branch
           type=ref,suffix=-{{sha}}-${{ matrix.variant }},event=branch
           type=semver,pattern={{major}},suffix=-${{ matrix.variant }}
-          type=semver,pattern={{major}},suffix=-{{sha}}-${{ matrix.variant }}
           type=semver,pattern={{major}}.{{minor}},suffix=-${{ matrix.variant }}
-          type=semver,pattern={{major}}.{{minor}},suffix=-{{sha}}-${{ matrix.variant }}
           type=semver,pattern={{major}}.{{minor}}.{{patch}},suffix=-${{ matrix.variant }}
-          type=semver,pattern={{major}}.{{minor}}.{{patch}},suffix=-{{sha}}-${{ matrix.variant }}
         # Disable 'latest' tag
         flavor: |
           latest=false
