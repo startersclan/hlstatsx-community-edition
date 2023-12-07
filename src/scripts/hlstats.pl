@@ -1168,13 +1168,18 @@ sub getPlayerInfo
                 # For cs2 - Give the bot userid < 0, so it registers as a HLstats_Player
                 #       E.g. L 11/15/2023 - 03:22:54.003 - "SourceTV<0><BOT><>" connected, address "none"
 				# 		E.g. L 12/06/2023 - 07:34:16.564 - "Romanov<0><BOT><>" entered the game
+				# 		E.g. L 12/06/2023 - 11:03:48.261 - "DemoRecorder<0><BOT><>" connected, address "none"
+				# 		E.g. L 12/06/2023 - 11:03:48.261 - "DemoRecorder<0><UNKNOWN><>" entered the game
                 if ($uniqueid eq "BOT" && index($name, "GOTV") != -1) {
                     $team = 'TV';
                 }elsif ($uniqueid eq "BOT" && index($name, "SourceTV") != -1) {
                     $userid = -1;
                     $team = 'TV';
-                }elsif ($uniqueid eq "BOT" && $userid eq '0') {
-                    $userid = -1;
+                }elsif ($uniqueid eq "BOT" && $userid == 0) {
+                    $userid = -2;
+                }elsif ($uniqueid eq "UNKNOWN" && $userid == 0) {
+                    $uniqueid = 'BOT';
+                    $userid = -3;
                 }
             }
         }
