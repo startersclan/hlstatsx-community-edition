@@ -1,6 +1,6 @@
 version: '2.2'
 services:
-  # 1. Counter-Strike 1.6 gameserver sends UDP logs to source-udp-forwarder
+  # 1. Counter-Strike 1.6 gameserver sends UDP logs to the daemon
   # See: https://github.com/startersclan/docker-sourceservers
   cstrike:
     image: goldsourceservers/cstrike:latest

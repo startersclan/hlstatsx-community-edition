@@ -12,7 +12,7 @@ Edition uses a Perl daemon to parse the log streamed from the
 game server. The data is stored in a MySQL Database and has
 a PHP frontend.
 
-Counter-Strike 2 is supported (mostly).
+Counter-Strike 2 is supported (mostly), via [`source-udp-forwarder`](https://github.com/startersclan/source-udp-forwarder).
 
 ## :loudspeaker: Important changes
 
