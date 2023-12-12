@@ -4,8 +4,6 @@ services:
   # See: https://github.com/startersclan/docker-sourceservers
   cstrike:
     image: goldsourceservers/cstrike:latest
-    volumes:
-      - dns-volume:/dns:ro
     ports:
       - 27015:27015/udp
     networks:
@@ -27,8 +25,6 @@ services:
   # See: https://github.com/startersclan/docker-sourceservers
   # cs2:
   #   image: sourceservers/cs2:latest
-  #   volumes:
-  #     - dns-volume:/dns:ro
   #   ports:
   #     - 27016:27016/tcp
   #     - 27016:27016/udp
@@ -61,21 +57,10 @@ services:
   #     - FORWARD_GAMESERVER_PORT=27016 # The gameserver's IP as registered in the HLStatsX:CE database
   #     - LOG_LEVEL=INFO
   #     - LOG_FORMAT=txt
-  #   volumes:
-  #     - dns-volume:/dns
   #   networks:
   #     - default
   #   depends_on:
   #     - daemon
-  #   entrypoint:
-  #     - /bin/sh
-  #   command:
-  #     - -c
-  #     - |
-  #         set -eu
-  #         echo "Outputting my IP address"
-  #         ip addr show eth0 | grep 'inet ' | awk '{print $$2}' | cut -d '/' -f1 | tee /dns/source-udp-forwarder-cs2
-  #         exec /source-udp-forwarder
 
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
   # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
@@ -302,7 +287,6 @@ networks:
     internal: true
 
 volumes:
-  dns-volume:
   db-volume:
   games-volume:
   traefik-acme-volume:

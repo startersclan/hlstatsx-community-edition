@@ -4,8 +4,6 @@ services:
   # See: https://github.com/startersclan/docker-sourceservers
   cstrike:
     image: goldsourceservers/cstrike:latest
-    volumes:
-      - dns-volume:/dns:ro
     ports:
       - 27015:27015/udp
     networks:
@@ -27,8 +25,6 @@ services:
   # See: https://github.com/startersclan/docker-sourceservers
   # cs2:
   #   image: sourceservers/cs2:latest
-  #   volumes:
-  #     - dns-volume:/dns:ro
   #   ports:
   #     - 27016:27016/tcp
   #     - 27016:27016/udp
@@ -61,8 +57,6 @@ services:
   #     - FORWARD_GAMESERVER_PORT=27016 # The gameserver's IP as registered in the HLStatsX:CE database
   #     - LOG_LEVEL=INFO
   #     - LOG_FORMAT=txt
-  #   volumes:
-  #     - dns-volume:/dns
   #   networks:
   #     - default
   #   depends_on:
@@ -264,5 +258,4 @@ networks:
          gateway: 10.5.0.1
 
 volumes:
-  dns-volume:
   db-volume:

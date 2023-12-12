@@ -150,7 +150,6 @@ docker-compose down
 
 # Cleanup
 docker-compose down
-docker volume rm hlstatsx-community-edition_dns-volume
 docker volume rm hlstatsx-community-edition_db-volume
 ```
 
