@@ -151,6 +151,7 @@ services:
       # - ./config/web/usr/local/etc/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
       # - ./config/web/usr/local/etc/php-fpm.d/php-fpm.conf:/usr/local/etc/php-fpm.d/php-fpm.conf:ro
     environment:
+      # - XDEBUG_MODE=off   # Uncomment to disable xdebug
       - DB_ADDR=db
       - DB_NAME=hlstatsxce
       - DB_USER=hlstatsxce
@@ -178,6 +179,7 @@ services:
       - ./src/heatmaps:/heatmaps
       - ./src/web:/web
     environment:
+      # - XDEBUG_MODE=off   # Uncomment to disable xdebug
       - DB_HOST=db
       - DB_NAME=hlstatsxce
       - DB_USER=hlstatsxce
