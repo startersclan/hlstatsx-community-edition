@@ -34,7 +34,9 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y wget; \
     # See: https://dev.mysql.com/downloads/repo/apt/
-    wget -q https://dev.mysql.com/get/mysql-apt-config_0.8.28-1_all.deb; \
+    DEB=$( wget -qO- https://dev.mysql.com/downloads/repo/apt/ | grep -E '[(]mysql-apt-config_[0-9]+\.[0-9]+\.[0-9]+-[0-9]+_all\.deb[)]' | cut -d '(' -f2 | cut -d ')' -f1 ); \
+    # E.g. https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb
+    wget -q https://dev.mysql.com/get/$DEB; \
     DEBIAN_FRONTEND=noninteractive apt install -y ./mysql-apt-config_*; \
     apt-get update; \
     apt-get install -y libmysqlclient-dev; \
