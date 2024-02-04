@@ -106,7 +106,9 @@ For support and installation notes visit http://www.hlxcommunity.com
       $answer     = "";
       $packets    = 0;
       $read       = array($socket);
-      while (socket_select($read, $write = NULL, $except = NULL, &$timeout) > 0) {
+      $write = NULL;
+      $except = NULL;
+      while (socket_select($read, $write, $except, &$timeout) > 0) {
         $recv_bytes += socket_recvfrom($socket, &$buffer, 2000, 0, &$host, &$port);
         if (($buffer[0] == chr(255)) && ($buffer[1] == chr(255)) && ($buffer[2] == "Z") && ($buffer[3] == chr(255)) && 
             ($buffer[4] == "1") && ($buffer[5] == ".") && ($buffer[6] == "0") && ($buffer[7] == "0") && ($buffer[8] == chr(255))) { 
