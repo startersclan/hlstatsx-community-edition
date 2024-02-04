@@ -65,7 +65,7 @@ services:
   # 3. HLStatsX:CE perl daemon accepts the gameserver logs. Gameserver Logs are parsed and stats are recorded
   # The daemon's proxy_key secret can only be setup in the HLStatsX:CE Web Admin Panel Settings under 'Proxy Settings' section
   daemon:
-    image: startersclan/hlstatsx-community-edition:1.11.2-daemon
+    image: startersclan/hlstatsx-community-edition:1.11.3-daemon
     ports:
       - 27500:27500/udp   # For external servers to send logs to the daemon
     networks:
@@ -87,7 +87,7 @@ services:
 
   # Cron - awards
   awards:
-    image: startersclan/hlstatsx-community-edition:1.11.2-daemon
+    image: startersclan/hlstatsx-community-edition:1.11.3-daemon
     stop_signal: SIGKILL
     entrypoint:
       - /bin/sh
@@ -134,7 +134,7 @@ services:
   # Available at http://localhost:8081, or https://web.example.com
   # Admin Panel username: admin, password: 123456
   web:
-    image: startersclan/hlstatsx-community-edition:1.11.2-web
+    image: startersclan/hlstatsx-community-edition:1.11.3-web
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=hlstatsx-community-edition_traefik-network"
@@ -168,7 +168,7 @@ services:
 
   # Cron - Heatmaps
   heatmaps:
-    image: startersclan/hlstatsx-community-edition:1.11.2-web
+    image: startersclan/hlstatsx-community-edition:1.11.3-web
     volumes:
       - games-volume:/web/hlstatsimg/games  # Stateful games volume, which also contains heatmaps
     environment:
