@@ -110,7 +110,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 ?>
 	<link rel="SHORTCUT ICON" href="favicon.ico" />
-	<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/mootools.js"></script>
+		<script type="text/javascript">window.JSONBrowser = window.JSON;</script>	
+	<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/mootools.js"></script>	
+	<script type="text/javascript"> window.JSON.parse = window.JSONBrowser.parse; window.JSON.stringify = window.JSONBrowser.stringify; </script>
 	<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/SqueezeBox.js"></script>
 	<script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/js/heatmap.js"></script>
 <?php
