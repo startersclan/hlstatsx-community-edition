@@ -208,9 +208,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 <?php
 			if ($g_options['sitename'] && $g_options['siteurl'])
 			{
-				echo '<li><a href="http://' . preg_replace('/http:\/\//', '', $g_options['siteurl']) . '">'. $g_options['sitename'] . '</a> <span class="arrow">&raquo;</span></li>';
+				echo '<li><a href="' . preg_replace('/http:\/\//', '', $g_options['siteurl']) . '">'. $g_options['sitename'] . '</a> <span class="arrow">&raquo;</span></li>';
 			}
-			echo '<li><a href="http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '">HLstatsX</a>';
+			echo '<li><a href="' . $_SERVER['PHP_SELF'] . '">HLstatsX</a>';
 
 
 			$i=0;
