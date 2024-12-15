@@ -203,10 +203,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.weapon,
 			IFNULL(hlstats_Weapons.modifier, 1.00) AS modifier,
 			COUNT(hlstats_Events_Frags.weapon) AS kills,
-			COUNT(hlstats_Events_Frags.weapon) / $realkills * 100 AS kpercent,
+			ROUND(CONCAT(COUNT(hlstats_Events_Frags.weapon)) / $realkills * 100, 2) AS kpercent,
 			SUM(hlstats_Events_Frags.headshot=1) as headshots,
 			SUM(hlstats_Events_Frags.headshot=1) / COUNT(hlstats_Events_Frags.weapon) AS hpk,
-			SUM(hlstats_Events_Frags.headshot=1) / $realheadshots * 100 AS hpercent
+			ROUND(CONCAT(SUM(hlstats_Events_Frags.headshot=1)) / $realheadshots * 100, 2) AS hpercent
 		FROM
 			hlstats_Events_Frags
 		LEFT JOIN hlstats_Weapons ON
