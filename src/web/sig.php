@@ -404,10 +404,11 @@ if ($player_id > 0) {
 	$timestamp   = $playerdata['connection_time'];
 	$days        = floor($timestamp / 86400);
 	$hours       = $days * 24;   
-	$hours       += floor($timestamp / 3600 % 24);
-	if ($hours < 10)
-		$hours = '0'.$hours; 
-	$min         = floor($timestamp / 60 % 60); 
+	$hours       += floor($timestamp / 3600) % 24;
+	if ($hours < 10) {
+		$hours = '0' . (int)$hours;
+	}
+	$min         = floor($timestamp / 60) % 60;
 	if ($min < 10)
 		$min = '0'.$min; 
 	$sec         = floor($timestamp % 60);
