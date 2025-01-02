@@ -466,6 +466,7 @@ if ($player_id > 0) {
 	$mod_date = date('D, d M Y H:i:s \G\M\T', time());
 	Header('Last-Modified:'.$mod_date);
 
+	imagepng($image,IMAGE_PATH.'/progress/sig_'.$player_id.'.png');
 	imagepng($image);
 	imagedestroy($image);
 	imagedestroy($watermark);
