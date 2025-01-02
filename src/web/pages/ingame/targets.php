@@ -111,12 +111,30 @@ For support and installation notes visit http://www.hlxcommunity.com
 		list($gamename) = $db->fetch_row();
 	}
 
+	// Get Weapon Name
+	$result = $db->query
+	("
+		SELECT
+			hlstats_Weapons.code,
+			hlstats_Weapons.name
+		FROM
+			hlstats_Weapons
+		WHERE
+			hlstats_Weapons.game = '$game'
+	");
+	while ($rowdata = $db->fetch_row($result))
+	{ 
+		$code = $rowdata[0];
+		$fname[strToLower($code)] = $rowdata[1];
+	}
+
 	$tblWeaponstats2 = new Table(
 		array(
 			new TableColumn(
 				'smweapon',
 				'Weapon',
-				'width=10&type=weaponimg&align=center&link=' . urlencode("mode=weaponinfo&weapon=%k&game=$game")
+				'width=10&type=weaponimg&align=center&link=' . urlencode("mode=weaponinfo&weapon=%k&game=$game"),
+				$fname
 			),
 			new TableColumn(
 				'smhits',

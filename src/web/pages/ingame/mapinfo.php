@@ -60,7 +60,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 			),
 			new TableColumn(
 				'frags',
-				'Kills on $map',
+				'Kills on ' . $map,
 				'width=15&align=right'
 			),
 			new TableColumn(

@@ -785,7 +785,8 @@ class VentRequestPacket extends VentPacket
 		$this->len = $this->totlen;
 		$this->totpck = 1;
 		$this->pck = 0;
-		$this->crc = Vent::getCRC( $this->rawdata );
+/*		$this->crc = Vent::getCRC( $this->rawdata );  */
+		$this->crc = (new Vent)->getCRC( $this->rawdata );
 		$this->encodeData();						// $this->data & datakey set here.
 		$this->encodeHeader();						// $this->header & headkey set here. 
 
