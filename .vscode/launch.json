@@ -10,8 +10,8 @@
             "request": "launch",
             "port": 9000,
             "pathMappings": {
-                "/heatmaps": "${workspaceRoot}/heatmaps",
-                "/web": "${workspaceRoot}/web",
+                "/heatmaps": "${workspaceRoot}/src/heatmaps",
+                "/web": "${workspaceRoot}/src/web",
             },
             "xdebugSettings": {
                 "max_data": 10000,
