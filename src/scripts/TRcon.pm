@@ -318,7 +318,7 @@ sub getPlayers
                 (\d+)\s+		# userid
 				(?:\d+\s+|)     # extra number in L4D, not sure what this is??
                 "(.+)"\s+		# name
-                (.+)\s+		    # uniqueid
+                (\S+)\s+		# uniqueid
                 ([\d:]+)\s+		# time
                 (\d+)\s+		# ping
                 (\d+)\s+		# loss
@@ -338,7 +338,8 @@ sub getPlayers
       my $address  = $8;
       my $port     = $9;
 
-	  $uniqueid =~ s/^STEAM_[0-9]+?\://i;
+	  $uniqueid =~ s!\[U:1:(\d+)\]!($1 % 2).':'.int($1 / 2)!eg;
+    $uniqueid =~ s/^STEAM_[0-9]+?\://i;
 	  
       # &::printEvent("DEBUG", "USERID: '$userid', NAME: '$name', UNIQUEID: '$uniqueid', TIME: '$time', PING: '$ping', LOSS: '$loss', STATE: '$state', ADDRESS:'$address', CLI_PORT: '$port'", 1);
 

@@ -3014,6 +3014,21 @@ while ($loop = &getLine()) {
 						);
 					}
 				}
+			} elsif ($ev_verb eq "committed suicide with") {
+				my $playerinfo = &getPlayerInfo($ev_player, 1);
+				
+				$ev_type = 4;
+				
+				if ($playerinfo) {
+					$ev_status = &doEvent_Suicide(
+						$playerinfo->{"userid"},
+						$playerinfo->{"uniqueid"},
+						$ev_obj_a,
+						$ev_Xcoord,
+						$ev_Ycoord,
+						$ev_Zcoord
+					);
+				}
 			} elsif ($ev_verb eq "joined team") {
 				my $playerinfo = &getPlayerInfo($ev_player, 1);
 				

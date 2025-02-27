@@ -112,12 +112,30 @@ For support and installation notes visit http://www.hlxcommunity.com
 		list($gamename) = $db->fetch_row();
 	}
 	
+	// Get Weapon Name
+	$result = $db->query
+	("
+		SELECT
+			hlstats_Weapons.code,
+			hlstats_Weapons.name
+		FROM
+			hlstats_Weapons
+		WHERE
+			hlstats_Weapons.game = '$game'
+	");
+	while ($rowdata = $db->fetch_row($result))
+	{ 
+		$code = $rowdata[0];
+		$fname[strToLower($code)] = $rowdata[1];
+	}
+
 	$tblWeapons = new Table(
 		array(
 			new TableColumn(
 				'weapon',
 				'Weapon',
-				'width=15&type=weaponimg&align=center&link=' . urlencode("mode=weaponinfo&weapon=%k&game=$game")
+				'width=15&type=weaponimg&align=center&link=' . urlencode("mode=weaponinfo&weapon=%k&game=$game"),
+				$fname
 			),
 			new TableColumn(
 				'modifier',
@@ -203,10 +221,10 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Events_Frags.weapon,
 			IFNULL(hlstats_Weapons.modifier, 1.00) AS modifier,
 			COUNT(hlstats_Events_Frags.weapon) AS kills,
-			COUNT(hlstats_Events_Frags.weapon) / $realkills * 100 AS kpercent,
+			ROUND(CONCAT(COUNT(hlstats_Events_Frags.weapon)) / $realkills * 100, 2) AS kpercent,
 			SUM(hlstats_Events_Frags.headshot=1) as headshots,
 			SUM(hlstats_Events_Frags.headshot=1) / COUNT(hlstats_Events_Frags.weapon) AS hpk,
-			SUM(hlstats_Events_Frags.headshot=1) / $realheadshots * 100 AS hpercent
+			ROUND(CONCAT(SUM(hlstats_Events_Frags.headshot=1)) / $realheadshots * 100, 2) AS hpercent
 		FROM
 			hlstats_Events_Frags
 		LEFT JOIN hlstats_Weapons ON
@@ -217,7 +235,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 			hlstats_Servers.game='$game' AND hlstats_Events_Frags.killerId=$player
 			AND (hlstats_Weapons.game='$game' OR hlstats_Weapons.weaponId IS NULL)
 		GROUP BY
-			hlstats_Events_Frags.weapon
+			hlstats_Events_Frags.weapon,
+			hlstats_Weapons.modifier
 		ORDER BY
 			$tblWeapons->sort $tblWeapons->sortorder,
 			$tblWeapons->sort2 $tblWeapons->sortorder
