@@ -24,7 +24,7 @@
 
 
 
-  if (function_exists(fopen))
+  if (function_exists('fopen'))
   {
     $db->query("SELECT addr, queryPort, UDPPort FROM hlstats_Servers_VoiceComm WHERE serverId=$tsId");
     $s = $db->fetch_array();

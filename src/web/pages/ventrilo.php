@@ -137,9 +137,9 @@ function show($tpl, $array)
 {
     $template = PAGE_PATH."/templates/ventrilo/".$tpl;
   
-    if($fp = @fopen($template.".".html, "r"))
+    if($fp = @fopen("$template.html", "r"))
 	{
-		$tpl = @fread($fp, filesize($template.".".html));
+		$tpl = @fread($fp, filesize("$template.html"));
 	}
 	else
 	{
