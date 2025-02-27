@@ -1,4 +1,4 @@
-ARG IMAGE=php:8.1-fpm-alpine
+ARG IMAGE=php:8.4-fpm-alpine
 FROM $IMAGE AS build
 
 # Set permissions for 'www-data' user
@@ -50,11 +50,12 @@ RUN set -eux; \
 
 # Xdebug: https://stackoverflow.com/questions/46825502/how-do-i-install-xdebug-on-dockers-official-php-fpm-alpine-image
 # PHPIZE_DEPS: autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c
-RUN apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
-    && pecl install xdebug-3.1.6 \
-    && docker-php-ext-enable xdebug \
-    && docker-php-source delete \
-    && apk del .build-dependencies
+RUN apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
+    apk add --no-cache --virtual .deps linux-headers; \
+    pecl install xdebug-3.4.1; \
+    docker-php-ext-enable xdebug; \
+    docker-php-source delete; \
+    apk del .build-dependencies
 RUN { \
         echo "[xdebug]"; \
         echo "zend_extension=xdebug"; \
