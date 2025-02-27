@@ -44,7 +44,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	// Addon created by Rufus (rufus@nonstuff.de)
 	
-	$action = valid_request($_GET['action'], true) or error('No action ID specified.');
+	$action = valid_request($_GET['action'], true) or error('No action code specified.');
 	
 	$db->query("
 		SELECT
@@ -52,7 +52,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 		FROM
 			hlstats_Actions
 		WHERE
-			id='$action_id'
+			code='$action'
 			AND game='$game'
 	");
 	

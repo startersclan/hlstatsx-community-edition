@@ -13,8 +13,8 @@ if (class_exists($db_classname)) {
 	error('Database class does not exist.  Please check your config.php file for DB_TYPE');
 }
 
-$game = valid_request($_GET['game']);
-$search = valid_request($_POST['value']);
+$game = valid_request($_GET['game'] ?? '');
+$search = valid_request($_POST['value'] ?? '');
 
 $game_escaped = $db->escape($game);
 $search_escaped = $db->escape($search);

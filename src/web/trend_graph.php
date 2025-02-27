@@ -64,10 +64,7 @@
 		$color = hex2rgb(valid_request($_GET['color'], false));
 	}
 
-	if (isset($_GET['player'])) {
-		$player = (int)$_GET['player'];
-	}
-
+	$player = valid_request(intval($_GET['player'] ?? ''), true);
 	if (!$player) {
 		exit();
 	}
