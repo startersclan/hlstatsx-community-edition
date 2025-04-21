@@ -58,6 +58,10 @@ new axis_player_color = -1
 new logmessage_ignore[512]
 new display_menu_keys = MENU_KEY_0|MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4|MENU_KEY_5|MENU_KEY_6|MENU_KEY_7|MENU_KEY_8|MENU_KEY_9
 
+// Enable time/latency logging
+new g_pingSum[33]
+new g_pingCount[33]
+new g_inGame[33]
 
 public plugin_init()
 {
@@ -337,6 +341,25 @@ public dod_client_changeteam(id, team, oldteam)
 
 public client_disconnect(id)
 {
+	// Enable time/latency logging
+	if (!g_inGame[id]) {
+		return;
+	}
+
+	if (task_exists(id))
+		remove_task(id)
+
+	new szTeam[16], szName[32], szAuthid[32]
+	new iUserid = get_user_userid(id)
+
+	get_user_team(id, szTeam, 15)
+	get_user_name(id, szName, 31)
+	get_user_authid(id, szAuthid, 31)
+
+	new iTime = get_user_time(id, 1)
+	log_message("^"%s<%d><%s><%s>^" triggered ^"time^" (time ^"%d:%02d^")", szName, iUserid, szAuthid, szTeam, (iTime / 60), (iTime % 60))
+	log_message("^"%s<%d><%s><%s>^" triggered ^"latency^" (ping ^"%d^")", szName, iUserid, szAuthid, szTeam, (g_pingSum[id] / (g_pingCount[id] ? g_pingCount[id] : 1)))
+
 	if ((id > 0) && (is_user_connected(id))) {
 		if ((allies_player_color == -1) || (id == allies_player_color)) {
 			allies_player_color = -1
@@ -377,6 +400,31 @@ public client_death(killer, victim, wpnindex, hitplace, TK)
 	}
 }
 
+public client_connect(id)
+{
+	g_inGame[id] = 0
+}
+
+public client_putinserver(id)
+{
+	g_inGame[id] = 1
+	if (!is_user_bot(id))
+	{
+		g_pingSum[id] = g_pingCount[id] = 0
+		if (task_exists(id))
+			remove_task(id)
+		set_task(19.5, "getPing", id, "", 0, "b")
+	}
+}
+
+public getPing(id)
+{
+	new iPing, iLoss
+
+	get_user_ping(id, iPing, iLoss)
+	g_pingSum[id] += iPing
+	++g_pingCount[id]
+}
 
 stock ExplodeString( Output[][], Max, Size, Input[], Delimiter )
 {
