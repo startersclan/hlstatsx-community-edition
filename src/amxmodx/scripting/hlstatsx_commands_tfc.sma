@@ -55,6 +55,10 @@ new g_HLstatsX_EventsMenu
 new logmessage_ignore[512]
 new display_menu_keys = MENU_KEY_0|MENU_KEY_1|MENU_KEY_2|MENU_KEY_3|MENU_KEY_4|MENU_KEY_5|MENU_KEY_6|MENU_KEY_7|MENU_KEY_8|MENU_KEY_9
 
+// Enable time/latency logging
+new g_pingSum[33]
+new g_pingCount[33]
+new g_inGame[33]
 
 public plugin_init()
 {
@@ -159,6 +163,28 @@ public game_log_hook(AlertType: type, message[])
 	return FMRES_IGNORED
 }
 
+
+public client_disconnect(id)
+{
+	// Enable time/latency logging
+	if (!g_inGame[id]) {
+		return;
+	}
+
+	if (task_exists(id))
+		remove_task(id)
+
+	new szTeam[16], szName[32], szAuthid[32]
+	new iUserid = get_user_userid(id)
+
+	get_user_team(id, szTeam, 15)
+	get_user_name(id, szName, 31)
+	get_user_authid(id, szAuthid, 31)
+
+	new iTime = get_user_time(id, 1)
+	log_message("^"%s<%d><%s><%s>^" triggered ^"time^" (time ^"%d:%02d^")", szName, iUserid, szAuthid, szTeam, (iTime / 60), (iTime % 60))
+	log_message("^"%s<%d><%s><%s>^" triggered ^"latency^" (ping ^"%d^")", szName, iUserid, szAuthid, szTeam, (g_pingSum[id] / (g_pingCount[id] ? g_pingCount[id] : 1)))
+}
 
 public client_death(killer, victim, wpnindex, hitplace, TK)
 {
