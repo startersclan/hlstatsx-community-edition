@@ -4,8 +4,8 @@
         die('Do not access this file directly.');
     }
 
-    // $dbversion = 90;
-    // $version = "1.11.5";
+    $dbversion = 90;
+    $version = "1.11.5";
 
     // Fix `tau_cannon`
     $db->query("UPDATE hlstats_Awards SET `name` = 'Gauss King' WHERE `code` = 'tau_cannon'");
@@ -16,7 +16,7 @@
     $db->query("UPDATE hlstats_Weapons SET `name` = 'Egon / Gluon Gun' WHERE `code` = 'gluon gun'");
 
     // Perform database schema update notification
-    // print "Updating database and verion schema numbers.<br />";
-    // $db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
-    // $db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
+    print "Updating database and version schema numbers.<br />";
+    $db->query("UPDATE hlstats_Options SET `value` = '$version' WHERE `keyname` = 'version'");
+    $db->query("UPDATE hlstats_Options SET `value` = '$dbversion' WHERE `keyname` = 'dbversion'");
 ?>
