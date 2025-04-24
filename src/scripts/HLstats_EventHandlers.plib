@@ -786,6 +786,8 @@ sub doEvent_Suicide
 	my $desc;
 	my $player = lookupPlayer($s_addr, $playerId, $playerUniqueId);
 	my $playerstr = &getPlayerInfoString($player, $playerId);
+
+	$player->set("is_dead", "1");
 	
 	if ($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers})
 	{
@@ -1429,7 +1431,9 @@ sub doEvent_Frag
 			}
 			$killer->updateDB();
 			$victim->increment("map_deaths");
-			$victim->set("is_dead", "1");
+			if ($weapon ne "zombie_claws_of_death") {
+				$victim->set("is_dead", "0");
+			}
 			if ($victim->{auto_type} eq "kill") {
 				&doEvent_Chat("say",
 					$victim->{"userid"},
@@ -1465,6 +1469,16 @@ sub doEvent_PlayerPlayerAction
 	my $victim = lookupPlayer($s_addr, $victimId, $victimUniqueId);
 	my $playerstr = &getPlayerInfoString($player, $playerId);
 	my $victimstr = &getPlayerInfoString($victim, $victimId);
+
+	my $player_bonuspoints = 0;
+	if (defined($properties{hlx_player_bonuspoints})) {
+		$player_bonuspoints = $properties{hlx_player_bonuspoints};
+	}
+	my $team_bonuspoints = 0;
+	if (defined($properties{hlx_team_bonuspoints})) {
+		$team_bonuspoints = $properties{hlx_team_bonuspoints};
+	}
+
 	if ($playerId == $victimId) {
 		$desc = "(IGNORED) PLAYER SAME AS VICTIM: ";
 	} elsif ($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers}) {
@@ -1472,7 +1486,7 @@ sub doEvent_PlayerPlayerAction
 	} elsif (checkBonusRound()) {
 		$desc = "(IGNORED) BonusRound: ";
 	} elsif ($player && $victim) {
-		if (($g_servers{$s_addr}->{ignore_bots} == 1) && (($killer->{is_bot} == 1) || ($victim->{is_bot} == 1))) {
+		if (($g_servers{$s_addr}->{ignore_bots} == 1) && (($player->{is_bot} == 1) || ($victim->{is_bot} == 1))) {
 			$desc = "(IGNORED) BOT: ";
 		} else {
 			if ($g_servers{$s_addr}->{play_game} == TF() && $action eq "medic_death") {
@@ -1502,6 +1516,18 @@ sub doEvent_PlayerPlayerAction
 					);
 				}
 			}
+
+			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{paction}) {
+				# Reroute PPAction that wants to be scored as a PAction
+				&doEvent_PlayerAction(
+					$playerId,
+					$playerUniqueId,
+					$action,
+					$x,
+					$y,
+					$z
+				);
+			}
 			
 			my $map = $g_servers{$s_addr}->get_map();
 			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{ppaction}) {
@@ -1522,8 +1548,8 @@ sub doEvent_PlayerPlayerAction
 			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{ppaction}) {
 				my $actionname = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{descr};
 				my $actionid = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{id};
-				my $reward_player = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_player};
-				my $reward_team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_team};
+				my $reward_player = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_player} + $player_bonuspoints;
+				my $reward_team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_team} + $team_bonuspoints;
 				my $team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{team};
 				
 				if (defined($properties{assister_position})) {
@@ -1653,6 +1679,9 @@ sub doEvent_PlayerAction
 			}
 			$player->updateDB();
 		} else {
+			if ($action eq "player_spawn") {
+				$player->set("is_dead", "0");
+			}
 			if ($g_servers{$s_addr}->{play_game} == TF())
 			{
 				my $objectstring = "";
@@ -1797,6 +1826,15 @@ sub doEvent_PlayerAction
 				$g_servers{$s_addr}->{nextkillheadshot} = $player->{playerid}
 			}
 
+			my $player_bonuspoints = 0;
+			if (defined($properties{hlx_player_bonuspoints})) {
+				$player_bonuspoints = $properties{hlx_player_bonuspoints};
+			}
+			my $team_bonuspoints = 0;
+			if (defined($properties{hlx_team_bonuspoints})) {
+				$team_bonuspoints = $properties{hlx_team_bonuspoints};
+			}
+
 			my $map = $g_servers{$s_addr}->get_map();
 			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{paction}) {
 				&doEvent_PlayerAction(
@@ -1811,8 +1849,8 @@ sub doEvent_PlayerAction
 			if (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{paction}) {
 				my $actionname = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{descr};
 				my $actionid = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{id};
-				my $reward_player = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_player};
-				my $reward_team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_team};
+				my $reward_player = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_player} + $player_bonuspoints;
+				my $reward_team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_team} + $team_bonuspoints;
 				my $team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{team};
 				
 				&recordEvent(
@@ -1891,8 +1929,14 @@ sub doEvent_PlayerAction
 sub doEvent_TeamAction
 {
 	$rcmd = $g_servers{$s_addr}->{broadcasting_command};
-	my ($team, $action) = @_;
+	my ($team, $action, %properties) = @_;
 	my $desc;
+
+	my $team_bonuspoints = 0;
+	if (defined($properties{hlx_team_bonuspoints})) {
+		$team_bonuspoints = $properties{hlx_team_bonuspoints};
+	}
+
 	if ($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers}) {
 		$desc = "(IGNORED) NOTMINPLAYERS: ";
 
@@ -1905,7 +1949,7 @@ sub doEvent_TeamAction
 		if ((defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$action}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{taction}) || (defined($g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}) && $g_games{$g_servers{$s_addr}->{game}}{actions}{$map."_$action"}{taction})) {
 			my $actionname = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{descr};
 			my $actionid = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{id};
-			my $reward_team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_team};
+			my $reward_team = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{reward_team} + $team_bonuspoints;
 			my $actionteam = $g_games{$g_servers{$s_addr}->{game}}{actions}{$action}{team};
 			if ($actionteam eq "") {
 				$actionteam = $team;
@@ -2041,7 +2085,9 @@ sub doEvent_WorldAction
 				$player->set("connect_time", time());
 			}  
 			if ($action eq "Round_Start") {
-				$player->set("is_dead", "0", 1);
+				if ($player->{team} ne "Spectator" && $player->{team} ne "Unassigned") {
+					$player->set("is_dead", "0", 1);
+				}
 				if ($player->{auto_type} eq "start") {
 					&doEvent_Chat("say",
 						$player->{"userid"},
