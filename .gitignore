@@ -3,5 +3,10 @@
 /.vscode/*
 !/.vscode/launch.json
 /.vagrant
+
+/src/amxmodx/scripting/include
+/src/amxmodx/scripting/amxxpc
+/src/amxmodx/scripting/amxxpc32.so
+
 /src/web/hlstatsimg/progress
 /src/web/hlstatsimg/graph
