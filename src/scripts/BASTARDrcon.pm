@@ -351,7 +351,7 @@ sub getVisiblePlayers
   {
    # "sv_visiblemaxplayers" = "-1"
    #       - Overrides the max players reported to prospective clients
-    if ($line =~ /^\s*"sv_visiblemaxplayers"\s*=\s*"([-0-9]+)".*$/x)
+    if ($line =~ /^\s*"sv_visiblemaxplayers"\s*(?:=|is)\s*"([-0-9]+)".*$/x)
     {
       $max_players   = $1;
     }
