@@ -201,6 +201,31 @@ For support and installation notes visit http://www.hlxcommunity.com
                                         </td>
                                 </tr>
 				<tr class="bg1">
+					<td>First Connect:*</td>
+					<td>
+						<?php
+							$db->query
+							("
+								SELECT
+									DATE_FORMAT(eventTime, '%a. %b. %D, %Y @ %T')
+								FROM
+									hlstats_Events_Connects
+								WHERE
+									hlstats_Events_Connects.playerId = '$player'
+								ORDER BY
+									id asc
+								LIMIT
+									1
+							");
+							list($lastevent) = $db->fetch_row();
+							if ($lastevent)
+								echo $lastevent;
+							else
+								echo '(Unknown)';
+						?>
+					</td>
+				</tr>
+				<tr class="bg2">
 					<td>Last Connect:*</td>
 					<td>
 						<?php
@@ -225,13 +250,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 						?>
 					</td>
 				</tr>
-				<tr class="bg2">
+				<tr class="bg1">
 					<td>Total Connection Time:</td>
 					<td>
 						<?php echo timestamp_to_str($playerdata['connection_time']); ?>
 					</td>
 				</tr>
-				<tr class="bg1">
+				<tr class="bg2">
 					<td>Average Ping:*</td>
 					<td>
 						<?php
@@ -253,7 +278,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 						?>
 					</td>
 				</tr>
-				<tr class="bg2">
+				<tr class="bg1">
 					<td>Favorite Server:*</td>
 					<td>
 						<?php
@@ -284,7 +309,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 						?>
 					</td>
 				</tr>
-				<tr class="bg1">
+				<tr class="bg2">
 					<td>Favorite Map:*</td>
 					<td>
 						<?php
@@ -309,7 +334,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 						?>
 					</td>
 				</tr>
-				<tr class="bg2">
+				<tr class="bg1">
 					<td>Favorite Weapon:*</td>
 						<?php
 							$result = $db->query("
