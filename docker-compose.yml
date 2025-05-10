@@ -20,6 +20,21 @@ services:
           set -eu
           exec hlds_linux -console -noipx -secure -game cstrike +map de_dust2 +maxplayers 32 +sv_lan 0 +ip 0.0.0.0 +port 27015 +rcon_password password +log on +logaddress_add 10.5.0.50 27500 +sv_visiblemaxplayers 30
 
+  # 1b. Uncomment to enable HLTV for CS1.6
+  # hltv:
+  #   image: goldsourceservers/cstrike:latest
+  #   ports:
+  #     - 27020:27020/udp
+  #   stop_signal: SIGKILL
+  #   entrypoint:
+  #     - /bin/bash
+  #   command:
+  #     - -c 
+  #     - | 
+  #         set -eu
+  #         sleep 10
+  #         exec ./hltv +connect 10.5.0.100:27015 -nomaster -nodns -port 27020
+
   # Uncomment to test CS2     
   # 1. Counter-Strike 2 gameserver sends HTTP logs to source-udp-forwarder
   # See: https://github.com/startersclan/docker-sourceservers

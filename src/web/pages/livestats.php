@@ -227,7 +227,15 @@ function printserverstats($server_id)
             $thisteam = $teamdata[$curteam];
 			$teamcolor = 'background:'.$thisteam['playerlist_bgcolor'].';color:'.$thisteam['playerlist_color'];
 			$bordercolor = 'background:'.$thisteam['playerlist_bgcolor'].';color:'.$thisteam['playerlist_color'].';border-top:1px '.$thisteam['playerlist_color'].' solid';
-            $team_display_name = empty($thisteam['name']) ? "Unknown team" : htmlspecialchars($thisteam['name']);
+			$team_display_name  = $thisteam['name'] ? htmlspecialchars($thisteam['name']) : htmlspecialchars(ucfirst(strtolower($thisteam['name'])));
+			if ($team_display_name == '') {
+				// Team is not in hlstats_Teams, but is present in the game log, e.g. player<123><STEAM_0:0:xxxxxxx><SPECTATOR> and hence in Livestats table as (in cs1.6: SPECTATOR, UNASSIGNED) (in csgo: Spectator, Unassigned).
+				$team_display_name = $thisteam['team'] ? htmlspecialchars(ucfirst(strtolower($thisteam['team']))) : '';
+				// Team is not in hlstats_Teams, but is also empty in the game log, e.g. player<123><STEAM_0:0:xxxxxxx><> and hence is null in Livestats table. This is a connecting client 100% of the time.
+				if ($team_display_name == '') {
+					$team_display_name = 'Unknown team';
+				}
+			}
 
 			while (isset($playerdata[$curteam][$j]))
 			{

@@ -1152,6 +1152,20 @@ sub getPlayerInfo
 				$name = "BOT-".$name;
 			}
 		}
+		# Uncomment this to consider HLTV as a bot
+		# elsif ($g_servers{$s_addr}->{play_game} == CSTRIKE()
+		# 		|| $g_servers{$s_addr}->{play_game} == TFC()
+		# 		|| $g_servers{$s_addr}->{play_game} == DOD()
+		# 		|| $g_servers{$s_addr}->{play_game} == NS()
+		# 		|| $g_servers{$s_addr}->{play_game} == VALVE()) {
+		# 	# For hlds - HLTV should be considered a bot
+		# 	# L 05/09/2025 - 17:41:44: "HLTV Proxy<5><HLTV><>" connected, address "10.5.0.4:27020"
+		# 	# L 05/09/2025 - 17:41:46: "HLTV Proxy<5><HLTV><>" entered the game
+		# 	# L 05/09/2025 - 17:41:46: "HLTV Proxy<5><HLTV><>" joined team "SPECTATOR"
+		# 	if ($uniqueid eq "HLTV") {
+		# 		$uniqueid = 'BOT';
+		# 	}
+		# }
 
 		if ($ipAddr eq "none") {
 			$ipAddr = "";
