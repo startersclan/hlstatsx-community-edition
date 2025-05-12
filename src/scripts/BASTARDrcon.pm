@@ -235,12 +235,26 @@ sub getPlayers
 
   my %players;
 
+  my $match;
+  my $name;
+  my $userid;
+  my $uniqueid;
+  my $time;
+  my $ping;
+  my $loss;
+  my $state;
+  my $address;
+  my $port;
 # HL1
 #      name userid uniqueid frag time ping loss adr
 # 1 "psychonic" 1 STEAM_0:1:4153990   0 00:33   13    0 192.168.5.115:27005
 
+# HL1 - HLTV
+#      name userid uniqueid frag time ping loss adr
+# 1 "HLTV Proxy" 1 HLTV hltv:0/128 delay:30 00:33 10.5.0.3:27020
   foreach my $line (@lines)
   {
+    $match = 0;
     if ($line =~ /^\#\s*\d+\s+
                 "(.+)"\s+					# name
 				(\d+)\s+					# userid
@@ -250,23 +264,42 @@ sub getPlayers
                 (\d+)\s+					# loss
                 ([^:]+):    				# addr
                 (\S+)          				# port
-                $/x)	
+                $/x) {
+      $match = 1;
 
-	{
-	  my $name     = $1;
-      my $userid   = $2;
-      my $uniqueid = $3;
-      my $time     = $4;
-      my $ping     = $5;
-      my $loss     = $6;
-      my $state    = "";
-      my $address  = $7;
-      my $port     = $8;
+      $name     = $1;
+      $userid   = $2;
+      $uniqueid = $3;
+      $time     = $4;
+      $ping     = $5;
+      $loss     = $6;
+      $state    = "";
+      $address  = $7;
+      $port     = $8;
 	  
 	  $uniqueid =~ s/^STEAM_[0-9]+?\://i;
 	  
       # &::printEvent("DEBUG", "USERID: '$userid', NAME: '$name', UNIQUEID: '$uniqueid', TIME: '$time', PING: '$ping', LOSS: '$loss', ADDRESS:'$address', CLI_PORT: '$port'", 1);
+    } elsif ($line =~ /^\#\s*\d+\s+
+                "([^"]+)"\s+					# name
+                (\d+)\s+						# userid
+                ([^\s]+)\s+						# uniqueid
+				hltv:[^\s]+\s+delay:[^\s]+\s+ 	# frag
+                ([\d:]+)\s+						# time
+                ([^:]+):    					# addr
+                (\S+)          					# port
+                $/x) {
+      $match = 1;
+	  
+      $name     = $1;
+      $userid   = $2;
+      $uniqueid = $3;
+      $time     = $4;
+      $address  = $5;
+      $port     = $6;
+    }
 
+    if ($match) {
       if ($::g_mode eq "NameTrack") {
         $players{$name}    = { 
                              "Name"       => $name,
