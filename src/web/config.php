@@ -42,6 +42,9 @@ if (!defined("IN_HLSTATS")) {
 
 function defineVar($name, $default) {
 	$value = getenv($name) ? getenv($name) : $default;
+	if (gettype($default) == 'array' && is_string($value)) {
+		eval("\$value = $value;");
+	}
 	$value = gettype($default) == 'boolean' && $value == 'false' ? false : $value; // Fix string 'false' becoming true for boolean when using settype
 	settype($value, gettype($default));
 	define($name, $value);
@@ -101,6 +104,15 @@ defineVar("PAGE_PATH", './pages');
 //
 // 		Note: the progress directory under hlstatsimg must be writable!!
 defineVar("IMAGE_PATH", './hlstatsimg');
+
+// MODES_RESTRICTED - Require logged-in access to certain pages. For more modes, see hlstats.php
+// 80 - Restricted users and above
+// 100 - Administrator access only
+defineVar("MODES_RESTRICTED", [
+	// 'chat' => 80,
+	// 'chathistory' => 80,
+	// 'search' => 80
+]);
 
 // How often dynamicly generated images are updated (in seconds)
 defineVar("IMAGE_UPDATE_INTERVAL", 300);
