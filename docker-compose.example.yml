@@ -157,6 +157,7 @@ services:
       - DB_USER=hlstatsxce
       - DB_PASS=hlstatsxce
       - DB_DEBUG=0
+      # - MODES_RESTRICTED=['chat' => 80, 'chathistory' => 80, 'search' => 80]
     ports:
       - 127.0.0.1:8081:80
       - 9000

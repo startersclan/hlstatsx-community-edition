@@ -120,6 +120,7 @@ define('PAGE', 'HLSTATS');
 ///
 
 // Load required files
+require(INCLUDE_PATH . '/class_auth.php');
 require(INCLUDE_PATH . '/class_db.php');
 require(INCLUDE_PATH . '/class_table.php');
 require(INCLUDE_PATH . '/functions.php');
@@ -225,6 +226,18 @@ if ( !in_array($mode, $valid_modes) )
 
 if ( file_exists(PAGE_PATH . "/$mode.php") )
 {
+	if (key_exists($mode, MODES_RESTRICTED)) {
+		$acclevel = MODES_RESTRICTED[$mode];
+		$auth = new Auth;
+		if ($auth->ok === false) {
+			http_response_code(401);
+			exit;
+		} else if ($auth->ok && $auth->userdata['acclevel'] < $acclevel) {
+			$auth->error = "Your account does not have sufficient permissions to view this page. Request them from your Administrator.";
+			$auth->printAuth();
+			exit;
+		}
+	}
 	@include(PAGE_PATH . "/$mode.php");
 	pageFooter();
 }
