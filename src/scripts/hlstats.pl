@@ -3678,6 +3678,9 @@ EOT
 			if($g_servers{$server}->{"srv_players"})
 			{
 				my %players_temp=%{$g_servers{$server}->{"srv_players"}};
+				my %status_players=$g_servers{$server}->rcon_getplayers();
+				# use Data::Dumper;
+				# print Dumper(\%status_players);
 				while ( my($pl, $player) = each(%players_temp) ) {
 					my $timeout = 250; # 250;
 					if ($g_mode eq "LAN")  {
@@ -3693,8 +3696,14 @@ EOT
 						# we delete any player who is inactive for over $timeout sec
 						# - they probably disconnected silently somehow.
 						if (($player->{is_bot} == 0) || ($g_stdin)) {
-							&printEvent(400, "Auto-disconnecting " . $player->getInfoString() ." for idling (" . ($ev_daemontime - $player->{timestamp}) . " sec) on server (".$server.")");
-							removePlayer($server, $userid, $uniqueid);
+							if (defined($status_players{$uniqueid})) {
+								# Don't remove player who exists in server 'status'
+								&printNotice("Not auto-disconnecting " . $player->getInfoString() . " because player exists in server status");
+							}else {
+								# Remove player who does not exists in server 'status'
+								&printEvent(400, "Auto-disconnecting " . $player->getInfoString() ." for idling (" . ($ev_daemontime - $player->{timestamp}) . " sec) on server (".$server.")");
+								removePlayer($server, $userid, $uniqueid);
+							}
 						}
 					}
 				}
