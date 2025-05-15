@@ -36,35 +36,54 @@
 
 # Configure the variables below
 
-# Set this value to 1 if you are running Gentoo linux, or any other linux distro where the "cal" command outputs not Sunday as the first day in every row!
-LINUX_OTHER="0" 
-
 # Login information for your MySQL server
 DBHOST="localhost"
 DBNAME=""
 DBUSER=""
 DBPASS=""
 
-#
-# Nothing to change below here.
-#
+# Maxmind API-Key
+API_KEY="<YOUR_API_KEY>"
 
+# GeoLite2-City-Location - choose language to be added: de / en / es / ru / pt-BR / zh-CN
+LANG="en"
 
-FILE="GeoLiteCity-latest.zip"
-rm -f geoLiteCity_Blocks.csv
-rm -f geoLiteCity_Location.csv
-rm -f geoLiteCity_Location.csv.temp
+# ***** NOTHING TO CONFIGURE BELOW HERE *****
+
+FILE="GeoLiteCity-CSV-latest.zip"
+API_URL="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City-CSV&license_key=$API_KEY&suffix=zip"
+
+# Change to directory where installer is
+cd `dirname $0`
+
+# Check if Maxmind API-KEY is set
+if [[ $API_KEY =~ "<YOUR_API_KEY>" ]]; then
+  echo "----------------------------------------------------------"
+  echo "[!] You probably forgot to set yours MaxMind account API key!"
+  echo "[i] Please check installation instructions > 2.4. Prepare GeoIP2 (optional) > https://github.com/NomisCZ/hlstatsx-community-edition/wiki/Installation#2-installation"
+  echo "----------------------------------------------------------"
+  exit 3
+fi
+
+# Cleanup former runs
+rm -f GeoLite2-City-Blocks-*.csv
+rm -f GeoLite2-City-Locations-*.csv
 rm -f $FILE
-[ -f $FILE ] || wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity_CSV/$FILE || exit 1
+# Download
+echo "[>>] Downloading GeoLite2-City databases"
+[ -f $FILE ] || wget $API_URL -O $FILE || exit 1
+echo "[<<] Uncompressing $FILE"
 unzip -jo $FILE || exit 1
-mv GeoLiteCity-Blocks.csv geoLiteCity_Blocks.csv
-mv GeoLiteCity-Location.csv geoLiteCity_Location.csv.temp
-iconv -f ISO-8859-1 -t UTF-8 geoLiteCity_Location.csv.temp > geoLiteCity_Location.csv
-mysqlimport -C -d --fields-terminated-by=, --fields-enclosed-by=\" --ignore-lines=2 --default-character-set=utf8 -L -i -h $DBHOST -u $DBUSER --password=$DBPASS $DBNAME geoLiteCity_Blocks.csv 
-mysqlimport -C -d --fields-terminated-by=, --fields-enclosed-by=\" --ignore-lines=2 --default-character-set=utf8 -L -i -h $DBHOST -u $DBUSER --password=$DBPASS $DBNAME geoLiteCity_Location.csv 
-
+# IPv4
+mv GeoLite2-City-Blocks-IPv4.csv geoLiteCity_Blocks.csv
+mv GeoLite2-City-Locations-$LANG.csv geoLiteCity_Location.csv
+# Importing
+echo "[>>] Importing with localization $LANG"
+mysqlimport -C -d --fields-terminated-by=, --fields-enclosed-by=\" --ignore-lines=2 --default-character-set=utf8 -L -i -h $DBHOST -u $DBUSER --password=$DBPASS $DBNAME geoLiteCity_Blocks.csv
+mysqlimport -C -d --fields-terminated-by=, --fields-enclosed-by=\" --ignore-lines=2 --default-character-set=utf8 -L -i -h $DBHOST -u $DBUSER --password=$DBPASS $DBNAME geoLiteCity_Location.csv
 # Cleanup
-rm -f geoLiteCity_Blocks.csv
-rm -f geoLiteCity_Location.csv
-rm -f geoLiteCity_Location.csv.temp
+echo "[->] Cleaning up"
+rm -f GeoLite2-City-*.csv
+rm -f geoLiteCity_*.csv
 rm -f $FILE
+echo "[✓] Done"
