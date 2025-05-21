@@ -1263,7 +1263,7 @@ sub doEvent_Frag
 					if ($g_servers{$s_addr}->{play_game} == L4D()) {
 						$msg = sprintf("%s (%s)%s got %s points for killing %s",$k_name,&number_format($killerskill),$killer_add_text,$k_skill,$v_name);
 					} else {
-						$msg = sprintf("%s (%s)%s got %s points%s for killing %s (%s)%s",$k_name,&number_format($killerskill),$killer_add_text,$k_skill,$v_skill_text,$v_name,&number_format($victimskill),$victim_add_text);
+						$msg = sprintf("%s (%s)%s got %s points for killing %s (%s)%s",$k_name,&number_format($killerskill),$killer_add_text,$k_skill,$v_skill_text,$v_name,&number_format($victimskill),$victim_add_text);
 					}
 					my @rcmds;
 					if (($killer->{is_bot} == 0) && ($killer->{"display_events"} == 1) && ($killer->{userid} > 0)) {
