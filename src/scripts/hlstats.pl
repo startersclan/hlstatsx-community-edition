@@ -74,6 +74,7 @@ require "$opt_libdir/BASTARDrcon.pm";
 require "$opt_libdir/HLstats_Server.pm";
 require "$opt_libdir/HLstats_Player.pm";
 require "$opt_libdir/HLstats_Game.pm";
+require "$opt_libdir/HLstats_OpForIdentity.pm";
 do "$opt_libdir/HLstats_GameConstants.plib";
 do "$opt_libdir/HLstats.plib";
 do "$opt_libdir/HLstats_EventHandlers.plib";
@@ -1083,6 +1084,11 @@ sub getPlayerInfo
 		my $bot			= 0;
 		my $haveplayer  = 0;
 		
+		# OpFor's obsolete WON-ID logging returns the same sentinel for humans
+		# and bots. Resolve the connection userid from the authenticated roster.
+		if ($g_servers{$s_addr}->{game} eq "gearbox" && $uniqueid eq "4294967295") {
+			$uniqueid = HLstats_OpForIdentity::resolve($g_servers{$s_addr}, $userid, $name);
+		}
 		$plainuniqueid = $uniqueid;
 		$uniqueid =~ s!\[U:1:(\d+)\]!'STEAM_0:'.($1 % 2).':'.int($1 / 2)!eg;
 		$uniqueid =~ s/^STEAM_[0-9]+?\://;
