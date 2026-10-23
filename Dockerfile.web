@@ -1,4 +1,4 @@
-ARG IMAGE=php:8.1-fpm-alpine
+ARG IMAGE=php:8.5-fpm-alpine
 FROM $IMAGE AS build
 
 # Set permissions for 'www-data' user
@@ -20,8 +20,11 @@ FROM $IMAGE AS dev
 # Install nginx and supervisor for multi-process container
 RUN apk add --no-cache ca-certificates nginx supervisor
 
-# opcache
-RUN docker-php-ext-install opcache
+# opcache (built-in on PHP 8.5+, installed if missing)
+RUN set -eux; \
+    if ! php -m | grep -qi opcache; then \
+        docker-php-ext-install opcache; \
+    fi
 
 # mysqli (deprecated)
 RUN set -eux; \
@@ -50,8 +53,8 @@ RUN set -eux; \
 
 # Xdebug: https://stackoverflow.com/questions/46825502/how-do-i-install-xdebug-on-dockers-official-php-fpm-alpine-image
 # PHPIZE_DEPS: autoconf dpkg-dev dpkg file g++ gcc libc-dev make pkgconf re2c
-RUN apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
-    && pecl install xdebug-3.1.6 \
+RUN apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS linux-headers \
+    && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && docker-php-source delete \
     && apk del .build-dependencies
